@@ -1,0 +1,43 @@
+{
+  "verified_at_utc": "2026-10-22T16:25:39.237222+00:00",
+  "status": "PASS",
+  "connection": {
+    "database": "easyerp_v02",
+    "version": "PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35227, 64-bit",
+    "listen_addresses": "127.0.0.1",
+    "port": 55433,
+    "data_directory": "D:/projx/demo/easyerp-0.2/var/pgdata",
+    "encoding": "UTF8",
+    "timezone": "UTC"
+  },
+  "source_sha256": "0cb98ec46569d2ee9b746873d495b2b3c251e44077d38954c206ac49544fe0a4",
+  "business_objects": {
+    "schemas": 6,
+    "tables": 146,
+    "foreign_keys": 475,
+    "views": 15
+  },
+  "additional_operations_views": 3,
+  "business_rows": 0,
+  "business_test_count": 35,
+  "role_test_count": 6,
+  "populated_restore_data_matched": true,
+  "production_backup_restore": {
+    "backup": "D:\\projx\\demo\\easyerp-0.2\\backups\\easyerp_v02-20261022T162536532603Z.dump",
+    "passed": true
+  },
+  "export": {
+    "export": "D:\\projx\\demo\\easyerp-0.2\\exports\\20261022T162538517017Z.zip",
+    "tables": 146
+  },
+  "export_checksums": "PASS",
+  "wrong_password_rejected": true,
+  "startup": {
+    "file": "C:\\Users\\75601\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\easyerp-0.2.vbs",
+    "current_user_logon": true,
+    "launch_smoke_test": "PASS"
+  },
+  "windows_powershell_51_smoke_test": "PASS",
+  "temporary_databases_remaining": 0,
+  "business_issue_count": 0
+}

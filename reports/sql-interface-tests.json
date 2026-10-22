@@ -1,0 +1,20 @@
+{
+  "at_utc": "2026-10-22T17:49:22.917343+00:00",
+  "status": "PASS",
+  "pgadmin_version": "9.15",
+  "database": "easyerp_v02",
+  "role": "easyerp_app",
+  "is_superuser": false,
+  "pgpass_connection": true,
+  "query_tool_initialized": true,
+  "sql_result": [
+    [
+      "easyerp_v02",
+      "easyerp_app",
+      "146",
+      "15"
+    ]
+  ],
+  "query_session_closed": true,
+  "database_password_stored_in_pgadmin": false
+}

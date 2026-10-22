@@ -1,0 +1,12 @@
+﻿{
+    "at":  "2026-10-22T19:49:22.9296433+02:00",
+    "status":  "PASS",
+    "backend_cold_start_exit":  0,
+    "frontend_cold_start_exit":  0,
+    "backend_repeat_exit":  0,
+    "frontend_repeat_exit":  0,
+    "existing_backend_process_reused":  true,
+    "frontend_ready":  true,
+    "database_auto_start":  true,
+    "sql_query_tool":  "PASS"
+}

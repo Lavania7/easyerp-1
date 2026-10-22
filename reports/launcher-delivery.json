@@ -1,0 +1,42 @@
+{
+  "at_utc": "2026-10-22T17:50:54.469634+00:00",
+  "status": "PASS",
+  "launchers": {
+    "启动前端.exe": {
+      "bytes": 12288,
+      "sha256": "2f6311728a3617dcc967ac0a3ed726ae9e1b5dbee83bdbefa2e49c3b128ff385"
+    },
+    "启动后端SQL.exe": {
+      "bytes": 12288,
+      "sha256": "ff71b10e02ad05dc30a2f5d648d167c565a418067a20f6caa83b8beeae107968"
+    }
+  },
+  "desktop_shortcuts": [
+    {
+      "path": "D:\\Users\\Desktop\\easyERP-前端工作台.lnk",
+      "target": "D:\\projx\\demo\\easyerp-0.2\\启动前端.exe",
+      "working_directory": "D:\\projx\\demo\\easyerp-0.2"
+    },
+    {
+      "path": "D:\\Users\\Desktop\\easyERP-后端SQL.lnk",
+      "target": "D:\\projx\\demo\\easyerp-0.2\\启动后端SQL.exe",
+      "working_directory": "D:\\projx\\demo\\easyerp-0.2"
+    }
+  ],
+  "frontend_url": "http://127.0.0.1:8092/",
+  "sql_interface_url": "http://127.0.0.1:8093/",
+  "cold_start": true,
+  "repeat_start": true,
+  "sql_query_result": [
+    [
+      "easyerp_v02",
+      "easyerp_app",
+      "146",
+      "15"
+    ]
+  ],
+  "live_business_rows": 0,
+  "source_sha256": "0cb98ec46569d2ee9b746873d495b2b3c251e44077d38954c206ac49544fe0a4",
+  "independent_pgadmin_profile": true,
+  "passwords_in_exe": false
+}

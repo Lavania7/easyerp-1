@@ -1,0 +1,6 @@
+{
+  "database": "easyerp_v02",
+  "port": 55433,
+  "postgres_bin": "E:\\PostgreSQL18\\bin",
+  "python": "E:\\DevTools\\Python314\\python.exe"
+}

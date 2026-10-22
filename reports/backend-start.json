@@ -1,0 +1,9 @@
+{
+  "status": "READY",
+  "url": "http://127.0.0.1:8093",
+  "port": 8093,
+  "profile_directory": "D:\\projx\\demo\\easyerp-0.2\\var\\pgadmin",
+  "existing_credentials": true,
+  "database": "easyerp_v02",
+  "at_utc": "2026-10-22T17:55:12.853261+00:00"
+}

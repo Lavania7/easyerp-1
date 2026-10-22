@@ -1,0 +1,12 @@
+﻿[
+    {
+        "path":  "D:\\Users\\Desktop\\easyERP-前端工作台.lnk",
+        "target":  "D:\\projx\\demo\\easyerp-0.2\\启动前端.exe",
+        "working_directory":  "D:\\projx\\demo\\easyerp-0.2"
+    },
+    {
+        "path":  "D:\\Users\\Desktop\\easyERP-后端SQL.lnk",
+        "target":  "D:\\projx\\demo\\easyerp-0.2\\启动后端SQL.exe",
+        "working_directory":  "D:\\projx\\demo\\easyerp-0.2"
+    }
+]
