@@ -1,0 +1,1510 @@
+{
+  "version": "legacy2-20261023-v1",
+  "source_root": "D:\\projx\\demo\\easyerp-old2",
+  "project_root": "D:\\projx\\demo\\easyerp-1",
+  "manifest_sha256": "f618bb90a81b27536db72a64a6944006f54587b1500cb611ac1fc8d3cb8d0f2a",
+  "files": [
+    {
+      "file_id": "old2-file-ac25e671a26ce1bd2ef750cde764274a",
+      "relative_path": "finance/info.md",
+      "sha256": "6c2a0b7e757c9b702a6e261394627afd1ded3a98cd9aec8f81fb9cbc1afa173b",
+      "size_bytes": 89,
+      "format_id": "note",
+      "encoding": null,
+      "sheet": null,
+      "header": null,
+      "metadata": {
+        "text": "企业网银账户年初余额：9167.48\r\n\r\n企业支付宝账户年初余额：1783.82\r\n"
+      },
+      "data_rows": 0
+    },
+    {
+      "file_id": "old2-file-f02ed7efa417c08bcf3381453b6cd53a",
+      "relative_path": "finance/企业支付宝账户2026/Q1/20885708369578680156_202601_账务明细(汇总)_1.csv",
+      "sha256": "f54bc7946566abc089f99af9b55372814cfdbdd331e26984a992ab9e2593a3ac",
+      "size_bytes": 626,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-02-01T04:57:46+08:00",
+        "start": "2026-01-01",
+        "end": "2026-01-31",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 5,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-3f29d1c699bbba024a5c5c074f625c6d",
+      "relative_path": "finance/企业支付宝账户2026/Q1/20885708369578680156_202601_账务明细_1.csv",
+      "sha256": "a42dc174db26bc228d7c86b8c19a2451220db922246b4865018f89e19ba27383",
+      "size_bytes": 29664,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-02-01T04:57:46+08:00",
+        "start": "2026-01-01",
+        "end": "2026-01-31",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-01-02",
+        "actual_end": "2026-01-31",
+        "income": "1447.44",
+        "expense": "3200.07"
+      },
+      "data_rows": 104,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-e450ba6d4eaf5c044f4d9e3944c2470e",
+      "relative_path": "finance/企业支付宝账户2026/Q1/20885708369578680156_202602_账务明细(汇总)_1.csv",
+      "sha256": "fe8dd25e8837bc8571fd5bf1957731175fdb122724aa69c43df5ce123642495e",
+      "size_bytes": 622,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-03-01T04:17:40+08:00",
+        "start": "2026-02-01",
+        "end": "2026-02-28",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 5,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-8d26a19989906488a99c32a773cbdd4e",
+      "relative_path": "finance/企业支付宝账户2026/Q1/20885708369578680156_202602_账务明细_1.csv",
+      "sha256": "4d28c0e1300597cd448c181c15b3c4ceaeaa62bd9afb185a17f3920515e3b170",
+      "size_bytes": 18337,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-03-01T04:17:40+08:00",
+        "start": "2026-02-01",
+        "end": "2026-02-28",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-02-01",
+        "actual_end": "2026-02-28",
+        "income": "1290.14",
+        "expense": "1084.35"
+      },
+      "data_rows": 67,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-4dd836eeed45b1d696ac4bd1540d4b8d",
+      "relative_path": "finance/企业支付宝账户2026/Q1/20885708369578680156_202603_账务明细(汇总)_1.csv",
+      "sha256": "cb98c47b65d4fb87f62969640ad73b3faf0ac70f0953acebccd4223e5d79c011",
+      "size_bytes": 586,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-04-01T05:40:56+08:00",
+        "start": "2026-03-01",
+        "end": "2026-03-31",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 4,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-6f782662c6ccdb2755b8d15bafd7f8f7",
+      "relative_path": "finance/企业支付宝账户2026/Q1/20885708369578680156_202603_账务明细_1.csv",
+      "sha256": "36a5f696730c94b2f9d74bbc14085f0c228fd9c89f85c880631f92c50ed2df8b",
+      "size_bytes": 36074,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-04-01T05:40:56+08:00",
+        "start": "2026-03-01",
+        "end": "2026-03-31",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-03-03",
+        "actual_end": "2026-03-31",
+        "income": "3360.89",
+        "expense": "3040.38"
+      },
+      "data_rows": 120,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-85ca34c5a26d90022b5ad09ce01d6e7a",
+      "relative_path": "finance/企业支付宝账户2026/Q2/20885708369578680156_202604_账务明细(汇总)_1.csv",
+      "sha256": "e534a3031c65c6975500dc657e68134b7c04e11d7e4785603e2c5439d11b68b6",
+      "size_bytes": 629,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-05-01T05:14:15+08:00",
+        "start": "2026-04-01",
+        "end": "2026-04-30",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 5,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-cf0edcd9cf8e8fb31505e308bc4ca8da",
+      "relative_path": "finance/企业支付宝账户2026/Q2/20885708369578680156_202604_账务明细_1.csv",
+      "sha256": "3cc7ce3110ae4afd39d6318c1ee4cb404a327969ff1aa335afd74dec29fff053",
+      "size_bytes": 68191,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-05-01T05:14:15+08:00",
+        "start": "2026-04-01",
+        "end": "2026-04-30",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-04-01",
+        "actual_end": "2026-04-30",
+        "income": "5311.91",
+        "expense": "5811.43"
+      },
+      "data_rows": 229,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-ff8fffe1832c033722f5401a3a59b9d6",
+      "relative_path": "finance/企业支付宝账户2026/Q2/20885708369578680156_202605_账务明细(汇总)_1.csv",
+      "sha256": "e43e68cc5a4bdb1e7d4014000c1c6f9f684029e28ed442f3a048ae1a8467c2a2",
+      "size_bytes": 663,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-06-01T05:26:24+08:00",
+        "start": "2026-05-01",
+        "end": "2026-05-31",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 6,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-670d5afd291c5f35bd47425293036915",
+      "relative_path": "finance/企业支付宝账户2026/Q2/20885708369578680156_202605_账务明细_1.csv",
+      "sha256": "9a1e06128b99f427b521a91d985c3c3383784cbd0e8da9ac1f09b68fa002d3a8",
+      "size_bytes": 60710,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-06-01T05:26:24+08:00",
+        "start": "2026-05-01",
+        "end": "2026-05-31",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-05-01",
+        "actual_end": "2026-05-31",
+        "income": "8658.97",
+        "expense": "6849.28"
+      },
+      "data_rows": 205,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-dff29b7ce1b2bee60bb59a549e0d3b69",
+      "relative_path": "finance/企业支付宝账户2026/Q2/20885708369578680156_202606_账务明细(汇总)_1.csv",
+      "sha256": "867838d74a6cfcf7f6f14b75fd24e888bc93a8ce6c456725fab7c65069af0d5b",
+      "size_bytes": 700,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-07-01T05:55:11+08:00",
+        "start": "2026-06-01",
+        "end": "2026-06-30",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 7,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-6e7687cd8e523c96becfb964f673ecc1",
+      "relative_path": "finance/企业支付宝账户2026/Q2/20885708369578680156_202606_账务明细_1.csv",
+      "sha256": "ff5b45bb343343b1be1fd334540a9a81c1f6e931cf468cccdf8a3497b2238a28",
+      "size_bytes": 56894,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-07-01T05:55:11+08:00",
+        "start": "2026-06-01",
+        "end": "2026-06-30",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-06-01",
+        "actual_end": "2026-06-30",
+        "income": "5344.28",
+        "expense": "4377.34"
+      },
+      "data_rows": 200,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-d57136820e8965941abb64193963d501",
+      "relative_path": "finance/企业支付宝账户2026/Q3/20885708369578680156_202607_账务明细(汇总)_1.csv",
+      "sha256": "a6f86f8d785eccb287bf56bb4887b06e1011e77c8090bbc7237ddc397ddc514f",
+      "size_bytes": 661,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-08-01T04:54:12+08:00",
+        "start": "2026-07-01",
+        "end": "2026-07-31",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 6,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-3f1c09c8f08dc18b95a98f6560c84094",
+      "relative_path": "finance/企业支付宝账户2026/Q3/20885708369578680156_202607_账务明细_1.csv",
+      "sha256": "1a228e7e727a47c4dcb9b6ac136235846b8ee859c2873b7e49d5e611413a00cf",
+      "size_bytes": 41009,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-08-01T04:54:12+08:00",
+        "start": "2026-07-01",
+        "end": "2026-07-31",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-07-01",
+        "actual_end": "2026-07-30",
+        "income": "3966.70",
+        "expense": "3819.46"
+      },
+      "data_rows": 138,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-196dc74476cecf166eb4dacac671bf4d",
+      "relative_path": "finance/企业支付宝账户2026/Q3/20885708369578680156_202608_账务明细(汇总)_1.csv",
+      "sha256": "7a72769f8b7a1d3ad17752e506b68d79c7b046057b797f39e302ea36b70ee024",
+      "size_bytes": 668,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-09-01T04:57:39+08:00",
+        "start": "2026-08-01",
+        "end": "2026-08-31",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 6,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-c7abaeff4a8ce3237d8e7f4ed6fadcda",
+      "relative_path": "finance/企业支付宝账户2026/Q3/20885708369578680156_202608_账务明细_1.csv",
+      "sha256": "9a8886edba62ce8ca41a59e7c23a7dc539465341c69771780d749d526de85eec",
+      "size_bytes": 46019,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-09-01T04:57:39+08:00",
+        "start": "2026-08-01",
+        "end": "2026-08-31",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-08-01",
+        "actual_end": "2026-08-31",
+        "income": "5102.80",
+        "expense": "5430.72"
+      },
+      "data_rows": 157,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-95e34571e3d1bf280dad08a45a0cc138",
+      "relative_path": "finance/企业支付宝账户2026/Q3/20885708369578680156_202609_账务明细(汇总)_1.csv",
+      "sha256": "e5de097c8eba6094b5e1041258d373c7e37e53c31e4568418ea74b5affff4896",
+      "size_bytes": 669,
+      "format_id": "alipay-summary",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "类型",
+        "收入笔数",
+        "收入金额（+元）",
+        "支出笔数",
+        "支出金额（-元）",
+        "总金额（元）"
+      ],
+      "metadata": {
+        "exported_at": "2026-10-01T05:20:22+08:00",
+        "start": "2026-09-01",
+        "end": "2026-09-30",
+        "source_account": "20885708369578680156"
+      },
+      "data_rows": 6,
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "file_id": "old2-file-a58aed1f6f79803e144da6bcd7201b2c",
+      "relative_path": "finance/企业支付宝账户2026/Q3/20885708369578680156_202609_账务明细_1.csv",
+      "sha256": "e94a79f2f71464e0d74845277470334ebdd5839885e5c08315d416663983c7c7",
+      "size_bytes": 43451,
+      "format_id": "alipay-detail",
+      "encoding": "gb18030",
+      "sheet": "",
+      "header": [
+        "账务流水号",
+        "业务流水号",
+        "商户订单号",
+        "商品名称",
+        "发生时间",
+        "对方账号",
+        "收入金额（+元）",
+        "支出金额（-元）",
+        "账户余额（元）",
+        "交易渠道",
+        "业务类型",
+        "备注"
+      ],
+      "metadata": {
+        "exported_at": "2026-10-01T05:20:22+08:00",
+        "start": "2026-09-01",
+        "end": "2026-09-30",
+        "source_account": "20885708369578680156",
+        "actual_start": "2026-09-01",
+        "actual_end": "2026-09-30",
+        "income": "4239.77",
+        "expense": "4817.54"
+      },
+      "data_rows": 150,
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "file_id": "old2-file-3aa7e230a74ab11b6df62b8296698d00",
+      "relative_path": "finance/企业网银账户2026/historydetail756.xlsx",
+      "sha256": "a134571cae7e0358066733f3ce259110da46c97eade1037eb994f2ae82f04c4c",
+      "size_bytes": 10152,
+      "format_id": "bank-history",
+      "encoding": null,
+      "sheet": "Sheet0",
+      "header": [
+        "凭证号",
+        "本方账号",
+        "对方账号",
+        "交易时间",
+        "借/贷",
+        "借方发生额",
+        "贷方发生额",
+        "对方行号",
+        "摘要",
+        "用途",
+        "对方单位名称",
+        "余额",
+        "个性化信息"
+      ],
+      "metadata": {
+        "source_account": "0200218009100132473",
+        "actual_start": "2026-04-01",
+        "actual_end": "2026-06-26",
+        "income": "24262.57",
+        "expense": "24779.03"
+      },
+      "data_rows": 65,
+      "profile": "bank-history-v1"
+    },
+    {
+      "file_id": "old2-file-d6ea506e9ce8abbd869ad5791df038cf",
+      "relative_path": "finance/企业网银账户2026/historydetail760.xlsx",
+      "sha256": "c61264b126e53311026cf2d82eb2b61d901538ef08452295ca1cd3eb1e8b4436",
+      "size_bytes": 8021,
+      "format_id": "bank-history",
+      "encoding": null,
+      "sheet": "Sheet0",
+      "header": [
+        "凭证号",
+        "本方账号",
+        "对方账号",
+        "交易时间",
+        "借/贷",
+        "借方发生额",
+        "贷方发生额",
+        "对方行号",
+        "摘要",
+        "用途",
+        "对方单位名称",
+        "余额",
+        "个性化信息"
+      ],
+      "metadata": {
+        "source_account": "0200218009100132473",
+        "actual_start": "2026-07-04",
+        "actual_end": "2026-09-30",
+        "income": "11019.19",
+        "expense": "12815.30"
+      },
+      "data_rows": 38,
+      "profile": "bank-history-v1"
+    },
+    {
+      "file_id": "old2-file-f607cdb162691c7c8879da791072493a",
+      "relative_path": "finance/企业网银账户2026/historydetail827.xlsx",
+      "sha256": "bf0695efbbedfdd06f8fe6ef1b4aac562402cdce9ee2cf82b55b45016c833549",
+      "size_bytes": 7492,
+      "format_id": "bank-history",
+      "encoding": null,
+      "sheet": "Sheet0",
+      "header": [
+        "凭证号",
+        "本方账号",
+        "对方账号",
+        "交易时间",
+        "借/贷",
+        "借方发生额",
+        "贷方发生额",
+        "对方行号",
+        "摘要",
+        "用途",
+        "对方单位名称",
+        "余额",
+        "个性化信息"
+      ],
+      "metadata": {
+        "source_account": "0200218009100132473",
+        "actual_start": "2026-01-02",
+        "actual_end": "2026-03-31",
+        "income": "8884.77",
+        "expense": "7325.97"
+      },
+      "data_rows": 39,
+      "profile": "bank-history-v1"
+    },
+    {
+      "file_id": "old2-file-50603f1acd9d83614a56b16d417c5676",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202601_0.xlsx",
+      "sha256": "72587616cd3fdfe91daabb3a53a84f35f1a4ae3de013b89f2f8827c3aa3c7af0",
+      "size_bytes": 6332,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-01-02",
+        "actual_end": "2026-01-31",
+        "income": "1015.82",
+        "expense": "1289.68"
+      },
+      "data_rows": 30,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-fc14694fe34c75eb24d20f5186f7cfa8",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202602_0.xlsx",
+      "sha256": "9832f4e86e4a5daf2ec5d22d48c11e41a6e327388d37be0604a2b41d4829e688",
+      "size_bytes": 4906,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-02-02",
+        "actual_end": "2026-02-28",
+        "income": "322.3",
+        "expense": "1.94"
+      },
+      "data_rows": 14,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-cb5850171daf929d67b52773584e0def",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202603_0.xlsx",
+      "sha256": "4f47013702091bb6f3f096c3973b08473a4cbe3e1e4f51259d465d67397e4644",
+      "size_bytes": 5536,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-03-04",
+        "actual_end": "2026-03-30",
+        "income": "703.32",
+        "expense": "804.23"
+      },
+      "data_rows": 20,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-4d39e80e46aca9d0299ee2bf826e39c3",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202604_0.xlsx",
+      "sha256": "63c9a8a48c0356b364750501e9128d74b3c46b42b2cee117d9177aea48e06cb4",
+      "size_bytes": 5709,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-04-10",
+        "actual_end": "2026-04-30",
+        "income": "1285.0",
+        "expense": "1258.58"
+      },
+      "data_rows": 22,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-dafa3cc270238b93ef0d4795a10a0fbc",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202605_0.xlsx",
+      "sha256": "6e567dcf8cb8fc7464bb8ea2e7cd5e79f1e5753cfefff5f86d6d5d6e619ab4c0",
+      "size_bytes": 6281,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-05-09",
+        "actual_end": "2026-05-30",
+        "income": "1053.4",
+        "expense": "6.32"
+      },
+      "data_rows": 30,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-936a427ce81de7c13bd7e05b8e952030",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202606_0.xlsx",
+      "sha256": "97db23e3f048f6d5c4ecbc95a21ec568b451d4f6319dc7296b2346e32bdd3255",
+      "size_bytes": 4723,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-06-04",
+        "actual_end": "2026-06-25",
+        "income": "510.5",
+        "expense": "1112.72"
+      },
+      "data_rows": 11,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-c0053851c8af420b081a14374692a318",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202607_0.xlsx",
+      "sha256": "8fbd985a17dbeadaf4bec7c5e24fcf1381a72679bddb1fc03ad853a62933c797",
+      "size_bytes": 4199,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-07-13",
+        "actual_end": "2026-07-28",
+        "income": "136",
+        "expense": "0.81"
+      },
+      "data_rows": 6,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-caefcc915bfbb39aee9ff6e77c13a859",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202608_0.xlsx",
+      "sha256": "1db0795d0862b74f0b1d68870e4cd775b49e4e13b09ca5e7c3b24443dba0d5b4",
+      "size_bytes": 4783,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-08-07",
+        "actual_end": "2026-08-29",
+        "income": "248",
+        "expense": "1.48"
+      },
+      "data_rows": 12,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-2be370548565cedc9b77aba8284976c0",
+      "relative_path": "finance/企业聚合算账户2026/2220072947975_202609_0.xlsx",
+      "sha256": "25face97c82e27433c5e41585297d28a3e7b92f1f313f39c12c77be1a543dd7d",
+      "size_bytes": 4820,
+      "format_id": "aggregate-settlement",
+      "encoding": null,
+      "sheet": "sheet1",
+      "header": [
+        "商家昵称",
+        "入帐日期",
+        "入帐时间",
+        "支付流水号",
+        "主订单id",
+        "子订单id",
+        "入帐类型",
+        "收入金额(元)",
+        "支出金额(元)",
+        "业务描述",
+        "备注",
+        "收/付渠道",
+        "数据创建时间",
+        "数据修改时间"
+      ],
+      "metadata": {
+        "source_account": "tb3504827777",
+        "actual_start": "2026-09-02",
+        "actual_end": "2026-09-29",
+        "income": "257",
+        "expense": "1105.39"
+      },
+      "data_rows": 12,
+      "profile": "aggregate-v1"
+    },
+    {
+      "file_id": "old2-file-3848aa21cc508333e457352f72089e02",
+      "relative_path": "finance/保证金流水2026/part_Q1.txt",
+      "sha256": "101d611895d01f258e5244913f353d719d4c8d379f0adfd59f10ad00b0ebb5e7",
+      "size_bytes": 139,
+      "format_id": "note",
+      "encoding": null,
+      "sheet": null,
+      "header": null,
+      "metadata": {
+        "text": "保证金500元\r\n\r\n没有记录的月份，保证金均为500元，直到Q2\r\n\r\n在这之后，没有记录的月份代表金额没有变化"
+      },
+      "data_rows": 0
+    },
+    {
+      "file_id": "old2-file-988d6ef56299ad86d998c46e58127b3d",
+      "relative_path": "finance/保证金流水2026/part_Q2.csv",
+      "sha256": "09f7fe37674930416b2513e91414d4efaf49a1f9e0b7b0f61e709b09a25b4580",
+      "size_bytes": 2499,
+      "format_id": "deposit-ledger",
+      "encoding": "utf-8-sig",
+      "sheet": "",
+      "header": [
+        "完成时间",
+        "操作类型",
+        "原因",
+        "币种",
+        "收支金额(元)",
+        "现金总余额(元)",
+        "来源账户",
+        "去向账户",
+        "出资类型",
+        "业务描述",
+        "业务编号",
+        "订单编号"
+      ],
+      "metadata": {
+        "actual_start": "2026-05-11",
+        "actual_end": "2026-06-23",
+        "income": "47.50",
+        "expense": "47.50"
+      },
+      "data_rows": 12,
+      "profile": "deposit-v1"
+    },
+    {
+      "file_id": "old2-file-243a4c16ec908d87d0f520aed9a2296c",
+      "relative_path": "finance/保证金流水2026/part_Q3.csv",
+      "sha256": "1a96d80d31cd478559891f2b2617822301d58d71938ad36d6b48e81279852dde",
+      "size_bytes": 3589,
+      "format_id": "deposit-ledger",
+      "encoding": "utf-8-sig",
+      "sheet": "",
+      "header": [
+        "完成时间",
+        "操作类型",
+        "原因",
+        "币种",
+        "收支金额(元)",
+        "现金总余额(元)",
+        "来源账户",
+        "去向账户",
+        "出资类型",
+        "业务描述",
+        "业务编号",
+        "订单编号"
+      ],
+      "metadata": {
+        "actual_start": "2026-07-20",
+        "actual_end": "2026-09-26",
+        "income": "161.80",
+        "expense": "161.80"
+      },
+      "data_rows": 17,
+      "profile": "deposit-v1"
+    },
+    {
+      "file_id": "old2-file-70d88bc54f4278a138b4eed6086485a4",
+      "relative_path": "sales/ExportOrderList-2026-Q1.xlsx",
+      "sha256": "17ecc44066f2875161797f0ab3de59bddae843ed602bf190d024e5593d56524c",
+      "size_bytes": 5122,
+      "format_id": "sales-orders",
+      "encoding": null,
+      "sheet": "export",
+      "header": [
+        "订单编号",
+        "支付单号",
+        "支付详情",
+        "买家应付货款",
+        "买家应付邮费",
+        "总金额",
+        "买家实付金额",
+        "订单状态",
+        "收货地址",
+        "运送方式",
+        "订单创建时间",
+        "订单付款时间",
+        "商品标题",
+        "宝贝种类",
+        "物流单号",
+        "物流公司",
+        "宝贝总数量",
+        "订单关闭原因",
+        "卖家服务费",
+        "买家服务费",
+        "开票信息",
+        "退款金额",
+        "是否主动赔付",
+        "主动赔付金额",
+        "主动赔付出账时间",
+        "商品属性SKU",
+        "应发货时间",
+        "C2B小额收款",
+        "发货时间",
+        "确认收货时间",
+        "确认收货打款金额",
+        "周期购到货时间"
+      ],
+      "metadata": {
+        "actual_start": "2026-04-24",
+        "actual_end": "2026-04-28"
+      },
+      "data_rows": 3,
+      "profile": "orders-32-v1"
+    },
+    {
+      "file_id": "old2-file-32ac7baf4eb380868c09fcf2878683d4",
+      "relative_path": "sales/ExportOrderList-2026-Q2.xlsx",
+      "sha256": "68a2c7d8ea8fb812e61c050092836dac3b6d62a8df156452b9bbe0897ed37ceb",
+      "size_bytes": 14138,
+      "format_id": "sales-orders",
+      "encoding": null,
+      "sheet": "export",
+      "header": [
+        "订单编号",
+        "支付单号",
+        "支付详情",
+        "买家应付货款",
+        "买家应付邮费",
+        "总金额",
+        "买家实付金额",
+        "订单状态",
+        "收货地址",
+        "运送方式",
+        "订单创建时间",
+        "订单付款时间",
+        "商品标题",
+        "宝贝种类",
+        "物流单号",
+        "物流公司",
+        "宝贝总数量",
+        "订单关闭原因",
+        "卖家服务费",
+        "买家服务费",
+        "开票信息",
+        "退款金额",
+        "是否主动赔付",
+        "主动赔付金额",
+        "主动赔付出账时间",
+        "商品属性SKU",
+        "应发货时间",
+        "C2B小额收款",
+        "发货时间",
+        "确认收货时间",
+        "确认收货打款金额",
+        "周期购到货时间"
+      ],
+      "metadata": {
+        "actual_start": "2026-04-24",
+        "actual_end": "2026-06-30"
+      },
+      "data_rows": 42,
+      "profile": "orders-32-v1"
+    },
+    {
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "relative_path": "sales/ExportOrderList-2026-Q3.xlsx",
+      "sha256": "daa128acde5ae7f5c67ec61e20515879080219662ac70d3eac5563ea543760e4",
+      "size_bytes": 33269,
+      "format_id": "sales-orders",
+      "encoding": null,
+      "sheet": "export",
+      "header": [
+        "订单编号",
+        "支付单号",
+        "买家应付货款",
+        "买家应付邮费",
+        "总金额",
+        "买家实付金额",
+        "订单状态",
+        "收货地址",
+        "运送方式",
+        "订单创建时间",
+        "订单付款时间",
+        "商品标题",
+        "宝贝种类",
+        "物流单号",
+        "物流公司",
+        "宝贝总数量",
+        "订单关闭原因",
+        "卖家服务费",
+        "买家服务费",
+        "开票信息",
+        "退款金额",
+        "是否主动赔付",
+        "主动赔付金额",
+        "商品属性SKU",
+        "应发货时间",
+        "发货时间",
+        "确认收货时间",
+        "确认收货打款金额",
+        "周期购到货时间"
+      ],
+      "metadata": {
+        "actual_start": "2026-07-01",
+        "actual_end": "2026-09-25"
+      },
+      "data_rows": 141,
+      "profile": "orders-29-v1"
+    }
+  ],
+  "table_counts": {
+    "finance.资金账户档案表": 4,
+    "finance.资金流水表": 1698,
+    "finance.流水来源明细表": 1698,
+    "finance.流水文件登记表": 23,
+    "sales.渠道档案表": 1,
+    "sales.平台文件登记表": 3,
+    "sales.销售订单登记表": 183,
+    "sales.订单导出快照表": 186,
+    "sales.销售订单行表": 192,
+    "sales.销售期间覆盖表": 3
+  },
+  "raw_rows": 2100,
+  "finance_controls": {
+    "alipay-detail": {
+      "rows": "1370",
+      "收入": "38722.90",
+      "支出": "38430.57"
+    },
+    "bank-history": {
+      "rows": "142",
+      "支出": "44920.30",
+      "收入": "44166.53"
+    },
+    "aggregate-settlement": {
+      "rows": "157",
+      "支出": "5581.15",
+      "收入": "5531.34"
+    },
+    "deposit-ledger": {
+      "rows": "29",
+      "收入": "209.30",
+      "支出": "209.30"
+    }
+  },
+  "alipay_reconciliation": [
+    {
+      "file_id": "old2-file-f02ed7efa417c08bcf3381453b6cd53a",
+      "month": "2026-01",
+      "income": "1447.44",
+      "expense": "3200.07",
+      "income_rows": 31,
+      "expense_rows": 73,
+      "detail_file_id": "old2-file-3f29d1c699bbba024a5c5c074f625c6d",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-e450ba6d4eaf5c044f4d9e3944c2470e",
+      "month": "2026-02",
+      "income": "1290.14",
+      "expense": "1084.35",
+      "income_rows": 24,
+      "expense_rows": 43,
+      "detail_file_id": "old2-file-8d26a19989906488a99c32a773cbdd4e",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-4dd836eeed45b1d696ac4bd1540d4b8d",
+      "month": "2026-03",
+      "income": "3360.89",
+      "expense": "3040.38",
+      "income_rows": 30,
+      "expense_rows": 90,
+      "detail_file_id": "old2-file-6f782662c6ccdb2755b8d15bafd7f8f7",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-85ca34c5a26d90022b5ad09ce01d6e7a",
+      "month": "2026-04",
+      "income": "5311.91",
+      "expense": "5811.43",
+      "income_rows": 64,
+      "expense_rows": 165,
+      "detail_file_id": "old2-file-cf0edcd9cf8e8fb31505e308bc4ca8da",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-ff8fffe1832c033722f5401a3a59b9d6",
+      "month": "2026-05",
+      "income": "8658.97",
+      "expense": "6849.28",
+      "income_rows": 61,
+      "expense_rows": 144,
+      "detail_file_id": "old2-file-670d5afd291c5f35bd47425293036915",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-dff29b7ce1b2bee60bb59a549e0d3b69",
+      "month": "2026-06",
+      "income": "5344.28",
+      "expense": "4377.34",
+      "income_rows": 68,
+      "expense_rows": 132,
+      "detail_file_id": "old2-file-6e7687cd8e523c96becfb964f673ecc1",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-d57136820e8965941abb64193963d501",
+      "month": "2026-07",
+      "income": "3966.70",
+      "expense": "3819.46",
+      "income_rows": 40,
+      "expense_rows": 98,
+      "detail_file_id": "old2-file-3f1c09c8f08dc18b95a98f6560c84094",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-196dc74476cecf166eb4dacac671bf4d",
+      "month": "2026-08",
+      "income": "5102.80",
+      "expense": "5430.72",
+      "income_rows": 50,
+      "expense_rows": 107,
+      "detail_file_id": "old2-file-c7abaeff4a8ce3237d8e7f4ed6fadcda",
+      "passed": true
+    },
+    {
+      "file_id": "old2-file-95e34571e3d1bf280dad08a45a0cc138",
+      "month": "2026-09",
+      "income": "4239.77",
+      "expense": "4817.54",
+      "income_rows": 47,
+      "expense_rows": 103,
+      "detail_file_id": "old2-file-a58aed1f6f79803e144da6bcd7201b2c",
+      "passed": true
+    }
+  ],
+  "exceptions": [
+    {
+      "id": "old2-issue-0d8a8af73dbb9c0f65b6faa349830e54",
+      "code": "文件季度与内容不符",
+      "detail": "Q1文件的订单创建日期为2026-04-24至2026-04-28，按内容日期导入，不补造1至3月销售。",
+      "file_id": "old2-file-70d88bc54f4278a138b4eed6086485a4",
+      "row_no": null,
+      "order_id": null
+    },
+    {
+      "id": "old2-issue-7fcc769171e6dc675c60e79887a9b199",
+      "code": "实付与运费待分配",
+      "detail": "来源含非零应付邮费，未提供商品实付及运费的实际分配；原始订单实付仍保留在快照。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 78,
+      "order_id": "old2-order-d201d2406193d9202a705a59054163a1"
+    },
+    {
+      "id": "old2-issue-9009dba843d285d69ed5775d979234a8",
+      "code": "实付与运费待分配",
+      "detail": "来源含非零应付邮费，未提供商品实付及运费的实际分配；原始订单实付仍保留在快照。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 79,
+      "order_id": "old2-order-3c6f4bddae7b0e65feba8af8c7ca7154"
+    },
+    {
+      "id": "old2-issue-49a9655aa7c8ba636943b7a95d2105f4",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 72,
+      "order_id": "old2-order-637b06f83aa82442c2a0142a47cad044"
+    },
+    {
+      "id": "old2-issue-dae0d3229257b31a4e8db5739d83f4ea",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 20,
+      "order_id": "old2-order-495065e080298451c97f29a72d309761"
+    },
+    {
+      "id": "old2-issue-4f0f8550dbef08a29e09dbd75e980236",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 50,
+      "order_id": "old2-order-d601628658b4d5934f47225c1e48e404"
+    },
+    {
+      "id": "old2-issue-d432a0ecbddcc19cf62d9a1a2dd7d0d1",
+      "code": "实付与运费待分配",
+      "detail": "来源含非零应付邮费，未提供商品实付及运费的实际分配；原始订单实付仍保留在快照。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 34,
+      "order_id": "old2-order-ffb5c10caca4dedd89621d4c90dc6658"
+    },
+    {
+      "id": "old2-issue-38393ad31ce87bfe7d68a4e71c8159a4",
+      "code": "实付与运费待分配",
+      "detail": "来源含非零应付邮费，未提供商品实付及运费的实际分配；原始订单实付仍保留在快照。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 17,
+      "order_id": "old2-order-38463e75f5506e342328ebbb066768fa"
+    },
+    {
+      "id": "old2-issue-8fbeccc3f7690529d0dfa11eb94b2ddd",
+      "code": "重复订单快照",
+      "detail": "同一平台订单保留全部来源快照，共有业务字段一致；订单及商品行只入库一次。",
+      "file_id": "old2-file-32ac7baf4eb380868c09fcf2878683d4",
+      "row_no": 43,
+      "order_id": "old2-order-1e1651effe950e7b9720462541cb142d"
+    },
+    {
+      "id": "old2-issue-10181fece96f1e6da851899b790c800d",
+      "code": "重复订单快照",
+      "detail": "同一平台订单保留全部来源快照，共有业务字段一致；订单及商品行只入库一次。",
+      "file_id": "old2-file-32ac7baf4eb380868c09fcf2878683d4",
+      "row_no": 41,
+      "order_id": "old2-order-22015b281acb1db33343b762f6ab177f"
+    },
+    {
+      "id": "old2-issue-df276d82de082b9094ded92e8f828774",
+      "code": "重复订单快照",
+      "detail": "同一平台订单保留全部来源快照，共有业务字段一致；订单及商品行只入库一次。",
+      "file_id": "old2-file-32ac7baf4eb380868c09fcf2878683d4",
+      "row_no": 42,
+      "order_id": "old2-order-66bacf7a4e2544c06ff711a15856eb54"
+    },
+    {
+      "id": "old2-issue-606fb4a5fe90fa8de46f7738ca3526d8",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-32ac7baf4eb380868c09fcf2878683d4",
+      "row_no": 34,
+      "order_id": "old2-order-85cf5ee73d85537a8c0c9eabbbb4a6e1"
+    },
+    {
+      "id": "old2-issue-03b4a123913dae4828d2a6d50e2250d3",
+      "code": "实付与运费待分配",
+      "detail": "来源含非零应付邮费，未提供商品实付及运费的实际分配；原始订单实付仍保留在快照。",
+      "file_id": "old2-file-32ac7baf4eb380868c09fcf2878683d4",
+      "row_no": 23,
+      "order_id": "old2-order-ce2bba915051f98bf5c2c38f6e35e70f"
+    },
+    {
+      "id": "old2-issue-4eabe677063a3625590c2ddfff916ba8",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-32ac7baf4eb380868c09fcf2878683d4",
+      "row_no": 12,
+      "order_id": "old2-order-8b359aee8e9b335291616eae8d9b3b4b"
+    },
+    {
+      "id": "old2-issue-75719bba22f6071c2a8501d9b51a8a16",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 106,
+      "order_id": "old2-order-2d32c5c8b408fe03d5e566263acac26d"
+    },
+    {
+      "id": "old2-issue-fe5e3f614cbf0972872e37e36a2bc04a",
+      "code": "实付与运费待分配",
+      "detail": "来源含非零应付邮费，未提供商品实付及运费的实际分配；原始订单实付仍保留在快照。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 106,
+      "order_id": "old2-order-2d32c5c8b408fe03d5e566263acac26d"
+    },
+    {
+      "id": "old2-issue-a11b6301f2c4c7d1cc8f9e43625019a5",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 92,
+      "order_id": "old2-order-4b41910c2d6b67e7c544b7734cd040c0"
+    },
+    {
+      "id": "old2-issue-b1813bc633fa5984dfe113cbd59781cc",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 83,
+      "order_id": "old2-order-819568c0e66707f62b481057e987226a"
+    },
+    {
+      "id": "old2-issue-2bbd30e4ec4eab7b5a705b672fa2e993",
+      "code": "多商品订单待分配",
+      "detail": "原始标题可拆分为2个商品，但没有逐商品数量、金额、运费、子订单及单位对应，相关字段留空。",
+      "file_id": "old2-file-5b6381961adebdba811c853b66838597",
+      "row_no": 90,
+      "order_id": "old2-order-e21bd4890bc6570e2dff5381becde56c"
+    },
+    {
+      "id": "old2-issue-477741b8990180076703f42b0cbdf1b7",
+      "code": "主体资料缺失",
+      "detail": "源文件没有公司主体及统一社会信用代码，4 个资金账户的主体ID留空；不生成虚构公司。",
+      "file_id": null,
+      "row_no": null,
+      "order_id": null
+    },
+    {
+      "id": "old2-issue-42cda72851685b9d3ac7acda2cc94a3d",
+      "code": "币种缺失",
+      "detail": "网银文件及销售订单文件未明确币种，网银账户和销售订单币种留空；支付宝、聚合结算和保证金按来源中的元/CNY记为CNY。",
+      "file_id": null,
+      "row_no": null,
+      "order_id": null
+    },
+    {
+      "id": "old2-issue-a51bdb7a6d886833e56c8c39d5fe63a7",
+      "code": "导出时间缺失",
+      "detail": "网银、聚合结算、保证金和销售订单未提供导出时间，留空；不使用文件修改时间代替。",
+      "file_id": null,
+      "row_no": null,
+      "order_id": null
+    },
+    {
+      "id": "old2-issue-ce18f4e047b9042a03e3cac92538efa1",
+      "code": "销售行字段缺失",
+      "detail": "产品版本、计量单位、原始单价、折扣和取消数量缺失时留空；客户身份、店铺标识和销售平台名称不根据收货地址或开票抬头推断。",
+      "file_id": null,
+      "row_no": null,
+      "order_id": null
+    },
+    {
+      "id": "old2-issue-8f47d3e2eb6e085074a1524f05b1c09b",
+      "code": "资金归属待核",
+      "detail": "仅导入逐笔收支，不确认收入、成本、用途、内部划转、重复事件或会计凭证；各账户流水合计不是经营收入。",
+      "file_id": null,
+      "row_no": null,
+      "order_id": null
+    }
+  ],
+  "timezone_normalization": "中国境内银行/平台导出中的无时区时间按Asia/Shanghai（UTC+08:00）规范化；原始字符串全部保留。",
+  "source_unchanged": true
+}

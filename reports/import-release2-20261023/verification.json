@@ -1,0 +1,272 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "rd.产品主数据表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "rd.产品版本表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "rd.物料主数据表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "rd.物料版本表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "rd.项目文件登记表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "rd.BOM登记表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "rd.BOM明细表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "production.工单草稿表 complete row count",
+      "passed": true
+    },
+    {
+      "check": "all 138 unrelated business tables unchanged",
+      "passed": true
+    },
+    {
+      "check": "prior financial and sales counts unchanged",
+      "passed": true
+    },
+    {
+      "check": "prior source records unchanged in count",
+      "passed": true
+    },
+    {
+      "check": "exactly two independent import batches",
+      "passed": true
+    },
+    {
+      "check": "release2 source registration preserved",
+      "passed": true
+    },
+    {
+      "check": "source SHA256 unchanged",
+      "passed": true
+    },
+    {
+      "check": "every original cell/formula/cache/style preserved",
+      "passed": true
+    },
+    {
+      "check": "all 6619 formula records retained without recalculation",
+      "passed": true
+    },
+    {
+      "check": "all 80 meaningful source rows typed",
+      "passed": true
+    },
+    {
+      "check": "17 unresolved BOM links remain NULL",
+      "passed": true
+    },
+    {
+      "check": "all BOM units/confirmation evidence stay NULL",
+      "passed": true
+    },
+    {
+      "check": "all BOM original row locations linked",
+      "passed": true
+    },
+    {
+      "check": "unverified BOM not labelled approved",
+      "passed": true
+    },
+    {
+      "check": "similar but different material names not merged",
+      "passed": true
+    },
+    {
+      "check": "missing product fields remain NULL",
+      "passed": true
+    },
+    {
+      "check": "missing material units and specifications remain NULL",
+      "passed": true
+    },
+    {
+      "check": "missing material categories stay blank",
+      "passed": true
+    },
+    {
+      "check": "no fictional version names or project links",
+      "passed": true
+    },
+    {
+      "check": "BOM versions and confirmation evidence absent",
+      "passed": true
+    },
+    {
+      "check": "workbook file not called approved",
+      "passed": true
+    },
+    {
+      "check": "two drafts retain missing time and owner",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in production.生产工单表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in production.完工记录表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in production.库存基准核定表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in production.库存变动表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in production.到货记录表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in production.采购订单表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in finance.会计凭证表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in finance.收入成本确认表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in rd.项目登记表",
+      "passed": true
+    },
+    {
+      "check": "no unsupported actual record in rd.计量单位表",
+      "passed": true
+    },
+    {
+      "check": "19 new nullable-field changes logged",
+      "passed": true
+    },
+    {
+      "check": "all seven workbook projections available in UI",
+      "passed": true
+    },
+    {
+      "check": "导入产品库存与报价 HTTP count",
+      "passed": true
+    },
+    {
+      "check": "导入物料库存与单价 HTTP count",
+      "passed": true
+    },
+    {
+      "check": "导入BOM与物料对应 HTTP count",
+      "passed": true
+    },
+    {
+      "check": "导入生产计划 HTTP count",
+      "passed": true
+    },
+    {
+      "check": "导入物料需求 HTTP count",
+      "passed": true
+    },
+    {
+      "check": "导入其他物品 HTTP count",
+      "passed": true
+    },
+    {
+      "check": "导入资产快照 HTTP count",
+      "passed": true
+    },
+    {
+      "check": "product quantities preserved as undated snapshots",
+      "passed": true
+    },
+    {
+      "check": "incomplete product costs remain NULL",
+      "passed": true
+    },
+    {
+      "check": "two complete BOM material-cost sums tie to source",
+      "passed": true
+    },
+    {
+      "check": "explicit zero inventory preserved",
+      "passed": true
+    },
+    {
+      "check": "source price precision preserved",
+      "passed": true
+    },
+    {
+      "check": "plans retain zero, 50 and 30 without actual production",
+      "passed": true
+    },
+    {
+      "check": "incomplete full material demand stays NULL",
+      "passed": true
+    },
+    {
+      "check": "no asset confirmation or date invented",
+      "passed": true
+    },
+    {
+      "check": "missing working capital not changed to zero",
+      "passed": true
+    },
+    {
+      "check": "prior funds still visible over HTTP",
+      "passed": true
+    },
+    {
+      "check": "prior orders still visible over HTTP",
+      "passed": true
+    },
+    {
+      "check": "formal frontend remains healthy",
+      "passed": true
+    },
+    {
+      "check": "structure and all validated constraints pass",
+      "passed": true
+    },
+    {
+      "check": "repeating release import is conflict-free, rolled back and changes no business rows",
+      "passed": true
+    },
+    {
+      "check": "department routing verified against actual formal/demo HTTP metadata",
+      "passed": true
+    }
+  ],
+  "source_check_count": 187,
+  "source_sha256": "0f08d35c5e4ee29de1db8918ec4fa5a55c5513ca12bd3a8af4b03ee455d66260",
+  "raw_rows": 1334,
+  "formula_records": 6619,
+  "missing_bom": {
+    "unmatched": 17,
+    "matched": 18,
+    "incomplete": 35,
+    "provenance": 35
+  },
+  "repeat_import_counts": {
+    "source_rows": 80,
+    "batches": 2,
+    "bom_rows": 35
+  }
+}

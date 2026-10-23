@@ -21,6 +21,7 @@ import sqlite3
 from data import Data, InvalidRequest, ROOT
 from entry import ManualEntry, EntryError, PREFERRED
 from imports import Imports, ImportError as FormatError, MAX_FILE
+from standard_templates import StandardTemplates
 
 WEB=Path(__file__).resolve().parent/'web'
 CATALOG={}
@@ -84,9 +85,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(405,encode({'error':'该接口不接受写入'}))
         if not hmac.compare_digest(self.headers.get('X-EasyERP-Token',''),WRITE_TOKEN):
             return self.send(403,encode({'error':'保存会话已失效，请刷新页面后重试。'}))
-        if parsed.path=='/api/import/execute':
-            return self.send(501,encode({'error':'业务数据导入尚未开放。当前仅支持格式检查和类型管理。','execution_available':False}))
-        is_file=parsed.path=='/api/import/check'
+        is_file=parsed.path in ('/api/import/check','/api/import/execute')
         if self.headers.get_content_type()!=('application/octet-stream' if is_file else 'application/json'):
             return self.send(415,encode({'error':'文件检查需要原始文件内容。' if is_file else '保存需要 JSON 格式'}))
         try:
@@ -100,7 +99,13 @@ class Handler(BaseHTTPRequestHandler):
         params={k:v[-1] for k,v in parse_qs(parsed.query,keep_blank_values=True).items()}
         if is_file:
             try:
-                result=import_service().check(params.get('filename',''),self.rfile.read(length),params.get('mode','live'))
+                service=import_service()
+                raw=self.rfile.read(length)
+                if parsed.path=='/api/import/execute':
+                    result=service.execute(params.get('check_id',''),params.get('filename',''),raw,params.get('mode','live'),
+                                           allow_incomplete=params.get('allow_incomplete'),merge=params.get('merge'))
+                else:
+                    result=service.check(params.get('filename',''),raw,params.get('mode','live'))
                 return self.send(200,encode(result))
             except FormatError as exc:
                 return self.send(exc.status,encode({'error':str(exc)}))
@@ -115,7 +120,7 @@ class Handler(BaseHTTPRequestHandler):
         params={k:v[-1] for k,v in parse_qs(parsed.query,keep_blank_values=True).items()}
         try:
             if parsed.path=='/api/import/settings':
-                result=import_service().configure(payload)
+                result=import_service().configure(payload,params.get('mode','live'))
                 result['token']=WRITE_TOKEN
                 return self.send(200,encode(result))
             result=ManualEntry(params).save(payload)
@@ -142,15 +147,22 @@ class Handler(BaseHTTPRequestHandler):
         parsed=urlsplit(self.path)
         path=parsed.path
         if not path.startswith('/api/'):
-            files={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/manual.js':'manual.js','/manual.css':'manual.css','/import.js':'import.js','/import.css':'import.css'}
+            files={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/manual.js':'manual.js','/manual.css':'manual.css','/import.js':'import.js','/import.css':'import.css','/templates.js':'templates.js','/templates.css':'templates.css','/preferences.js':'preferences.js','/preferences.css':'preferences.css','/dark.css':'dark.css','/locales.js':'locales.js','/i18n.js':'i18n.js'}
             if path not in files: return self.send(404,encode({'error':'页面不存在'}))
             file=WEB/files[path]
             return self.send(200,file.read_bytes(),mimetypes.guess_type(file.name)[0] or 'application/octet-stream')
         params={k:v[-1] for k,v in parse_qs(parsed.query,keep_blank_values=True).items()}
         try:
+            if path.startswith('/api/templates/'):
+                templates=StandardTemplates(params)
+                if path=='/api/templates/meta': return self.send(200,encode(templates.metadata()))
+                if path=='/api/templates/download':
+                    body,headers=templates.download(params.get('object',''))
+                    return self.send(200,body,'text/csv; charset=utf-8',headers)
+                return self.send(404,encode({'error':'模板接口不存在'}))
             if path.startswith('/api/import/'):
                 service=import_service()
-                if path=='/api/import/meta': return self.send(200,encode({**service.metadata(),'token':WRITE_TOKEN}))
+                if path=='/api/import/meta': return self.send(200,encode({**service.metadata(params.get('mode','live')),'token':WRITE_TOKEN}))
                 if path=='/api/import/history': return self.send(200,encode(service.history(params.get('mode','live'),params.get('offset',0))))
                 if path=='/api/import/events': return self.send(200,encode(service.events()))
                 return self.send(404,encode({'error':'导入接口不存在；业务数据导入尚未开放。'}))

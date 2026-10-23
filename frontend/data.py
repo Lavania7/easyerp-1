@@ -95,7 +95,7 @@ class Data:
           'subjects':'SELECT "主体ID","公司名称" FROM legal."公司主体档案表" ORDER BY "公司名称"',
           'people':'SELECT "人员ID","姓名" FROM finance."人员档案表" ORDER BY "姓名"',
           'units':'SELECT "单位ID","单位名称" FROM rd."计量单位表" ORDER BY "单位名称"',
-          'currencies':'''SELECT DISTINCT "币种" FROM (SELECT "币种" FROM finance."资金账户档案表" UNION SELECT "币种" FROM sales."销售订单登记表" UNION SELECT "币种" FROM finance."收入成本确认表") x ORDER BY 1'''
+          'currencies':'''SELECT DISTINCT "币种" FROM (SELECT "币种" FROM finance."资金账户档案表" UNION SELECT "币种" FROM sales."销售订单登记表" UNION SELECT "币种" FROM finance."收入成本确认表") x WHERE "币种" IS NOT NULL ORDER BY 1'''
         })
 
     def order_query(self):
@@ -104,9 +104,10 @@ class Data:
         mismatch AS (SELECT DISTINCT f."销售订单行ID" FROM production."发货履约与质量反馈表" f JOIN sales."销售订单行表" l USING ("销售订单行ID")
         WHERE f."单位ID"<>l."单位ID" AND {self.cutoff('f."发货时间"',True)})
         SELECT l.*,o."创建时间",o."币种",o."平台订单号",o."状态" AS "订单状态",c."客户名称",p."名称" AS "产品名称",pv."版本名称",u."单位名称",
-        s.qty AS "已登记发货数量",CASE WHEN m."销售订单行ID" IS NOT NULL OR l."产品版本ID" IS NULL THEN NULL
+        s.qty AS "已登记发货数量",CASE WHEN m."销售订单行ID" IS NOT NULL OR l."产品版本ID" IS NULL OR l."数量" IS NULL OR l."取消数量" IS NULL OR l."单位ID" IS NULL THEN NULL
         ELSE greatest(l."数量"-l."取消数量"-coalesce(s.qty,0),0) END AS "待履约数量",
         CASE WHEN m."销售订单行ID" IS NOT NULL THEN '单位待核' WHEN l."产品版本ID" IS NULL THEN '组合／版本待核'
+        WHEN l."单位ID" IS NULL THEN '单位待核' WHEN l."数量" IS NULL OR l."取消数量" IS NULL THEN '数量待核'
         WHEN o."状态" IN ('已取消','已关闭') OR l."状态"='已取消' THEN '已关闭／取消'
         WHEN l."状态"='已完成' THEN '已完成'
         WHEN l."数量"-l."取消数量"-coalesce(s.qty,0)<=0 THEN '登记发货已覆盖'
@@ -135,7 +136,7 @@ class Data:
     def fund_query(self):
         return '''SELECT f.*,a."账户名",a."主体ID",co."公司名称",q."已核定用途金额",q."已核定分摊金额",q."用途差额",q."分摊差额",q."已确认重复",q."已确认内部划转"
         FROM finance."账户流水标准化表" f JOIN finance."资金账户档案表" a USING ("账户ID")
-        JOIN legal."公司主体档案表" co USING ("主体ID") JOIN erp_ops."资金核对" q USING ("资金记录ID")'''
+        LEFT JOIN legal."公司主体档案表" co USING ("主体ID") JOIN erp_ops."资金核对" q USING ("资金记录ID")'''
 
     def filtered(self,kind):
         scope=self.p.get('scope','')
@@ -179,7 +180,7 @@ class Data:
         count(*) FILTER(WHERE r."确认收入" IS NOT NULL AND r."结转成本" IS NOT NULL) AS "配对记录数"
         FROM finance."收入成本确认表" r WHERE r."状态"='已核定' AND {self.period('r."所属月份"',months=True)} AND {self.money('r."币种"')} GROUP BY 1'''
         return self.bundle({
-          'sales':f'SELECT "币种",sum("商品实付") AS "金额",count(*) AS "订单行数" FROM ({oq}) x WHERE {self.period("x.\"创建时间\"",True)} AND {self.money("x.\"币种\"")} GROUP BY 1',
+          'sales':f'SELECT "币种",sum("商品实付") AS "金额",count(*) AS "订单行数",count(*) AS "记录数",count("商品实付") AS "实付已填数" FROM ({oq}) x WHERE {self.period("x.\"创建时间\"",True)} AND {self.money("x.\"币种\"")} GROUP BY 1',
           'recognition':rec,
           'cash':f'''SELECT "币种","收支方向",sum("金额") FILTER(WHERE NOT "已确认重复" AND NOT "已确认内部划转") AS "外部金额",
           sum("金额") FILTER(WHERE NOT "已确认重复" AND "已确认内部划转") AS "内部划转金额",count(*) FILTER(WHERE "已确认重复") AS "重复记录数"
@@ -236,6 +237,8 @@ class Data:
             return self.bundle({
               'basic':f'''SELECT o.*,c."客户名称",ch."渠道名称" FROM sales."销售订单登记表" o LEFT JOIN sales."客户档案表" c USING ("客户ID") JOIN sales."渠道档案表" ch USING ("渠道ID") WHERE "订单ID"={k}''',
               'lines':f'SELECT * FROM ({self.order_query()}) x WHERE "订单ID"={k}',
+              'snapshots':f'SELECT * FROM sales."订单导出快照表" WHERE "订单ID"={k} ORDER BY "订单快照ID"',
+              'source_files':f'SELECT DISTINCT f.* FROM sales."平台文件登记表" f JOIN sales."订单导出快照表" s USING ("平台文件ID") WHERE s."订单ID"={k}',
               'shipments':f'SELECT * FROM production."发货履约与质量反馈表" WHERE "订单ID"={k} ORDER BY "发货时间"',
               'workorders':f'SELECT * FROM production."工单订单对应表" WHERE "销售订单行ID" IN ({line})',
               'settlements':f'''SELECT a.*,f."币种",f."发生时间",f."资金记录ID",u."状态" AS "用途状态" FROM finance."结算分摊表" a JOIN finance."资金用途核定表" u USING ("用途核定ID") JOIN finance."账户流水标准化表" f USING ("资金记录ID") WHERE a."销售订单行ID" IN ({line})''',

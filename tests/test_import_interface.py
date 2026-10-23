@@ -57,7 +57,7 @@ sample_results=[]
 with tempfile.TemporaryDirectory(prefix='easyerp-import-test-') as temp:
  svc=Imports(temp,ROOT/'frontend/import_formats.json')
  check('six registered types / seven explicit profiles',len(svc.types)==6 and sum(len(t['profiles']) for t in svc.types.values())==7)
- check('execution unavailable in catalog',svc.metadata()['execution_available'] is False)
+ check('standard CSV execution available in catalog',svc.metadata()['execution_available'] is True)
  for item in manifest['files']:
   source=args.sample_root/item['path'];raw=source.read_bytes()
   check('sample source unchanged: '+item['path'],hashlib.sha256(raw).hexdigest()==item['sha256'])
@@ -124,7 +124,7 @@ with tempfile.TemporaryDirectory(prefix='easyerp-import-test-') as temp:
 
 token=''
 meta=call('meta');token=meta['token']
-check('HTTP explicit interface-only contract',meta['execution_available'] is False)
+check('HTTP standard execution contract',meta['execution_available'] is True and any(t.get('immutable') and t['id']=='standard-master' for t in meta['types']))
 for item in manifest['files']:
  source=args.sample_root/item['path'];r=call('check',raw=source.read_bytes(),params={'filename':source.name})
  check('HTTP sample result '+item['path'],(r['match'] or {}).get('type_id')==item['type_id'] and not r['can_execute'])
@@ -135,7 +135,9 @@ call('check',raw=sales_raw,params={'filename':sales.name},headers={'Content-Type
 call('check',raw=sales_raw,params={'filename':sales.name,'mode':'invalid'},expected=400)
 call('settings',payload={'type_id':'new-format','enabled':True,'version':0},expected=404)
 call('settings',payload={'type_id':'sales-orders','enabled':'yes','version':0},expected=400)
-call('execute',payload={},expected=501)
+call('execute',payload={},expected=415)
+checked_sales=call('check',raw=sales_raw,params={'filename':sales.name})
+call('execute',raw=sales_raw,params={'filename':sales.name,'check_id':checked_sales['id']},expected=415)
 call('settings',payload={},method='DELETE',expected=405)
 call('history',params={'offset':-1},expected=400)
 meta=call('meta');row=next(t for t in meta['types'] if t['id']=='sales-orders')

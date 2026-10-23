@@ -39,8 +39,8 @@
     context=null;
     const schema=schemaFor[group];
     const favorites=catalog.preferred[group]||[];
-    const rows=catalog.objects.filter(o=>o.schema===schema && (showAll||favorites.includes(o.name)) && (!filter||o.name.toLowerCase().includes(filter.toLowerCase())));
-    rows.sort((a,b)=>{if(showAll)return a.name.localeCompare(b.name,'zh-CN');return favorites.indexOf(a.name)-favorites.indexOf(b.name);});
+    const rows=catalog.objects.filter(o=>o.schema===schema && (showAll||favorites.includes(o.name)) && (!filter||[o.name,name(o.key),window.ERPUI?.t(o.name),window.ERPUI?.t(name(o.key))].join(' ').toLocaleLowerCase().includes(filter.toLocaleLowerCase())));
+    rows.sort((a,b)=>{if(showAll)return (window.ERPUI?.t(a.name)||a.name).localeCompare(window.ERPUI?.t(b.name)||b.name,window.ERPUI?.locale()||'zh-CN');return favorites.indexOf(a.name)-favorites.indexOf(b.name);});
     shell('手工录入','选择业务类型，填写后保存到当前数据源。',`<div class="entry-tabs">${Object.entries(titles).map(([key,label])=>`<button type="button" data-entry-group="${key}" class="${group===key?'active':''}">${label}</button>`).join('')}</div><div class="entry-chooser-tools"><input id="entry-chooser-search" type="search" placeholder="搜索业务或主录名称" aria-label="搜索录入业务" value="${h(filter)}"><select id="entry-chooser-scope" aria-label="显示范围"><option value="common" ${!showAll?'selected':''}>常用业务</option><option value="all" ${showAll?'selected':''}>全部主录</option></select></div><div class="entry-cards">${rows.map(o=>`<button type="button" class="entry-card" data-entry-object="${h(o.key)}"><span>↗</span><strong>${h(name(o.key))}</strong><small>${o.children?h(o.children.label)+' · 一次保存':'新建记录 · 支持关联资料选择'}</small></button>`).join('')||'<p class="muted">没有匹配的录入业务。</p>'}</div><p class="entry-list-note">必填项标有 *。未掌握的可选信息可留空；数量、金额为空时不会按 0 保存。保存后可从本页和 SQLview 查询同一条记录。</p>`);
   }
   function localTimestamp(value) {

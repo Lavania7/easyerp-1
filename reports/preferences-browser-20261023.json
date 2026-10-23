@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "browser_csv_import_rows": 2,
+  "nullable_cells_preserved": true,
+  "formal_data_unchanged": true,
+  "demo_restored": true,
+  "theme_modes": [
+    "light",
+    "dark",
+    "system"
+  ],
+  "languages": [
+    "zh",
+    "en",
+    "de"
+  ],
+  "preferences_survive_reload": true,
+  "localized_filter_keeps_original_value": true,
+  "standard_type_has_no_disable_button": true
+}

@@ -1,0 +1,223 @@
+{
+  "status": "PASS",
+  "application_url": "http://127.0.0.1:8092/",
+  "standard_csv_checks": 195,
+  "template_checks": [
+    {
+      "check": "/api/templates/meta returns 200 in live",
+      "passed": true
+    },
+    {
+      "check": "live covers exactly all SQL business tables",
+      "passed": true
+    },
+    {
+      "check": "live has six department counts",
+      "passed": true
+    },
+    {
+      "check": "live correctly identifies data source and format",
+      "passed": true
+    },
+    {
+      "check": "live every CSV has exact SQL header order and no business/sample rows",
+      "passed": true
+    },
+    {
+      "check": "live nullable fields follow actual SQL",
+      "passed": true
+    },
+    {
+      "check": "live field constraints provided",
+      "passed": true
+    },
+    {
+      "check": "live HEAD has accurate headers and no body",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template ''",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template 'erp_ops.source_import_file'",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template 'pg_catalog.pg_class'",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template 'sales.订单与履约交付表'",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template \"sales.x';DROP TABLE x;--\"",
+      "passed": true
+    },
+    {
+      "check": "live all business data unchanged",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta returns 200 in demo",
+      "passed": true
+    },
+    {
+      "check": "demo covers exactly all SQL business tables",
+      "passed": true
+    },
+    {
+      "check": "demo has six department counts",
+      "passed": true
+    },
+    {
+      "check": "demo correctly identifies data source and format",
+      "passed": true
+    },
+    {
+      "check": "demo every CSV has exact SQL header order and no business/sample rows",
+      "passed": true
+    },
+    {
+      "check": "demo nullable fields follow actual SQL",
+      "passed": true
+    },
+    {
+      "check": "demo field constraints provided",
+      "passed": true
+    },
+    {
+      "check": "demo HEAD has accurate headers and no body",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template ''",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template 'erp_ops.source_import_file'",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template 'pg_catalog.pg_class'",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template 'sales.订单与履约交付表'",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template \"sales.x';DROP TABLE x;--\"",
+      "passed": true
+    },
+    {
+      "check": "demo all business data unchanged",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta rejects invalid source",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta is read-only",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta rejects cross-origin access",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/download rejects invalid source",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/download is read-only",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/download rejects cross-origin access",
+      "passed": true
+    },
+    {
+      "check": "/ served by frontend",
+      "passed": true
+    },
+    {
+      "check": "download button and modules wired",
+      "passed": true
+    },
+    {
+      "check": "/templates.js served by frontend",
+      "passed": true
+    },
+    {
+      "check": "/templates.css served by frontend",
+      "passed": true
+    }
+  ],
+  "legacy_checks": 239,
+  "browser_checks": [
+    "Cancel gap dialog writes no business row",
+    "Confirm gap imports missing required department as NULL",
+    "Yes latest overwrites nonblank while incoming blanks preserve",
+    "No latest preserves existing nonblank and fills original blanks",
+    "Browser demo fixture cleaned and formal/demo business hashes unchanged",
+    "Chinese, English and German confirmation dialogs verified",
+    "Light/system and dark dialog layouts verified",
+    "No browser console errors; Chinese/system/live restored"
+  ],
+  "business_data_unchanged": true,
+  "demo_cleaned": true,
+  "database_support": {
+    "live": {
+      "installed": true,
+      "app_allowed": true,
+      "reader_allowed": false,
+      "field_changes": 0,
+      "presence_changes": 0
+    },
+    "demo": {
+      "installed": true,
+      "app_allowed": true,
+      "reader_allowed": false,
+      "field_changes": 0,
+      "presence_changes": 0
+    }
+  },
+  "database_backups": [
+    {
+      "path": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02-20261023T022637922006Z.dump",
+      "sha256": "0c3f61416270a592bbe13f0414ca7f02a24b732862bff6471e83a4c8163ef2b6"
+    },
+    {
+      "path": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02_ui_demo-20261023T022638387960Z.dump",
+      "sha256": "1ee7d74a78dd84665ea6d85949acbfdc667c37386c62a3301063ad66302cd1ee"
+    }
+  ],
+  "source_backup": "D:\\projx\\demo\\easyerp-1\\backups\\csv-confirm-merge-20261023-042605",
+  "installed_files": {
+    "frontend/standard_import.py": "6c37cb37e21c1ec8a3991092b369ee8e2afbb079236f21da0483d7ccc02b74c8",
+    "frontend/imports.py": "17a5e71e9b00b8de16b297b1fc0d3f1fc67bb44d1d09124ceae55a36077efa02",
+    "frontend/server.py": "1db037cbf776404f33c9ab8c0a70e81c22e5b51db61e54fcb7c7a2f84c91436e",
+    "frontend/web/import.js": "84987f6c6be805d91d9df9cd0182f88201b186ef06ac9089c09cb2b282a3c0ef",
+    "frontend/web/preferences.css": "50e8fa3de5544438888f410ceacdcc595be1eb8f90876497ed2d3ef404bf49ff",
+    "frontend/web/dark.css": "13a5eb05d4941df5f3ba452329cc600dc4aabf43e4ba8e45cb32322805b1bbf2",
+    "frontend/web/locales.js": "6825b08d67c931a412789a73bff9aa9355aea6b50d92dc4f1104c81391f79db5",
+    "frontend/web/templates.js": "6f7ed08f21c714258608e5c8c01638e99da724a5cd3f508f16d6655c33ad3b45",
+    "frontend/csv_import_schema.sql": "ffcf03d88239929264204bb8dd44dda20c067d0fb1cfe9642394bb35e3a6d4be",
+    "bin/enable-csv-import.py": "73910b993121edd25936c009a97aa976d395ec34cc3a49d27405db8ebee7e772",
+    "frontend/PREFERENCES_AND_STANDARD_IMPORT.md": "5ec2e0d1dcc1c5b1d04f9353b8f3c39f37a5115cc05981719fe32e93ad251ae6",
+    "frontend/IMPORT_INTERFACE.md": "d4fd5be8e4d1908217b1ab52991244e2489f36f1efec5e8005fe76aa4a56cabe",
+    "frontend/README.md": "627dd55da6d8be5f6b5f2878ccccc620e8edde20936c1e3938ef881a8c3f1e91",
+    "frontend/STANDARD_TEMPLATES.md": "de5b11c46688ed9f491f5a159f35157f8ec9723212866ca39967d24b5ebe6793",
+    "tests/test_standard_import.py": "441d54b1dc1da6cfc2de474b7e70fb183915c60c7cb1c689c856f3cdaf13bddf"
+  },
+  "screenshots": [
+    "D:\\projx\\demo\\easyerp-1\\reports\\csv-confirm-merge-20261023\\english-dark.jpg",
+    "D:\\projx\\demo\\easyerp-1\\reports\\csv-confirm-merge-20261023\\gap-confirmation.jpg",
+    "D:\\projx\\demo\\easyerp-1\\reports\\csv-confirm-merge-20261023\\german-dark.jpg",
+    "D:\\projx\\demo\\easyerp-1\\reports\\csv-confirm-merge-20261023\\merge-confirmation.jpg",
+    "D:\\projx\\demo\\easyerp-1\\reports\\csv-confirm-merge-20261023\\result.jpg"
+  ]
+}

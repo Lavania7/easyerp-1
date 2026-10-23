@@ -1,0 +1,586 @@
+{
+  "finance|交付明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|交付明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|交付明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|交付明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|销售订单登记表": {
+    "rows": 183,
+    "signature": "bd1aba8f9e92bca49d72137e462d4278"
+  },
+  "rd|项目文件登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|库存变动表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|交付明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|交付明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|资金用途核定表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|设计变更与验证表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|BOM明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|往来未结明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|质量检验表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|销售订单行表": {
+    "rows": 192,
+    "signature": "31b8892c57120544fc9fc13c56416ca3"
+  },
+  "finance|费用归属表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|结算分摊表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|委外物料流转表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|数学模型库": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|证据对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|收入成本确认表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|订单导出快照表": {
+    "rows": 186,
+    "signature": "37957bc7c9af70d7c9ea56e8b7ae8783"
+  },
+  "sales|商品对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|库存基准核定表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|会计分录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|售后事件表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|生产工时表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|库存盘点表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|数据集输入来源表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|报废记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|工时计价表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|生产工单表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|整改跟踪表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|合规自查表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|期初及结账核实表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|意见与规划总表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|客户需求表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|产品规格表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|公司主体档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|验收记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|生产领退料表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|库存余额与差异表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|发货记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|发票登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|内部划转对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|客户档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|采购订单行表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|合同审阅表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|资产台账": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|报表项目映射表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|报表批次表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|会计政策表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|会计凭证表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|分析报告登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|销售期间覆盖表": {
+    "rows": 3,
+    "signature": "e0087e02e9eb3e007f7816b35435024f"
+  },
+  "rd|单位换算表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|会计科目表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|交付记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|交付记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|交付记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|交付记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|资金账户档案表": {
+    "rows": 4,
+    "signature": "4f5ba0575fb40ff8ce57fcadbcf5c2c8"
+  },
+  "finance|交付记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|交付记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|研发投入归属表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|资产负债表来源明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|纳税申报记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|现金流量表来源明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|利润表来源明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|指标计算表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|整改处理表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|意见执行表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|整改处理表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|意见执行表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|整改处理表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|意见执行表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|完工记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|法规登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|法律文件登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|整改处理表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|意见执行表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|整改处理表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|意见执行表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|整改处理表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|意见执行表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|发布批次表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|重复记录对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|指标定义表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|税款缴退明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|研发工时表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|采购归属对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|工单订单对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|账户期间余额表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|平台文件登记表": {
+    "rows": 3,
+    "signature": "15d3558b0c48b8fdb60d185d52a319c6"
+  },
+  "sales|客户分类统计结果表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|客户分类统计批次表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|资产负债表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|意见复盘表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|销售动作表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|项目登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|发票分摊表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|意见采纳表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|意见采纳表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|产品版本表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|意见采纳表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|意见采纳表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|履约提示表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|意见采纳表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|意见采纳表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|研发事项来源表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|物料主数据表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|产品主数据表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|设备档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|仓库档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "legal|适用规则表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|到货记录表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|账户核对表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|现金流量表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|利润表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|数据引用登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|组合商品明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|采购订单表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|库存结存来源明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|流水文件登记表": {
+    "rows": 23,
+    "signature": "8b0a5b087c56d96ca940d224181306ea"
+  },
+  "production|工单草稿表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|销售合同表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|物料版本表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|采购合同表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|渠道档案表": {
+    "rows": 1,
+    "signature": "52b37fe460d5c9b332a3d750c4bf0a56"
+  },
+  "rd|计量单位表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|BOM登记表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|供应商档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|订单组合明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|组合商品表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|人员档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|项目草稿表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "sales|合同订单对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "rd|发布文件明细表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|库位档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "production|保管方档案表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|报告模型对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|报告数据对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|报告指标对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "analysis|意见指标对应表": {
+    "rows": 0,
+    "signature": "d751713988987e9331980363e24189ce"
+  },
+  "finance|流水来源明细表": {
+    "rows": 1698,
+    "signature": "132cacdf0ae18d9dde86914f1bd897a1"
+  },
+  "finance|资金流水表": {
+    "rows": 1698,
+    "signature": "453e72ced51a02aafbe56170593fdbfe"
+  }
+}

@@ -1,0 +1,1915 @@
+{
+  "checks": [
+    {
+      "check": "/api/templates/meta returns 200 in live",
+      "passed": true
+    },
+    {
+      "check": "live covers exactly all SQL business tables",
+      "passed": true
+    },
+    {
+      "check": "live has six department counts",
+      "passed": true
+    },
+    {
+      "check": "live correctly identifies data source and format",
+      "passed": true
+    },
+    {
+      "check": "live every CSV has exact SQL header order and no business/sample rows",
+      "passed": true
+    },
+    {
+      "check": "live nullable fields follow actual SQL",
+      "passed": true
+    },
+    {
+      "check": "live field constraints provided",
+      "passed": true
+    },
+    {
+      "check": "live HEAD has accurate headers and no body",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template ''",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template 'erp_ops.source_import_file'",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template 'pg_catalog.pg_class'",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template 'sales.订单与履约交付表'",
+      "passed": true
+    },
+    {
+      "check": "live rejects non-table template \"sales.x';DROP TABLE x;--\"",
+      "passed": true
+    },
+    {
+      "check": "live all business data unchanged",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta returns 200 in demo",
+      "passed": true
+    },
+    {
+      "check": "demo covers exactly all SQL business tables",
+      "passed": true
+    },
+    {
+      "check": "demo has six department counts",
+      "passed": true
+    },
+    {
+      "check": "demo correctly identifies data source and format",
+      "passed": true
+    },
+    {
+      "check": "demo every CSV has exact SQL header order and no business/sample rows",
+      "passed": true
+    },
+    {
+      "check": "demo nullable fields follow actual SQL",
+      "passed": true
+    },
+    {
+      "check": "demo field constraints provided",
+      "passed": true
+    },
+    {
+      "check": "demo HEAD has accurate headers and no body",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template ''",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template 'erp_ops.source_import_file'",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template 'pg_catalog.pg_class'",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template 'sales.订单与履约交付表'",
+      "passed": true
+    },
+    {
+      "check": "demo rejects non-table template \"sales.x';DROP TABLE x;--\"",
+      "passed": true
+    },
+    {
+      "check": "demo all business data unchanged",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta rejects invalid source",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta is read-only",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/meta rejects cross-origin access",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/download rejects invalid source",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/download is read-only",
+      "passed": true
+    },
+    {
+      "check": "/api/templates/download rejects cross-origin access",
+      "passed": true
+    },
+    {
+      "check": "/ served by frontend",
+      "passed": true
+    },
+    {
+      "check": "download button and modules wired",
+      "passed": true
+    },
+    {
+      "check": "/templates.js served by frontend",
+      "passed": true
+    },
+    {
+      "check": "/templates.css served by frontend",
+      "passed": true
+    }
+  ],
+  "downloads": {
+    "live": [
+      {
+        "object": "sales.交付明细表",
+        "columns": 23,
+        "bytes": 559,
+        "sha256": "b46a583ac29f4d72aa0d1452b9bff221b6f0c179cacb41109a77342e49971da2"
+      },
+      {
+        "object": "sales.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "sales.合同订单对应表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "1704d26fbf4c9dd414f96355bdd3ba809a5e943a2381b01f2e05bb249d76f1e1"
+      },
+      {
+        "object": "sales.售后事件表",
+        "columns": 11,
+        "bytes": 149,
+        "sha256": "5823a869bbcf14b187b82faf33e69fd2ba189e61f32c5cb04e0d9fbd4eff2718"
+      },
+      {
+        "object": "sales.商品对应表",
+        "columns": 12,
+        "bytes": 149,
+        "sha256": "592ccf9cbb03f34f71f34eefde40d9c3e5f599098cf0763f34f2f47865a00e0f"
+      },
+      {
+        "object": "sales.客户分类统计批次表",
+        "columns": 8,
+        "bytes": 112,
+        "sha256": "50f8ef26c2f29d69c11bdbbf000774f1993e71b22611574c837bac2bf5d0f77a"
+      },
+      {
+        "object": "sales.客户分类统计结果表",
+        "columns": 9,
+        "bytes": 122,
+        "sha256": "47ae5e798aaaca26e56d4875feee955f97423e988b0cb961f247493109619681"
+      },
+      {
+        "object": "sales.客户档案表",
+        "columns": 8,
+        "bytes": 110,
+        "sha256": "cf6c6dda1a8bc1cbf8f71822670bd6a2663bc3040d11014844359fde72f1bfaa"
+      },
+      {
+        "object": "sales.客户需求表",
+        "columns": 9,
+        "bytes": 105,
+        "sha256": "64fdd22930b82c9157ec390770fb3659a7f022cf5a02e22e273625fae5c44691"
+      },
+      {
+        "object": "sales.平台文件登记表",
+        "columns": 8,
+        "bytes": 121,
+        "sha256": "daac2954e6348146eb726efb7bef89d2d162bebf1948c7b98e5a651b5a7b720e"
+      },
+      {
+        "object": "sales.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "sales.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "sales.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "sales.渠道档案表",
+        "columns": 4,
+        "bytes": 52,
+        "sha256": "951544de1241a9114f63623e32a678de55b289dedcfae8baf9bb258770cbf7ae"
+      },
+      {
+        "object": "sales.组合商品明细表",
+        "columns": 5,
+        "bytes": 71,
+        "sha256": "e9e4c7990631e1dfcd77d8bd48f47bb437bcc96a85410e77c2bc522c56a70da7"
+      },
+      {
+        "object": "sales.组合商品表",
+        "columns": 5,
+        "bytes": 71,
+        "sha256": "d47f5bf7b4355b8bd4a03ef49d175139643fc9ba71573d15f3381301733636a2"
+      },
+      {
+        "object": "sales.订单导出快照表",
+        "columns": 11,
+        "bytes": 165,
+        "sha256": "c929a9b756341c50af37dd333f9afffa39fcfd34f0b05534a0b2bbc2a4f84d02"
+      },
+      {
+        "object": "sales.订单组合明细表",
+        "columns": 4,
+        "bytes": 74,
+        "sha256": "780178db8ca83005a3f205c41cb1165864f52ade5b3a64a3b65567e3d57dfb9a"
+      },
+      {
+        "object": "sales.销售动作表",
+        "columns": 6,
+        "bytes": 78,
+        "sha256": "03046e12535ad44db42dab117313d5b3f19d10e4091df2dde7e9615d11fdab6c"
+      },
+      {
+        "object": "sales.销售合同表",
+        "columns": 5,
+        "bytes": 67,
+        "sha256": "3f4a20a9b5f6249d6b73a970175a8436979437be94dd44453016ee891e4d1b84"
+      },
+      {
+        "object": "sales.销售期间覆盖表",
+        "columns": 7,
+        "bytes": 119,
+        "sha256": "708e063369229cb2e6134c5e22e198795c71384b02d842a465d010b82a0dc9e4"
+      },
+      {
+        "object": "sales.销售订单登记表",
+        "columns": 8,
+        "bytes": 87,
+        "sha256": "4e8b9a129c63a27c6c256cf22dd54c0710a68e9cb743c3cfc397f0e6408132e4"
+      },
+      {
+        "object": "sales.销售订单行表",
+        "columns": 18,
+        "bytes": 218,
+        "sha256": "bb312536c8987351621d883362dece4738920427ac6da29116e26be8e1794333"
+      },
+      {
+        "object": "production.交付明细表",
+        "columns": 31,
+        "bytes": 723,
+        "sha256": "ab78cd6afd7b4ef5686dea8359b2d5a42fad615bfbdc4a191be9a16770c3c797"
+      },
+      {
+        "object": "production.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "production.仓库档案表",
+        "columns": 5,
+        "bytes": 54,
+        "sha256": "6f260ee8f266966143180646be9eba4d5836af5908d02744f654dd6b37b2ca06"
+      },
+      {
+        "object": "production.供应商档案表",
+        "columns": 4,
+        "bytes": 55,
+        "sha256": "b7024003ac5a32e98aae947de674ee7a8cb76678d33c173072de473846526114"
+      },
+      {
+        "object": "production.保管方档案表",
+        "columns": 3,
+        "bytes": 32,
+        "sha256": "79d1c05d9d377c35a912aba0075cabcfcda1f2a3e13b1310849bff73f0219f0a"
+      },
+      {
+        "object": "production.到货记录表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "c100efca41d1f8d3bacc59ecc9544f431d12078a4707da773d68145c73b1bb6f"
+      },
+      {
+        "object": "production.发货记录表",
+        "columns": 9,
+        "bytes": 122,
+        "sha256": "ed2de238a6281fc32d96b76e752d2e7353d43b29245424dc77ee0ba299b29836"
+      },
+      {
+        "object": "production.委外物料流转表",
+        "columns": 12,
+        "bytes": 154,
+        "sha256": "a9f50269f3dd8561e2cfd17b2f8776859a40972b24c5f74a7a71a7604d1c878a"
+      },
+      {
+        "object": "production.完工记录表",
+        "columns": 8,
+        "bytes": 87,
+        "sha256": "51b2dd83e315c6bf1aa55837bba09949355b101a716267ae36787272eed8ad65"
+      },
+      {
+        "object": "production.工单草稿表",
+        "columns": 5,
+        "bytes": 64,
+        "sha256": "0869e250dce2c46f9ed68bd03de0e19c7a6861c5640c8465a3395cce2266ad78"
+      },
+      {
+        "object": "production.工单订单对应表",
+        "columns": 6,
+        "bytes": 96,
+        "sha256": "3f7bfffbc4c716d6cc978fc5f65f659222e6e6708fda798adc9ca3c466faa061"
+      },
+      {
+        "object": "production.库位档案表",
+        "columns": 3,
+        "bytes": 35,
+        "sha256": "b4736501c46ab3d8e363a866ca14ab85f86724df4fef642505c90d0632985603"
+      },
+      {
+        "object": "production.库存余额与差异表",
+        "columns": 12,
+        "bytes": 154,
+        "sha256": "f753621d0a2240df8a68c1dbaf6cebab43f38cefdcf21fe2966ce8bac6147948"
+      },
+      {
+        "object": "production.库存变动表",
+        "columns": 18,
+        "bytes": 246,
+        "sha256": "b40f07abb6b6db470c28054830da20a05b6a35787e1eb7c881af6bcc02c8f918"
+      },
+      {
+        "object": "production.库存基准核定表",
+        "columns": 12,
+        "bytes": 144,
+        "sha256": "d49c2bf0805c2b7963697431816a5c4558ba6ba3991e31c61106733ab16b86da"
+      },
+      {
+        "object": "production.库存盘点表",
+        "columns": 11,
+        "bytes": 131,
+        "sha256": "971c3da6ae5d014439b837d11a6a79c6c119abc97020aae0b871cc9e4982fd1c"
+      },
+      {
+        "object": "production.库存结存来源明细表",
+        "columns": 5,
+        "bytes": 77,
+        "sha256": "d60c83833d05c16c9068cea31da6d3a6d92034ca3351fe9aec6cf60887b587a9"
+      },
+      {
+        "object": "production.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "production.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "production.报废记录表",
+        "columns": 10,
+        "bytes": 113,
+        "sha256": "405253220778fd1d6eb74a1bf078aa4283c0698b8b55424f38c61cce7abd5b20"
+      },
+      {
+        "object": "production.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "production.生产工单表",
+        "columns": 11,
+        "bytes": 149,
+        "sha256": "20648b232988f31ea1996221e875b3dfd6ce2bb9a130a7e37f1cdbd31ec60c9e"
+      },
+      {
+        "object": "production.生产工时表",
+        "columns": 12,
+        "bytes": 129,
+        "sha256": "b0a66ec49211fd670eba421dcb20537ef50d85ae952e5d7ec36f4b421fcbbd3c"
+      },
+      {
+        "object": "production.生产领退料表",
+        "columns": 9,
+        "bytes": 97,
+        "sha256": "9fe4b9d5afc80d636ef2a925fd56682d4b24ed07b1b3b0e704c86612254f24a0"
+      },
+      {
+        "object": "production.设备档案表",
+        "columns": 5,
+        "bytes": 59,
+        "sha256": "19072319d12690ca8d7de0835468b246dbfcf8c4557abab024d37a4791eadd21"
+      },
+      {
+        "object": "production.质量检验表",
+        "columns": 14,
+        "bytes": 168,
+        "sha256": "aa901aca0b16ef7067b4b4724542024f42b022977d05964600bdfea06a8d11b8"
+      },
+      {
+        "object": "production.采购合同表",
+        "columns": 5,
+        "bytes": 70,
+        "sha256": "d6afc0deccb7f9d681df5420b4f9c41577243e695aabb90fcca2127e921ac036"
+      },
+      {
+        "object": "production.采购归属对应表",
+        "columns": 6,
+        "bytes": 75,
+        "sha256": "82a7de31b9317eac804a46206c8f2dabe9f67276b7ad2a49907d717f31a939d3"
+      },
+      {
+        "object": "production.采购订单行表",
+        "columns": 10,
+        "bytes": 120,
+        "sha256": "1c4f7e505d3b0821b8b3613c9bbadaf18c36a3557b95f6471d68d66ef7947555"
+      },
+      {
+        "object": "production.采购订单表",
+        "columns": 6,
+        "bytes": 70,
+        "sha256": "3dec1788d5d6094179113f5c4a0adcbb6707ec3203cf0ff4f786496cdb260fe0"
+      },
+      {
+        "object": "production.验收记录表",
+        "columns": 10,
+        "bytes": 121,
+        "sha256": "a3501b771e583dbf6c5a18cbfcf48726e93d8c07439055e7c49e5040d01f0423"
+      },
+      {
+        "object": "rd.BOM明细表",
+        "columns": 15,
+        "bytes": 194,
+        "sha256": "073999ae7c59b481213d537b6705adfdf1b4913bef4329a8f54ffb494dccf362"
+      },
+      {
+        "object": "rd.BOM登记表",
+        "columns": 4,
+        "bytes": 54,
+        "sha256": "08ee47bfb6ba97dee73f6a77c2c41cc8949054db3d2bb1a027f212a558e14be9"
+      },
+      {
+        "object": "rd.交付明细表",
+        "columns": 23,
+        "bytes": 523,
+        "sha256": "d80b47a87d9b0d6a6daf7704d17cdf4f40a5b83e7a5f757224daeea016d518be"
+      },
+      {
+        "object": "rd.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "rd.产品主数据表",
+        "columns": 5,
+        "bytes": 38,
+        "sha256": "39742bcdf2be9ba22db42b2016ad7d8ea508fee8429c1bf5629526f6eb703e25"
+      },
+      {
+        "object": "rd.产品版本表",
+        "columns": 6,
+        "bytes": 71,
+        "sha256": "c95f005b85e2a8b0fafd223aeecb4385eca1d55d51c6021665aa342a18ca5a88"
+      },
+      {
+        "object": "rd.产品规格表",
+        "columns": 9,
+        "bytes": 118,
+        "sha256": "5409d879dad5ff1fb487f1a5bbfdca0d6e991650087e70747929da1dec589639"
+      },
+      {
+        "object": "rd.单位换算表",
+        "columns": 9,
+        "bytes": 119,
+        "sha256": "651bb0d2304e72b48babf4edcfd75bd3632875d152b5f3c275f195ea64713a23"
+      },
+      {
+        "object": "rd.发布批次表",
+        "columns": 7,
+        "bytes": 92,
+        "sha256": "a78c437ba048de9915d1b95a9bba57791c674f5c63f48a790b814fd4a84f950a"
+      },
+      {
+        "object": "rd.发布文件明细表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "e06ddedd931bf9865471a33db3a0cbfc1567a13eddb6875a4287204f50ece273"
+      },
+      {
+        "object": "rd.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "rd.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "rd.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "rd.物料主数据表",
+        "columns": 5,
+        "bytes": 38,
+        "sha256": "a5791fb9cae8fd458d06f3e4e78d665f6c194eedce11923252da8bbf065e88c1"
+      },
+      {
+        "object": "rd.物料版本表",
+        "columns": 5,
+        "bytes": 62,
+        "sha256": "beffc6489ec58da707ed28670705f47fe332de9de58e4bf3326998f818482297"
+      },
+      {
+        "object": "rd.研发事项来源表",
+        "columns": 5,
+        "bytes": 67,
+        "sha256": "7945be346618e47d4aa03f6c393f81f03968a6db1b6654c9df42305ab8bc23f3"
+      },
+      {
+        "object": "rd.研发工时表",
+        "columns": 7,
+        "bytes": 77,
+        "sha256": "a86b48d04ead1849c1854182ba611ef2279318271d88cbd738ab9e9b7511a1ee"
+      },
+      {
+        "object": "rd.研发投入归属表",
+        "columns": 7,
+        "bytes": 84,
+        "sha256": "76bb541c19afa4bc1a8f47be1917683c032741296b028629ea34cc548415aa34"
+      },
+      {
+        "object": "rd.计量单位表",
+        "columns": 4,
+        "bytes": 52,
+        "sha256": "9e26c1b3b5693d6042d00fc5163d04f431e528b09dce3a0e774cd92c87df2503"
+      },
+      {
+        "object": "rd.设计变更与验证表",
+        "columns": 14,
+        "bytes": 166,
+        "sha256": "336c08d480d97615fc241f23ed090e1a2afdbe5a2fd2238590ddc3a92d4d60dd"
+      },
+      {
+        "object": "rd.项目文件登记表",
+        "columns": 11,
+        "bytes": 120,
+        "sha256": "6f41d29f34c40548999255bae541b58a264eebda0d131aff158c22b412c09840"
+      },
+      {
+        "object": "rd.项目登记表",
+        "columns": 7,
+        "bytes": 92,
+        "sha256": "d6d9b4fbb46a3064de04ee6c8ef8534651c14040efedd0e5d923bc088401be57"
+      },
+      {
+        "object": "rd.项目草稿表",
+        "columns": 4,
+        "bytes": 52,
+        "sha256": "1922d7e7a82b0f50b59c4f87cc1b1c5b82693bbe6d0102bd258bfee3f3987b2b"
+      },
+      {
+        "object": "finance.交付明细表",
+        "columns": 38,
+        "bytes": 931,
+        "sha256": "c206912b0f14e57fe4a339d16286ba879a4f3e1cf234d05164843ebee7837c8a"
+      },
+      {
+        "object": "finance.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "finance.人员档案表",
+        "columns": 5,
+        "bytes": 65,
+        "sha256": "4c78e4a8e2fa9553f5ab838f172f3dff0e0f6ebdf748359f29e6f10e224f3750"
+      },
+      {
+        "object": "finance.会计凭证表",
+        "columns": 9,
+        "bytes": 93,
+        "sha256": "86c6314599c30c27a7444cae78e6068ac122bf456d6491169ec749b77af9510a"
+      },
+      {
+        "object": "finance.会计分录表",
+        "columns": 12,
+        "bytes": 122,
+        "sha256": "0103883644148a0e91789b3306134cccbcb2694bcae59f4c4c48c105fde32fb0"
+      },
+      {
+        "object": "finance.会计政策表",
+        "columns": 9,
+        "bytes": 129,
+        "sha256": "b743bc84cbbe8e8520f834b0cad223caae3700bb9898ddfa24d1b12d2df6dedb"
+      },
+      {
+        "object": "finance.会计科目表",
+        "columns": 7,
+        "bytes": 89,
+        "sha256": "0e77a8fb3001bb0f0ec4f76a2bd66051c62efd3f436cb632ff8bea32d85b2422"
+      },
+      {
+        "object": "finance.内部划转对应表",
+        "columns": 9,
+        "bytes": 130,
+        "sha256": "b210c87ff33b1070eeb02a6c45a441977e4e401c8c7e8bb0a9a5ce0bf63c35d1"
+      },
+      {
+        "object": "finance.利润表",
+        "columns": 6,
+        "bytes": 83,
+        "sha256": "66ba4ec23bf2979b2d2bad7ea5a1d4448487590a64449bb0283b13c42629bfbf"
+      },
+      {
+        "object": "finance.利润表来源明细表",
+        "columns": 7,
+        "bytes": 87,
+        "sha256": "17c3f6a2ffe93f4fb5869db529ea372b754092f7e6b7767dc0251ce0ab5329e3"
+      },
+      {
+        "object": "finance.发票分摊表",
+        "columns": 6,
+        "bytes": 90,
+        "sha256": "17db7e59b8fa82e5608c91f9809ff833616082d50090b431bbcab1b852d190c9"
+      },
+      {
+        "object": "finance.发票登记表",
+        "columns": 10,
+        "bytes": 110,
+        "sha256": "63c3a6fa48321fa6e4a287838088c91dfb07edc6dfa40c2c5434e5b2c24a7893"
+      },
+      {
+        "object": "finance.工时计价表",
+        "columns": 11,
+        "bytes": 134,
+        "sha256": "e36573b89ed8dd0b1f3de2475007e1d9a7f91ab871b6e47825053d12ec3c4106"
+      },
+      {
+        "object": "finance.往来未结明细表",
+        "columns": 17,
+        "bytes": 205,
+        "sha256": "41b8ac3e096ba7a3bd6d36a5c36fb91127f4b4d765310c273a16e9931b29aebd"
+      },
+      {
+        "object": "finance.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "finance.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "finance.报表批次表",
+        "columns": 11,
+        "bytes": 147,
+        "sha256": "9ac240a4936392e02e5bdc1daa8ae5d5e0fddba6c4ff5d7a68fc8eb1106f4f0d"
+      },
+      {
+        "object": "finance.报表项目映射表",
+        "columns": 9,
+        "bytes": 115,
+        "sha256": "39842653b06bb5a3de693accd5e8848732af2dc85c36bf2c91fdb0fc83f0ee7b"
+      },
+      {
+        "object": "finance.收入成本确认表",
+        "columns": 14,
+        "bytes": 156,
+        "sha256": "bd2f3400640824621507c0b0b638bc5ec95e0a75d13b3d4b2d893a6041f93680"
+      },
+      {
+        "object": "finance.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "finance.期初及结账核实表",
+        "columns": 11,
+        "bytes": 120,
+        "sha256": "59da27dc369863d79d65352f78574bfa817b6854fff147b64578439f48679dca"
+      },
+      {
+        "object": "finance.流水文件登记表",
+        "columns": 7,
+        "bytes": 108,
+        "sha256": "f288ac49e8ba925b639710b1812fba504dea22ef17658d5ac7bf0e6f95e22f92"
+      },
+      {
+        "object": "finance.流水来源明细表",
+        "columns": 4,
+        "bytes": 62,
+        "sha256": "e2967fa5f0a7d6a1dbbb03fbb43c14d64a94b7092769b336de091cfcbe911414"
+      },
+      {
+        "object": "finance.现金流量表",
+        "columns": 6,
+        "bytes": 89,
+        "sha256": "5570d11162a43238898d55f2e91d230f5c6442147c631c4e7f8ade6cd69bb46f"
+      },
+      {
+        "object": "finance.现金流量表来源明细表",
+        "columns": 7,
+        "bytes": 93,
+        "sha256": "70bfa9cc2cd4a8241a3b054053270251d55a4397a97d0ba7d76f6e67705c4ceb"
+      },
+      {
+        "object": "finance.税款缴退明细表",
+        "columns": 7,
+        "bytes": 89,
+        "sha256": "b7664607e4852cc03cdfde83915511c0d069269fc7e096041b7959b4ceadc61f"
+      },
+      {
+        "object": "finance.纳税申报记录表",
+        "columns": 11,
+        "bytes": 121,
+        "sha256": "ae16e8c9843f4fe2ce228b1e5cf3f9c9891b1208d371b5abe65a7e212047401e"
+      },
+      {
+        "object": "finance.结算分摊表",
+        "columns": 12,
+        "bytes": 153,
+        "sha256": "eb7662b8e06a2a017e6463870cfefdfbf2a930c9124680b5c9591a8137fb230e"
+      },
+      {
+        "object": "finance.账户期间余额表",
+        "columns": 9,
+        "bytes": 112,
+        "sha256": "2c40bb66aa4f7f0240a4b6afd09747f5e676241c9e1eb253689a58f62899abf8"
+      },
+      {
+        "object": "finance.账户核对表",
+        "columns": 6,
+        "bytes": 86,
+        "sha256": "08a3227c1add47771dd91fb7335a7636ecaca536aac1662a2d4e23524f70be3f"
+      },
+      {
+        "object": "finance.费用归属表",
+        "columns": 14,
+        "bytes": 148,
+        "sha256": "9a1c041238436208f2b017bcdbe487caf3e03720cc0b1c28cfce2c6fc3496505"
+      },
+      {
+        "object": "finance.资产台账",
+        "columns": 12,
+        "bytes": 145,
+        "sha256": "1fc952d67298e2ce4c084bf2bd014e3bf5dfd2c7ce39d26be5f2758d246d6625"
+      },
+      {
+        "object": "finance.资产负债表",
+        "columns": 7,
+        "bytes": 102,
+        "sha256": "83890fc0412ad3199d4eea8ca6afa403d66cc9cb984ff4b7512a69f7e30a158c"
+      },
+      {
+        "object": "finance.资产负债表来源明细表",
+        "columns": 7,
+        "bytes": 93,
+        "sha256": "47f6da17c922842e09b3c50d6fdafcf4f23e539f9f70016368e2225c01db5747"
+      },
+      {
+        "object": "finance.资金流水表",
+        "columns": 7,
+        "bytes": 90,
+        "sha256": "11644e37f0fdc27dd4c3dd7bc86a0b6e5a8a8443f2374e218d3ac3b8d1a8edc5"
+      },
+      {
+        "object": "finance.资金用途核定表",
+        "columns": 16,
+        "bytes": 198,
+        "sha256": "d1c82d0f134cbedb43296e66b7ec72c3e9f031b2a5219628064223157e5c04ca"
+      },
+      {
+        "object": "finance.资金账户档案表",
+        "columns": 9,
+        "bytes": 98,
+        "sha256": "0b142e7749bff8bd70cc73ec7801ab2c67159d395329dd1637701f85974f8f19"
+      },
+      {
+        "object": "finance.重复记录对应表",
+        "columns": 6,
+        "bytes": 97,
+        "sha256": "64e8e622ca8c629cdf35f7db3929705c7569b9b89ccba98c41e0a1f40b2e91f9"
+      },
+      {
+        "object": "legal.交付明细表",
+        "columns": 14,
+        "bytes": 304,
+        "sha256": "b09b617da9775f816df270e17b0a1f22e872688e88dce95631e314d6bbac41b0"
+      },
+      {
+        "object": "legal.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "legal.公司主体档案表",
+        "columns": 8,
+        "bytes": 128,
+        "sha256": "f1f928a16291e726be231b8258367ea0f7e07c06b1e0ad5f63ce711ab1cee6f4"
+      },
+      {
+        "object": "legal.合同审阅表",
+        "columns": 8,
+        "bytes": 107,
+        "sha256": "1d5107c4da36ef5ca9b9b16199582088383fc5a368df9fb882825158cfeee2ad"
+      },
+      {
+        "object": "legal.合规自查表",
+        "columns": 11,
+        "bytes": 129,
+        "sha256": "df270483df901050429256e84d05fd1696878aa494f14db1bdc7acecf1e79e2d"
+      },
+      {
+        "object": "legal.履约提示表",
+        "columns": 6,
+        "bytes": 62,
+        "sha256": "3be6021b114dab822a75a4e992fd928a8c732de755e1d5e057f602e170ab6ee2"
+      },
+      {
+        "object": "legal.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "legal.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "legal.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "legal.整改跟踪表",
+        "columns": 10,
+        "bytes": 124,
+        "sha256": "6a1f2d8b5c9fa6452a82aca799941434be18be369f8a6d4f605f1875cd8b05db"
+      },
+      {
+        "object": "legal.法律文件登记表",
+        "columns": 8,
+        "bytes": 102,
+        "sha256": "7330558b5a8b727033125f26b78a340d9a8c65baab17576b7d5dcd03df6a344a"
+      },
+      {
+        "object": "legal.法规登记表",
+        "columns": 9,
+        "bytes": 102,
+        "sha256": "78d378e772832f0bcad2edeac64bf7bcd2b74d488464c282ffdece39ec179747"
+      },
+      {
+        "object": "legal.证据对应表",
+        "columns": 11,
+        "bytes": 145,
+        "sha256": "e7d5b06bf80fff96f9914fb3813020e46cf8d0bb7ebfd3cc123f371562b32a9d"
+      },
+      {
+        "object": "legal.适用规则表",
+        "columns": 5,
+        "bytes": 61,
+        "sha256": "1eee6ba5acb0e5f95ba19c6dc37a0f416293802ba0090f0ed795dbabe92c8190"
+      },
+      {
+        "object": "analysis.交付明细表",
+        "columns": 16,
+        "bytes": 378,
+        "sha256": "33e768c6d409fad873dbdada3a86d7f082ee30c7edc5b7797f5b4a7f892d92db"
+      },
+      {
+        "object": "analysis.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "analysis.分析报告登记表",
+        "columns": 8,
+        "bytes": 88,
+        "sha256": "56e2227247eff4eb22bf8899d954df3b5bf1bd563acda4d33fa1e617b98fdcfa"
+      },
+      {
+        "object": "analysis.意见与规划总表",
+        "columns": 11,
+        "bytes": 130,
+        "sha256": "c1d2e73985767283c9c1fdaa8e7531a06eda19da8ddf8857a78290c020c05c77"
+      },
+      {
+        "object": "analysis.意见复盘表",
+        "columns": 8,
+        "bytes": 102,
+        "sha256": "2302d838eaa63b3cc2bf3a9eff3f6d5c6d2e07909012b77c18f7ce8284822081"
+      },
+      {
+        "object": "analysis.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "analysis.意见指标对应表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "06cc010f4e8b004f210f76f995c6cfb416780b0c279e7b0dedf38550e0dded77"
+      },
+      {
+        "object": "analysis.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "analysis.报告指标对应表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "f31ae481c512648936aec6b32f17ecf1d929878ea9da6a20c34e9321d1fb69cd"
+      },
+      {
+        "object": "analysis.报告数据对应表",
+        "columns": 3,
+        "bytes": 46,
+        "sha256": "e58dfda10cb37e33d0aaaed61fb09b90f341ae730db56e3c201d7781fcc94d46"
+      },
+      {
+        "object": "analysis.报告模型对应表",
+        "columns": 3,
+        "bytes": 43,
+        "sha256": "150fdb3e8d9cf98c3545a804015be3942a9e61a4686972bc39caf3c6e6deb206"
+      },
+      {
+        "object": "analysis.指标定义表",
+        "columns": 6,
+        "bytes": 60,
+        "sha256": "e4a3a42aed0ef59089cd57699a2e6d19fcf52b3a84419c4838c83e79e82b4b49"
+      },
+      {
+        "object": "analysis.指标计算表",
+        "columns": 9,
+        "bytes": 109,
+        "sha256": "0feced8c2a235084a7bb5278ef03161c7277719f6b42e81bc56a47c011c84306"
+      },
+      {
+        "object": "analysis.数学模型库",
+        "columns": 11,
+        "bytes": 118,
+        "sha256": "2bfb6d0f15e1544679e5abc519c61a72eed413dfa946790e640c5c4249d3f533"
+      },
+      {
+        "object": "analysis.数据引用登记表",
+        "columns": 8,
+        "bytes": 110,
+        "sha256": "1d07ccf566c16474550c3dcef4e2f826dd0ba666a313797f625072adbf7861e9"
+      },
+      {
+        "object": "analysis.数据集输入来源表",
+        "columns": 10,
+        "bytes": 148,
+        "sha256": "0fa006eaea9e3c33183fa5a2367ebfddade112e7280c0a549def42704bce28e3"
+      },
+      {
+        "object": "analysis.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      }
+    ],
+    "demo": [
+      {
+        "object": "sales.交付明细表",
+        "columns": 23,
+        "bytes": 559,
+        "sha256": "b46a583ac29f4d72aa0d1452b9bff221b6f0c179cacb41109a77342e49971da2"
+      },
+      {
+        "object": "sales.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "sales.合同订单对应表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "1704d26fbf4c9dd414f96355bdd3ba809a5e943a2381b01f2e05bb249d76f1e1"
+      },
+      {
+        "object": "sales.售后事件表",
+        "columns": 11,
+        "bytes": 149,
+        "sha256": "5823a869bbcf14b187b82faf33e69fd2ba189e61f32c5cb04e0d9fbd4eff2718"
+      },
+      {
+        "object": "sales.商品对应表",
+        "columns": 12,
+        "bytes": 149,
+        "sha256": "592ccf9cbb03f34f71f34eefde40d9c3e5f599098cf0763f34f2f47865a00e0f"
+      },
+      {
+        "object": "sales.客户分类统计批次表",
+        "columns": 8,
+        "bytes": 112,
+        "sha256": "50f8ef26c2f29d69c11bdbbf000774f1993e71b22611574c837bac2bf5d0f77a"
+      },
+      {
+        "object": "sales.客户分类统计结果表",
+        "columns": 9,
+        "bytes": 122,
+        "sha256": "47ae5e798aaaca26e56d4875feee955f97423e988b0cb961f247493109619681"
+      },
+      {
+        "object": "sales.客户档案表",
+        "columns": 8,
+        "bytes": 110,
+        "sha256": "cf6c6dda1a8bc1cbf8f71822670bd6a2663bc3040d11014844359fde72f1bfaa"
+      },
+      {
+        "object": "sales.客户需求表",
+        "columns": 9,
+        "bytes": 105,
+        "sha256": "64fdd22930b82c9157ec390770fb3659a7f022cf5a02e22e273625fae5c44691"
+      },
+      {
+        "object": "sales.平台文件登记表",
+        "columns": 8,
+        "bytes": 121,
+        "sha256": "daac2954e6348146eb726efb7bef89d2d162bebf1948c7b98e5a651b5a7b720e"
+      },
+      {
+        "object": "sales.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "sales.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "sales.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "sales.渠道档案表",
+        "columns": 4,
+        "bytes": 52,
+        "sha256": "951544de1241a9114f63623e32a678de55b289dedcfae8baf9bb258770cbf7ae"
+      },
+      {
+        "object": "sales.组合商品明细表",
+        "columns": 5,
+        "bytes": 71,
+        "sha256": "e9e4c7990631e1dfcd77d8bd48f47bb437bcc96a85410e77c2bc522c56a70da7"
+      },
+      {
+        "object": "sales.组合商品表",
+        "columns": 5,
+        "bytes": 71,
+        "sha256": "d47f5bf7b4355b8bd4a03ef49d175139643fc9ba71573d15f3381301733636a2"
+      },
+      {
+        "object": "sales.订单导出快照表",
+        "columns": 11,
+        "bytes": 165,
+        "sha256": "c929a9b756341c50af37dd333f9afffa39fcfd34f0b05534a0b2bbc2a4f84d02"
+      },
+      {
+        "object": "sales.订单组合明细表",
+        "columns": 4,
+        "bytes": 74,
+        "sha256": "780178db8ca83005a3f205c41cb1165864f52ade5b3a64a3b65567e3d57dfb9a"
+      },
+      {
+        "object": "sales.销售动作表",
+        "columns": 6,
+        "bytes": 78,
+        "sha256": "03046e12535ad44db42dab117313d5b3f19d10e4091df2dde7e9615d11fdab6c"
+      },
+      {
+        "object": "sales.销售合同表",
+        "columns": 5,
+        "bytes": 67,
+        "sha256": "3f4a20a9b5f6249d6b73a970175a8436979437be94dd44453016ee891e4d1b84"
+      },
+      {
+        "object": "sales.销售期间覆盖表",
+        "columns": 7,
+        "bytes": 119,
+        "sha256": "708e063369229cb2e6134c5e22e198795c71384b02d842a465d010b82a0dc9e4"
+      },
+      {
+        "object": "sales.销售订单登记表",
+        "columns": 8,
+        "bytes": 87,
+        "sha256": "4e8b9a129c63a27c6c256cf22dd54c0710a68e9cb743c3cfc397f0e6408132e4"
+      },
+      {
+        "object": "sales.销售订单行表",
+        "columns": 18,
+        "bytes": 218,
+        "sha256": "bb312536c8987351621d883362dece4738920427ac6da29116e26be8e1794333"
+      },
+      {
+        "object": "production.交付明细表",
+        "columns": 31,
+        "bytes": 723,
+        "sha256": "ab78cd6afd7b4ef5686dea8359b2d5a42fad615bfbdc4a191be9a16770c3c797"
+      },
+      {
+        "object": "production.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "production.仓库档案表",
+        "columns": 5,
+        "bytes": 54,
+        "sha256": "6f260ee8f266966143180646be9eba4d5836af5908d02744f654dd6b37b2ca06"
+      },
+      {
+        "object": "production.供应商档案表",
+        "columns": 4,
+        "bytes": 55,
+        "sha256": "b7024003ac5a32e98aae947de674ee7a8cb76678d33c173072de473846526114"
+      },
+      {
+        "object": "production.保管方档案表",
+        "columns": 3,
+        "bytes": 32,
+        "sha256": "79d1c05d9d377c35a912aba0075cabcfcda1f2a3e13b1310849bff73f0219f0a"
+      },
+      {
+        "object": "production.到货记录表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "c100efca41d1f8d3bacc59ecc9544f431d12078a4707da773d68145c73b1bb6f"
+      },
+      {
+        "object": "production.发货记录表",
+        "columns": 9,
+        "bytes": 122,
+        "sha256": "ed2de238a6281fc32d96b76e752d2e7353d43b29245424dc77ee0ba299b29836"
+      },
+      {
+        "object": "production.委外物料流转表",
+        "columns": 12,
+        "bytes": 154,
+        "sha256": "a9f50269f3dd8561e2cfd17b2f8776859a40972b24c5f74a7a71a7604d1c878a"
+      },
+      {
+        "object": "production.完工记录表",
+        "columns": 8,
+        "bytes": 87,
+        "sha256": "51b2dd83e315c6bf1aa55837bba09949355b101a716267ae36787272eed8ad65"
+      },
+      {
+        "object": "production.工单草稿表",
+        "columns": 5,
+        "bytes": 64,
+        "sha256": "0869e250dce2c46f9ed68bd03de0e19c7a6861c5640c8465a3395cce2266ad78"
+      },
+      {
+        "object": "production.工单订单对应表",
+        "columns": 6,
+        "bytes": 96,
+        "sha256": "3f7bfffbc4c716d6cc978fc5f65f659222e6e6708fda798adc9ca3c466faa061"
+      },
+      {
+        "object": "production.库位档案表",
+        "columns": 3,
+        "bytes": 35,
+        "sha256": "b4736501c46ab3d8e363a866ca14ab85f86724df4fef642505c90d0632985603"
+      },
+      {
+        "object": "production.库存余额与差异表",
+        "columns": 12,
+        "bytes": 154,
+        "sha256": "f753621d0a2240df8a68c1dbaf6cebab43f38cefdcf21fe2966ce8bac6147948"
+      },
+      {
+        "object": "production.库存变动表",
+        "columns": 18,
+        "bytes": 246,
+        "sha256": "b40f07abb6b6db470c28054830da20a05b6a35787e1eb7c881af6bcc02c8f918"
+      },
+      {
+        "object": "production.库存基准核定表",
+        "columns": 12,
+        "bytes": 144,
+        "sha256": "d49c2bf0805c2b7963697431816a5c4558ba6ba3991e31c61106733ab16b86da"
+      },
+      {
+        "object": "production.库存盘点表",
+        "columns": 11,
+        "bytes": 131,
+        "sha256": "971c3da6ae5d014439b837d11a6a79c6c119abc97020aae0b871cc9e4982fd1c"
+      },
+      {
+        "object": "production.库存结存来源明细表",
+        "columns": 5,
+        "bytes": 77,
+        "sha256": "d60c83833d05c16c9068cea31da6d3a6d92034ca3351fe9aec6cf60887b587a9"
+      },
+      {
+        "object": "production.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "production.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "production.报废记录表",
+        "columns": 10,
+        "bytes": 113,
+        "sha256": "405253220778fd1d6eb74a1bf078aa4283c0698b8b55424f38c61cce7abd5b20"
+      },
+      {
+        "object": "production.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "production.生产工单表",
+        "columns": 11,
+        "bytes": 149,
+        "sha256": "20648b232988f31ea1996221e875b3dfd6ce2bb9a130a7e37f1cdbd31ec60c9e"
+      },
+      {
+        "object": "production.生产工时表",
+        "columns": 12,
+        "bytes": 129,
+        "sha256": "b0a66ec49211fd670eba421dcb20537ef50d85ae952e5d7ec36f4b421fcbbd3c"
+      },
+      {
+        "object": "production.生产领退料表",
+        "columns": 9,
+        "bytes": 97,
+        "sha256": "9fe4b9d5afc80d636ef2a925fd56682d4b24ed07b1b3b0e704c86612254f24a0"
+      },
+      {
+        "object": "production.设备档案表",
+        "columns": 5,
+        "bytes": 59,
+        "sha256": "19072319d12690ca8d7de0835468b246dbfcf8c4557abab024d37a4791eadd21"
+      },
+      {
+        "object": "production.质量检验表",
+        "columns": 14,
+        "bytes": 168,
+        "sha256": "aa901aca0b16ef7067b4b4724542024f42b022977d05964600bdfea06a8d11b8"
+      },
+      {
+        "object": "production.采购合同表",
+        "columns": 5,
+        "bytes": 70,
+        "sha256": "d6afc0deccb7f9d681df5420b4f9c41577243e695aabb90fcca2127e921ac036"
+      },
+      {
+        "object": "production.采购归属对应表",
+        "columns": 6,
+        "bytes": 75,
+        "sha256": "82a7de31b9317eac804a46206c8f2dabe9f67276b7ad2a49907d717f31a939d3"
+      },
+      {
+        "object": "production.采购订单行表",
+        "columns": 10,
+        "bytes": 120,
+        "sha256": "1c4f7e505d3b0821b8b3613c9bbadaf18c36a3557b95f6471d68d66ef7947555"
+      },
+      {
+        "object": "production.采购订单表",
+        "columns": 6,
+        "bytes": 70,
+        "sha256": "3dec1788d5d6094179113f5c4a0adcbb6707ec3203cf0ff4f786496cdb260fe0"
+      },
+      {
+        "object": "production.验收记录表",
+        "columns": 10,
+        "bytes": 121,
+        "sha256": "a3501b771e583dbf6c5a18cbfcf48726e93d8c07439055e7c49e5040d01f0423"
+      },
+      {
+        "object": "rd.BOM明细表",
+        "columns": 15,
+        "bytes": 194,
+        "sha256": "073999ae7c59b481213d537b6705adfdf1b4913bef4329a8f54ffb494dccf362"
+      },
+      {
+        "object": "rd.BOM登记表",
+        "columns": 4,
+        "bytes": 54,
+        "sha256": "08ee47bfb6ba97dee73f6a77c2c41cc8949054db3d2bb1a027f212a558e14be9"
+      },
+      {
+        "object": "rd.交付明细表",
+        "columns": 23,
+        "bytes": 523,
+        "sha256": "d80b47a87d9b0d6a6daf7704d17cdf4f40a5b83e7a5f757224daeea016d518be"
+      },
+      {
+        "object": "rd.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "rd.产品主数据表",
+        "columns": 5,
+        "bytes": 38,
+        "sha256": "39742bcdf2be9ba22db42b2016ad7d8ea508fee8429c1bf5629526f6eb703e25"
+      },
+      {
+        "object": "rd.产品版本表",
+        "columns": 6,
+        "bytes": 71,
+        "sha256": "c95f005b85e2a8b0fafd223aeecb4385eca1d55d51c6021665aa342a18ca5a88"
+      },
+      {
+        "object": "rd.产品规格表",
+        "columns": 9,
+        "bytes": 118,
+        "sha256": "5409d879dad5ff1fb487f1a5bbfdca0d6e991650087e70747929da1dec589639"
+      },
+      {
+        "object": "rd.单位换算表",
+        "columns": 9,
+        "bytes": 119,
+        "sha256": "651bb0d2304e72b48babf4edcfd75bd3632875d152b5f3c275f195ea64713a23"
+      },
+      {
+        "object": "rd.发布批次表",
+        "columns": 7,
+        "bytes": 92,
+        "sha256": "a78c437ba048de9915d1b95a9bba57791c674f5c63f48a790b814fd4a84f950a"
+      },
+      {
+        "object": "rd.发布文件明细表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "e06ddedd931bf9865471a33db3a0cbfc1567a13eddb6875a4287204f50ece273"
+      },
+      {
+        "object": "rd.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "rd.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "rd.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "rd.物料主数据表",
+        "columns": 5,
+        "bytes": 38,
+        "sha256": "a5791fb9cae8fd458d06f3e4e78d665f6c194eedce11923252da8bbf065e88c1"
+      },
+      {
+        "object": "rd.物料版本表",
+        "columns": 5,
+        "bytes": 62,
+        "sha256": "beffc6489ec58da707ed28670705f47fe332de9de58e4bf3326998f818482297"
+      },
+      {
+        "object": "rd.研发事项来源表",
+        "columns": 5,
+        "bytes": 67,
+        "sha256": "7945be346618e47d4aa03f6c393f81f03968a6db1b6654c9df42305ab8bc23f3"
+      },
+      {
+        "object": "rd.研发工时表",
+        "columns": 7,
+        "bytes": 77,
+        "sha256": "a86b48d04ead1849c1854182ba611ef2279318271d88cbd738ab9e9b7511a1ee"
+      },
+      {
+        "object": "rd.研发投入归属表",
+        "columns": 7,
+        "bytes": 84,
+        "sha256": "76bb541c19afa4bc1a8f47be1917683c032741296b028629ea34cc548415aa34"
+      },
+      {
+        "object": "rd.计量单位表",
+        "columns": 4,
+        "bytes": 52,
+        "sha256": "9e26c1b3b5693d6042d00fc5163d04f431e528b09dce3a0e774cd92c87df2503"
+      },
+      {
+        "object": "rd.设计变更与验证表",
+        "columns": 14,
+        "bytes": 166,
+        "sha256": "336c08d480d97615fc241f23ed090e1a2afdbe5a2fd2238590ddc3a92d4d60dd"
+      },
+      {
+        "object": "rd.项目文件登记表",
+        "columns": 11,
+        "bytes": 120,
+        "sha256": "6f41d29f34c40548999255bae541b58a264eebda0d131aff158c22b412c09840"
+      },
+      {
+        "object": "rd.项目登记表",
+        "columns": 7,
+        "bytes": 92,
+        "sha256": "d6d9b4fbb46a3064de04ee6c8ef8534651c14040efedd0e5d923bc088401be57"
+      },
+      {
+        "object": "rd.项目草稿表",
+        "columns": 4,
+        "bytes": 52,
+        "sha256": "1922d7e7a82b0f50b59c4f87cc1b1c5b82693bbe6d0102bd258bfee3f3987b2b"
+      },
+      {
+        "object": "finance.交付明细表",
+        "columns": 38,
+        "bytes": 931,
+        "sha256": "c206912b0f14e57fe4a339d16286ba879a4f3e1cf234d05164843ebee7837c8a"
+      },
+      {
+        "object": "finance.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "finance.人员档案表",
+        "columns": 5,
+        "bytes": 65,
+        "sha256": "4c78e4a8e2fa9553f5ab838f172f3dff0e0f6ebdf748359f29e6f10e224f3750"
+      },
+      {
+        "object": "finance.会计凭证表",
+        "columns": 9,
+        "bytes": 93,
+        "sha256": "86c6314599c30c27a7444cae78e6068ac122bf456d6491169ec749b77af9510a"
+      },
+      {
+        "object": "finance.会计分录表",
+        "columns": 12,
+        "bytes": 122,
+        "sha256": "0103883644148a0e91789b3306134cccbcb2694bcae59f4c4c48c105fde32fb0"
+      },
+      {
+        "object": "finance.会计政策表",
+        "columns": 9,
+        "bytes": 129,
+        "sha256": "b743bc84cbbe8e8520f834b0cad223caae3700bb9898ddfa24d1b12d2df6dedb"
+      },
+      {
+        "object": "finance.会计科目表",
+        "columns": 7,
+        "bytes": 89,
+        "sha256": "0e77a8fb3001bb0f0ec4f76a2bd66051c62efd3f436cb632ff8bea32d85b2422"
+      },
+      {
+        "object": "finance.内部划转对应表",
+        "columns": 9,
+        "bytes": 130,
+        "sha256": "b210c87ff33b1070eeb02a6c45a441977e4e401c8c7e8bb0a9a5ce0bf63c35d1"
+      },
+      {
+        "object": "finance.利润表",
+        "columns": 6,
+        "bytes": 83,
+        "sha256": "66ba4ec23bf2979b2d2bad7ea5a1d4448487590a64449bb0283b13c42629bfbf"
+      },
+      {
+        "object": "finance.利润表来源明细表",
+        "columns": 7,
+        "bytes": 87,
+        "sha256": "17c3f6a2ffe93f4fb5869db529ea372b754092f7e6b7767dc0251ce0ab5329e3"
+      },
+      {
+        "object": "finance.发票分摊表",
+        "columns": 6,
+        "bytes": 90,
+        "sha256": "17db7e59b8fa82e5608c91f9809ff833616082d50090b431bbcab1b852d190c9"
+      },
+      {
+        "object": "finance.发票登记表",
+        "columns": 10,
+        "bytes": 110,
+        "sha256": "63c3a6fa48321fa6e4a287838088c91dfb07edc6dfa40c2c5434e5b2c24a7893"
+      },
+      {
+        "object": "finance.工时计价表",
+        "columns": 11,
+        "bytes": 134,
+        "sha256": "e36573b89ed8dd0b1f3de2475007e1d9a7f91ab871b6e47825053d12ec3c4106"
+      },
+      {
+        "object": "finance.往来未结明细表",
+        "columns": 17,
+        "bytes": 205,
+        "sha256": "41b8ac3e096ba7a3bd6d36a5c36fb91127f4b4d765310c273a16e9931b29aebd"
+      },
+      {
+        "object": "finance.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "finance.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "finance.报表批次表",
+        "columns": 11,
+        "bytes": 147,
+        "sha256": "9ac240a4936392e02e5bdc1daa8ae5d5e0fddba6c4ff5d7a68fc8eb1106f4f0d"
+      },
+      {
+        "object": "finance.报表项目映射表",
+        "columns": 9,
+        "bytes": 115,
+        "sha256": "39842653b06bb5a3de693accd5e8848732af2dc85c36bf2c91fdb0fc83f0ee7b"
+      },
+      {
+        "object": "finance.收入成本确认表",
+        "columns": 14,
+        "bytes": 156,
+        "sha256": "bd2f3400640824621507c0b0b638bc5ec95e0a75d13b3d4b2d893a6041f93680"
+      },
+      {
+        "object": "finance.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "finance.期初及结账核实表",
+        "columns": 11,
+        "bytes": 120,
+        "sha256": "59da27dc369863d79d65352f78574bfa817b6854fff147b64578439f48679dca"
+      },
+      {
+        "object": "finance.流水文件登记表",
+        "columns": 7,
+        "bytes": 108,
+        "sha256": "f288ac49e8ba925b639710b1812fba504dea22ef17658d5ac7bf0e6f95e22f92"
+      },
+      {
+        "object": "finance.流水来源明细表",
+        "columns": 4,
+        "bytes": 62,
+        "sha256": "e2967fa5f0a7d6a1dbbb03fbb43c14d64a94b7092769b336de091cfcbe911414"
+      },
+      {
+        "object": "finance.现金流量表",
+        "columns": 6,
+        "bytes": 89,
+        "sha256": "5570d11162a43238898d55f2e91d230f5c6442147c631c4e7f8ade6cd69bb46f"
+      },
+      {
+        "object": "finance.现金流量表来源明细表",
+        "columns": 7,
+        "bytes": 93,
+        "sha256": "70bfa9cc2cd4a8241a3b054053270251d55a4397a97d0ba7d76f6e67705c4ceb"
+      },
+      {
+        "object": "finance.税款缴退明细表",
+        "columns": 7,
+        "bytes": 89,
+        "sha256": "b7664607e4852cc03cdfde83915511c0d069269fc7e096041b7959b4ceadc61f"
+      },
+      {
+        "object": "finance.纳税申报记录表",
+        "columns": 11,
+        "bytes": 121,
+        "sha256": "ae16e8c9843f4fe2ce228b1e5cf3f9c9891b1208d371b5abe65a7e212047401e"
+      },
+      {
+        "object": "finance.结算分摊表",
+        "columns": 12,
+        "bytes": 153,
+        "sha256": "eb7662b8e06a2a017e6463870cfefdfbf2a930c9124680b5c9591a8137fb230e"
+      },
+      {
+        "object": "finance.账户期间余额表",
+        "columns": 9,
+        "bytes": 112,
+        "sha256": "2c40bb66aa4f7f0240a4b6afd09747f5e676241c9e1eb253689a58f62899abf8"
+      },
+      {
+        "object": "finance.账户核对表",
+        "columns": 6,
+        "bytes": 86,
+        "sha256": "08a3227c1add47771dd91fb7335a7636ecaca536aac1662a2d4e23524f70be3f"
+      },
+      {
+        "object": "finance.费用归属表",
+        "columns": 14,
+        "bytes": 148,
+        "sha256": "9a1c041238436208f2b017bcdbe487caf3e03720cc0b1c28cfce2c6fc3496505"
+      },
+      {
+        "object": "finance.资产台账",
+        "columns": 12,
+        "bytes": 145,
+        "sha256": "1fc952d67298e2ce4c084bf2bd014e3bf5dfd2c7ce39d26be5f2758d246d6625"
+      },
+      {
+        "object": "finance.资产负债表",
+        "columns": 7,
+        "bytes": 102,
+        "sha256": "83890fc0412ad3199d4eea8ca6afa403d66cc9cb984ff4b7512a69f7e30a158c"
+      },
+      {
+        "object": "finance.资产负债表来源明细表",
+        "columns": 7,
+        "bytes": 93,
+        "sha256": "47f6da17c922842e09b3c50d6fdafcf4f23e539f9f70016368e2225c01db5747"
+      },
+      {
+        "object": "finance.资金流水表",
+        "columns": 7,
+        "bytes": 90,
+        "sha256": "11644e37f0fdc27dd4c3dd7bc86a0b6e5a8a8443f2374e218d3ac3b8d1a8edc5"
+      },
+      {
+        "object": "finance.资金用途核定表",
+        "columns": 16,
+        "bytes": 198,
+        "sha256": "d1c82d0f134cbedb43296e66b7ec72c3e9f031b2a5219628064223157e5c04ca"
+      },
+      {
+        "object": "finance.资金账户档案表",
+        "columns": 9,
+        "bytes": 98,
+        "sha256": "0b142e7749bff8bd70cc73ec7801ab2c67159d395329dd1637701f85974f8f19"
+      },
+      {
+        "object": "finance.重复记录对应表",
+        "columns": 6,
+        "bytes": 97,
+        "sha256": "64e8e622ca8c629cdf35f7db3929705c7569b9b89ccba98c41e0a1f40b2e91f9"
+      },
+      {
+        "object": "legal.交付明细表",
+        "columns": 14,
+        "bytes": 304,
+        "sha256": "b09b617da9775f816df270e17b0a1f22e872688e88dce95631e314d6bbac41b0"
+      },
+      {
+        "object": "legal.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "legal.公司主体档案表",
+        "columns": 8,
+        "bytes": 128,
+        "sha256": "f1f928a16291e726be231b8258367ea0f7e07c06b1e0ad5f63ce711ab1cee6f4"
+      },
+      {
+        "object": "legal.合同审阅表",
+        "columns": 8,
+        "bytes": 107,
+        "sha256": "1d5107c4da36ef5ca9b9b16199582088383fc5a368df9fb882825158cfeee2ad"
+      },
+      {
+        "object": "legal.合规自查表",
+        "columns": 11,
+        "bytes": 129,
+        "sha256": "df270483df901050429256e84d05fd1696878aa494f14db1bdc7acecf1e79e2d"
+      },
+      {
+        "object": "legal.履约提示表",
+        "columns": 6,
+        "bytes": 62,
+        "sha256": "3be6021b114dab822a75a4e992fd928a8c732de755e1d5e057f602e170ab6ee2"
+      },
+      {
+        "object": "legal.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "legal.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "legal.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      },
+      {
+        "object": "legal.整改跟踪表",
+        "columns": 10,
+        "bytes": 124,
+        "sha256": "6a1f2d8b5c9fa6452a82aca799941434be18be369f8a6d4f605f1875cd8b05db"
+      },
+      {
+        "object": "legal.法律文件登记表",
+        "columns": 8,
+        "bytes": 102,
+        "sha256": "7330558b5a8b727033125f26b78a340d9a8c65baab17576b7d5dcd03df6a344a"
+      },
+      {
+        "object": "legal.法规登记表",
+        "columns": 9,
+        "bytes": 102,
+        "sha256": "78d378e772832f0bcad2edeac64bf7bcd2b74d488464c282ffdece39ec179747"
+      },
+      {
+        "object": "legal.证据对应表",
+        "columns": 11,
+        "bytes": 145,
+        "sha256": "e7d5b06bf80fff96f9914fb3813020e46cf8d0bb7ebfd3cc123f371562b32a9d"
+      },
+      {
+        "object": "legal.适用规则表",
+        "columns": 5,
+        "bytes": 61,
+        "sha256": "1eee6ba5acb0e5f95ba19c6dc37a0f416293802ba0090f0ed795dbabe92c8190"
+      },
+      {
+        "object": "analysis.交付明细表",
+        "columns": 16,
+        "bytes": 378,
+        "sha256": "33e768c6d409fad873dbdada3a86d7f082ee30c7edc5b7797f5b4a7f892d92db"
+      },
+      {
+        "object": "analysis.交付记录表",
+        "columns": 10,
+        "bytes": 135,
+        "sha256": "7d476c83d3c27308915115a077c7584abbfadabfb517461f4767c56686dc54eb"
+      },
+      {
+        "object": "analysis.分析报告登记表",
+        "columns": 8,
+        "bytes": 88,
+        "sha256": "56e2227247eff4eb22bf8899d954df3b5bf1bd563acda4d33fa1e617b98fdcfa"
+      },
+      {
+        "object": "analysis.意见与规划总表",
+        "columns": 11,
+        "bytes": 130,
+        "sha256": "c1d2e73985767283c9c1fdaa8e7531a06eda19da8ddf8857a78290c020c05c77"
+      },
+      {
+        "object": "analysis.意见复盘表",
+        "columns": 8,
+        "bytes": 102,
+        "sha256": "2302d838eaa63b3cc2bf3a9eff3f6d5c6d2e07909012b77c18f7ce8284822081"
+      },
+      {
+        "object": "analysis.意见执行表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "04832777f5c70185e4bace669f912b151d89ec80416627df0f85a011f6a85d5f"
+      },
+      {
+        "object": "analysis.意见指标对应表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "06cc010f4e8b004f210f76f995c6cfb416780b0c279e7b0dedf38550e0dded77"
+      },
+      {
+        "object": "analysis.意见采纳表",
+        "columns": 6,
+        "bytes": 73,
+        "sha256": "dc2cd07ad64d5fd0e465b044495ecf46befafc4fdc4bbbeb225f1f4546b67a4e"
+      },
+      {
+        "object": "analysis.报告指标对应表",
+        "columns": 3,
+        "bytes": 49,
+        "sha256": "f31ae481c512648936aec6b32f17ecf1d929878ea9da6a20c34e9321d1fb69cd"
+      },
+      {
+        "object": "analysis.报告数据对应表",
+        "columns": 3,
+        "bytes": 46,
+        "sha256": "e58dfda10cb37e33d0aaaed61fb09b90f341ae730db56e3c201d7781fcc94d46"
+      },
+      {
+        "object": "analysis.报告模型对应表",
+        "columns": 3,
+        "bytes": 43,
+        "sha256": "150fdb3e8d9cf98c3545a804015be3942a9e61a4686972bc39caf3c6e6deb206"
+      },
+      {
+        "object": "analysis.指标定义表",
+        "columns": 6,
+        "bytes": 60,
+        "sha256": "e4a3a42aed0ef59089cd57699a2e6d19fcf52b3a84419c4838c83e79e82b4b49"
+      },
+      {
+        "object": "analysis.指标计算表",
+        "columns": 9,
+        "bytes": 109,
+        "sha256": "0feced8c2a235084a7bb5278ef03161c7277719f6b42e81bc56a47c011c84306"
+      },
+      {
+        "object": "analysis.数学模型库",
+        "columns": 11,
+        "bytes": 118,
+        "sha256": "2bfb6d0f15e1544679e5abc519c61a72eed413dfa946790e640c5c4249d3f533"
+      },
+      {
+        "object": "analysis.数据引用登记表",
+        "columns": 8,
+        "bytes": 110,
+        "sha256": "1d07ccf566c16474550c3dcef4e2f826dd0ba666a313797f625072adbf7861e9"
+      },
+      {
+        "object": "analysis.数据集输入来源表",
+        "columns": 10,
+        "bytes": 148,
+        "sha256": "0fa006eaea9e3c33183fa5a2367ebfddade112e7280c0a549def42704bce28e3"
+      },
+      {
+        "object": "analysis.整改处理表",
+        "columns": 7,
+        "bytes": 98,
+        "sha256": "47cb2467adfe784bcf8ca3e867348cb7130b69b8a0de0ad9906a7e9a95ad57d5"
+      }
+    ]
+  },
+  "business_data_unchanged": true
+}
