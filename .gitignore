@@ -3,3 +3,7 @@ var/
 backups/
 exports/
 __pycache__/
+
+# Local Codex guidance
+/AGENTS.md
+/.agents/
