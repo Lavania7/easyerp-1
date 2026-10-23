@@ -1,0 +1,8 @@
+{
+  "readme_exists": false,
+  "prompt_contains_original_schema_source": true,
+  "source_file_check": "MISSING_README",
+  "missing_path": "D:\\projx\\demo\\easyerp-1\\readme.md",
+  "frontend_health": true,
+  "source_workbook_unchanged": true
+}

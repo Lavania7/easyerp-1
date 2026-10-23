@@ -74,6 +74,8 @@ Set-Location 'D:\projx\demo\easyerp-1'
 
 ## 表格导入接口
 
-右上角「↑ 导入」提供文件格式检查、已登记表格类型、停用/恢复和检查记录。初始登记 6 类、7 个格式版本；未知格式需要增加功能，不自动接纳。当前只开放这些接口，业务数据导入尚未开放，检查不会写入 PostgreSQL 业务表。说明及扩展约定见 [表格导入接口](IMPORT_INTERFACE.md)。
+右上角「↑ 导入」支持标准主录表CSV检查、预览及整批导入，覆盖SQL的146张主录表；该类型始终启用。既有6类外部格式继续支持结构检查与启停管理，未知格式不会自动接纳。空缺经确认后保留为NULL；已有记录可用最新非空值覆盖，或只补原空白项，新CSV空白不会清除旧数据。执行失败整批回滚，同一次检查重复提交不重复写入；重新检查可再次导入同一文件。用户授权的空缺约束调整按字段执行并记录，主键、已填写关联、数值检查及已过账保护继续生效。见[导入说明](IMPORT_INTERFACE.md)。
 
 `imports.py` 使用标准库读取 XLSX/CSV/TXT 并管理本地记录；`import_formats.json` 保存明确登记的识别规则；`var/import-interface.sqlite3` 保存启停设置和检查历史，重启后保留。记录按正式/演示来源分开，类型设置工作空间共用。验收为 `tests/test_import_interface.py`，报告为 `reports/import-interface-tests.json`。
+
+顶部提供太阳／月亮／电脑三种主题及ZH／EN／DE语言切换，刷新后保留选择。详见[主题、语言与标准导入](PREFERENCES_AND_STANDARD_IMPORT.md)。

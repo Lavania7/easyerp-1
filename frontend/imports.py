@@ -1,4 +1,4 @@
-"""Versioned format recognition and local registration history; no business SQL writes."""
+"""Versioned format recognition, standard CSV import and local check history."""
 from pathlib import Path, PurePosixPath
 from datetime import datetime, timezone
 from contextlib import contextmanager
@@ -185,20 +185,25 @@ class Imports:
         finally:
             db.close()
 
-    def metadata(self):
+    def metadata(self, mode='live'):
+        self.mode(mode)
+        from standard_import import StandardImport
         with self.connect() as db:
             settings = {r['type_id']: dict(r) for r in db.execute('SELECT * FROM settings')}
         types = []
         for key, kind in self.types.items():
             state = settings.get(key, {'enabled': 1, 'version': 0, 'updated_at': None})
             types.append({**kind, **state, 'enabled': bool(state['enabled']), 'registered_at': self.catalog['registered_at']})
-        return {'types': types, 'catalog_version': self.catalog['version'], 'execution_available': False,
+        types.insert(0, StandardImport(mode).registration())
+        return {'types': types, 'catalog_version': self.catalog['version'], 'execution_available': True,
                 'scope': 'workspace', 'max_file_bytes': MAX_FILE, 'extensions': ['.xlsx', '.csv', '.txt']}
 
-    def configure(self, body):
+    def configure(self, body, mode='live'):
         if not isinstance(body, dict) or set(body) != {'type_id', 'enabled', 'version'}:
             raise ImportError('请提供类型、启用状态和当前版本。')
         key = body['type_id']
+        if key == 'standard-master':
+            raise ImportError('标准主录表始终启用，不能停用。')
         if not isinstance(key, str) or key not in self.types:
             raise ImportError('此表格类型未登记，需要开发新增支持。', 404)
         if type(body['enabled']) is not bool or type(body['version']) is not int:
@@ -215,7 +220,7 @@ class Imports:
                 db.execute('INSERT OR REPLACE INTO settings VALUES(?,?,?,?)', (key, int(body['enabled']), version + 1, now))
                 db.execute('INSERT INTO events(type_id,enabled,version,recorded_at) VALUES(?,?,?,?)',
                            (key, int(body['enabled']), version + 1, now))
-        return self.metadata()
+        return self.metadata(mode)
 
     @staticmethod
     def mode(mode):
@@ -236,6 +241,9 @@ class Imports:
             raise ImportError('当前仅检查 XLSX、CSV 和 TXT 文件；其他格式需要新增支持。', 415)
         try:
             shape = xlsx(raw) if extension == '.xlsx' else text_table(raw)
+            from standard_import import StandardImport
+            standard = StandardImport(mode)
+            plan = standard.plan(filename, raw) if extension == '.csv' else None
             matches = []
             for kind in self.catalog['types']:
                 for profile in kind['profiles']:
@@ -256,10 +264,13 @@ class Imports:
             result = {'status': 'recognized' if len(matches) == 1 else 'unknown', 'match': matches[0] if len(matches) == 1 else None,
                       'encoding': shape['encoding'], 'sheets': [{'name': s['name'], 'physical_rows': s['rows']} for s in shape['sheets']],
                       'reason': '格式已登记。' if len(matches) == 1 else '此文件结构尚未支持，需要增加或更新格式识别规则。'}
+            if plan is not None:
+                result = standard.inspect(plan)
         except ImportError as exc:
             result = {'status': 'invalid', 'match': None, 'sheets': [], 'encoding': None, 'reason': str(exc)}
         result.update({'filename': filename, 'sha256': hashlib.sha256(raw).hexdigest(), 'size_bytes': len(raw),
-                       'recorded_at': stamp(), 'catalog_version': self.catalog['version'], 'execution_available': False})
+                       'recorded_at': stamp(), 'mode': mode, 'catalog_version': self.catalog['version'],
+                       'execution_available': bool(result.get('match', {}).get('type_id') == 'standard-master') if result.get('match') else False})
         # Persist eligibility and settings version from the same serialized transaction.
         with self.connect() as db:
             db.execute('BEGIN IMMEDIATE')
@@ -267,6 +278,9 @@ class Imports:
                 row = db.execute('SELECT enabled,version FROM settings WHERE type_id=?', (result['match']['type_id'],)).fetchone()
                 result['enabled_at_check'] = bool(row['enabled']) if row else True
                 result['settings_version'] = row['version'] if row else 0
+                if result['match']['type_id'] == 'standard-master':
+                    result['enabled_at_check'] = True
+                    result['settings_version'] = 0
             else:
                 result['enabled_at_check'] = False
             db.execute('INSERT INTO checks(mode,filename,sha256,recorded_at,result) VALUES(?,?,?,?,?)',
@@ -275,15 +289,75 @@ class Imports:
         return self.current(result)
 
     def current(self, result, states=None):
-        states = states if states is not None else {t['id']: t for t in self.metadata()['types']}
+        states = states if states is not None else {t['id']: t for t in self.metadata(result.get('mode', 'live'))['types']}
         match = result.get('match')
         current = states.get(match['type_id']) if match else None
         result['currently_enabled'] = bool(current and current['enabled'])
         result['requires_recheck'] = bool(match and (result['catalog_version'] != self.catalog['version'] or
                                                     not current or match['profile'] not in {p['id'] for p in current['profiles']}))
         result['format_eligible'] = bool(result['status'] == 'recognized' and current and current['enabled'] and not result['requires_recheck'])
-        result['can_execute'] = False
+        standard = bool(match and match['type_id'] == 'standard-master')
+        if standard:
+            from standard_import import POLICY_VERSION
+            profile = next((p for p in current['profiles'] if p['id'] == match['profile']), None) if current else None
+            result['requires_recheck'] = result['requires_recheck'] or not profile or profile['signature'] != match.get('signature') or result.get('import_policy_version') != POLICY_VERSION
+            result['can_execute'] = bool(result['validated'] and result.get('row_count') and not result['requires_recheck'] and not result.get('execution'))
+        else:
+            result['can_execute'] = False
         result['label'] = ('已停用 · 不可导入' if not result['currently_enabled'] else '规则已更新 · 请重新检查' if result['requires_recheck'] else '已登记 · 可用于导入') if match else ('无法检查' if result['status'] == 'invalid' else '需要新增支持')
+        if standard:
+            result['label'] = '已导入' if result.get('execution') else '业务校验未通过' if not result['validated'] else '校验通过 · 可导入' if result['can_execute'] else '请填写数据或重新检查'
+        result['format_eligible'] = result['format_eligible'] and not result['requires_recheck']
+        return result
+
+    def execute(self, check_id, filename, raw, mode='live', allow_incomplete=None, merge=None):
+        mode = self.mode(mode)
+        if isinstance(check_id, bool) or not isinstance(check_id, (str, int)) or not str(check_id).isdigit() or len(str(check_id)) > 12:
+            raise ImportError('请先检查文件，再执行标准主录表导入。')
+        with self.connect() as db:
+            row = db.execute('SELECT * FROM checks WHERE id=? AND mode=?', (int(check_id), mode)).fetchone()
+        if not row:
+            raise ImportError('检查记录不存在或数据来源不一致。', 409)
+        checked = json.loads(row['result'])
+        if row['filename'] != filename or row['sha256'] != hashlib.sha256(raw).hexdigest():
+            raise ImportError('文件已变化，请重新检查后导入。', 409)
+        if not checked.get('match') or checked['match']['type_id'] != 'standard-master':
+            raise ImportError('当前仅开放标准主录表CSV导入，其他类型仍只检查格式。', 415)
+        if not checked.get('validated') or not checked.get('row_count'):
+            raise ImportError('文件尚未通过业务校验，请修改后重新检查。')
+        from standard_import import StandardImport, POLICY_VERSION
+        if checked.get('import_policy_version') != POLICY_VERSION or not checked.get('import_key'):
+            raise ImportError('导入规则已更新，请重新检查文件。', 409)
+        if allow_incomplete in ('true','false'):
+            allow_incomplete = allow_incomplete == 'true'
+        elif allow_incomplete is None:
+            allow_incomplete = False
+        elif type(allow_incomplete) is not bool:
+            raise ImportError('空缺确认参数无效。')
+        if merge == '':
+            merge = None
+        if merge not in (None,'latest','fill_empty'):
+            raise ImportError('请选择使用最新数据或只补填原空白项。')
+        service = StandardImport(mode)
+        plan = service.plan(filename, raw, checked['import_key'])
+        if not plan or plan['signature'] != checked['match']['signature']:
+            raise ImportError('主录表结构已变化，请重新下载模板并检查。', 409)
+        previous = service.previous(plan, int(check_id), merge, allow_incomplete)
+        if previous:
+            result = previous
+        elif plan['errors']:
+            raise ImportError('；'.join(plan['errors']))
+        else:
+            if plan['blank_cells'] and not allow_incomplete:
+                raise ImportError('检查到表信息不全，是否还要导入？',409)
+            if service.existing_count(plan) and merge is None:
+                raise ImportError('是否要使用最新一次的数据？',409)
+            result = service.write(plan, int(check_id), merge, allow_incomplete)
+        # PostgreSQL audit is the commit authority. Retrying after a local history error is safe.
+        checked['execution'] = result
+        checked['can_execute'] = False
+        with self.connect() as db:
+            db.execute('UPDATE checks SET result=? WHERE id=? AND mode=?', (packed(checked), int(check_id), mode))
         return result
 
     def history(self, mode='live', offset=0):
@@ -294,7 +368,7 @@ class Imports:
             raise ImportError('分页参数无效。')
         if not 0 <= offset <= 1000000:
             raise ImportError('分页参数超出范围。')
-        states = {t['id']: t for t in self.metadata()['types']}
+        states = {t['id']: t for t in self.metadata(mode)['types']}
         with self.connect() as db:
             rows = db.execute('SELECT id,result FROM checks WHERE mode=? ORDER BY id DESC LIMIT 20 OFFSET ?', (mode, offset)).fetchall()
             total = db.execute('SELECT count(*) FROM checks WHERE mode=?', (mode,)).fetchone()[0]

@@ -1,0 +1,195 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "finance.资金账户档案表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "finance.资金流水表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "finance.流水来源明细表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "finance.流水文件登记表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "sales.渠道档案表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "sales.平台文件登记表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "sales.销售订单登记表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "sales.订单导出快照表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "sales.销售订单行表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "sales.销售期间覆盖表 exact row count",
+      "passed": true
+    },
+    {
+      "check": "37 files and all original rows preserved",
+      "passed": true
+    },
+    {
+      "check": "one committed import batch",
+      "passed": true
+    },
+    {
+      "check": "only 14 required-field flags relaxed",
+      "passed": true
+    },
+    {
+      "check": "no invented companies, customers or vouchers",
+      "passed": true
+    },
+    {
+      "check": "18 multigood line quantities remain NULL",
+      "passed": true
+    },
+    {
+      "check": "all missing line facts remain NULL",
+      "passed": true
+    },
+    {
+      "check": "incomplete paid allocation remains NULL",
+      "passed": true
+    },
+    {
+      "check": "企业聚合结算账户 independent source totals",
+      "passed": true
+    },
+    {
+      "check": "企业网银账户 independent source totals",
+      "passed": true
+    },
+    {
+      "check": "保证金账户 independent source totals",
+      "passed": true
+    },
+    {
+      "check": "企业支付宝账户 independent source totals",
+      "passed": true
+    },
+    {
+      "check": "nine source summary/detail reconciliations",
+      "passed": true
+    },
+    {
+      "check": "all source bytes unchanged",
+      "passed": true
+    },
+    {
+      "check": "orders backend includes unknown references and currencies",
+      "passed": true
+    },
+    {
+      "check": "funds backend includes unknown references and currencies",
+      "passed": true
+    },
+    {
+      "check": "overview tracks incomplete sales sum",
+      "passed": true
+    },
+    {
+      "check": "missing order quantities never become completed quantity",
+      "passed": true
+    },
+    {
+      "check": "currency options contain no null entry",
+      "passed": true
+    },
+    {
+      "check": "running frontend points to the formal database",
+      "passed": true
+    },
+    {
+      "check": "orders HTTP listing count",
+      "passed": true
+    },
+    {
+      "check": "orders HTTP details and provenance",
+      "passed": true
+    },
+    {
+      "check": "funds HTTP listing count",
+      "passed": true
+    },
+    {
+      "check": "funds HTTP details and provenance",
+      "passed": true
+    },
+    {
+      "check": "import exception view visible in application",
+      "passed": true
+    },
+    {
+      "check": "HTTP incomplete-sales count present",
+      "passed": true
+    },
+    {
+      "check": "repeating exact import passes conflict checks and leaves row counts unchanged (rolled back)",
+      "passed": true
+    }
+  ],
+  "account_totals": [
+    {
+      "account": "企业聚合结算账户",
+      "rows": 157,
+      "income": "5531.3400",
+      "expense": "5581.1500"
+    },
+    {
+      "account": "企业网银账户",
+      "rows": 142,
+      "income": "44166.5300",
+      "expense": "44920.3000"
+    },
+    {
+      "account": "保证金账户",
+      "rows": 29,
+      "income": "209.3000",
+      "expense": "209.3000"
+    },
+    {
+      "account": "企业支付宝账户",
+      "rows": 1370,
+      "income": "38722.9000",
+      "expense": "38430.5700"
+    }
+  ],
+  "preserved_nulls": {
+    "unknown_quantities": 18,
+    "missing_facts": 192,
+    "unknown_paid": 23
+  },
+  "database_counts": {
+    "files": 37,
+    "raw_rows": 2100,
+    "batches": 1,
+    "nullable_changes": 14,
+    "companies": 0,
+    "customers": 0,
+    "vouchers": 0
+  },
+  "repeat_import_counts": {
+    "funds": 1698,
+    "orders": 183,
+    "lines": 192,
+    "batches": 1
+  }
+}

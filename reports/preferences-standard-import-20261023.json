@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "backup": "D:\\projx\\demo\\easyerp-1\\backups\\preferences-standard-import-20261023-034103",
+  "installed_files": 19,
+  "verification_reports": {
+    "standard-import-tests-20261023.json": {
+      "checks": 168,
+      "status": "PASS"
+    },
+    "standard-templates-20261023.json": {
+      "checks": 38,
+      "status": "PASS"
+    },
+    "import-interface-tests.json": {
+      "checks": 239,
+      "status": "PASS"
+    },
+    "preferences-browser-20261023.json": {
+      "checks": null,
+      "status": "PASS"
+    }
+  },
+  "formal_data_unchanged": true,
+  "demo_test_data_cleaned": true
+}
