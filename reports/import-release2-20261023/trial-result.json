@@ -1,0 +1,1401 @@
+{
+  "version": "release2-workbook-20261023-v1",
+  "source": "D:\\projx\\demo\\easyerp-old1\\xlsx\\release2.0.xlsx",
+  "source_sha256": "0f08d35c5e4ee29de1db8918ec4fa5a55c5513ca12bd3a8af4b03ee455d66260",
+  "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+  "sheets": [
+    {
+      "name": "产品源数据表",
+      "dimension": "A2:I105",
+      "formula_count": 302,
+      "error_count": 0
+    },
+    {
+      "name": "物料源数据表",
+      "dimension": "A2:H205",
+      "formula_count": 201,
+      "error_count": 0
+    },
+    {
+      "name": "BOM总表",
+      "dimension": "A2:AQ506",
+      "formula_count": 2503,
+      "error_count": 0
+    },
+    {
+      "name": "物料需求",
+      "dimension": "A2:K208",
+      "formula_count": 2204,
+      "error_count": 0
+    },
+    {
+      "name": "计划总览",
+      "dimension": "A2:N109",
+      "formula_count": 1204,
+      "error_count": 0
+    },
+    {
+      "name": "其他物品数据表",
+      "dimension": "A2:E205",
+      "formula_count": 201,
+      "error_count": 0
+    },
+    {
+      "name": "资产表",
+      "dimension": "A2:C10",
+      "formula_count": 4,
+      "error_count": 0
+    }
+  ],
+  "raw_rows": 1334,
+  "formula_count": 6619,
+  "business_record_counts": {
+    "product": 4,
+    "material": 15,
+    "bom": 35,
+    "plan": 4,
+    "demand": 15,
+    "other": 2,
+    "asset": 5
+  },
+  "table_counts": {
+    "rd.产品主数据表": 4,
+    "rd.产品版本表": 4,
+    "rd.物料主数据表": 15,
+    "rd.物料版本表": 15,
+    "rd.项目文件登记表": 1,
+    "rd.BOM登记表": 4,
+    "rd.BOM明细表": 35,
+    "production.工单草稿表": 2
+  },
+  "nullable_fields": [
+    [
+      "rd",
+      "产品主数据表",
+      "规格"
+    ],
+    [
+      "rd",
+      "产品主数据表",
+      "单位ID"
+    ],
+    [
+      "rd",
+      "产品主数据表",
+      "类别"
+    ],
+    [
+      "rd",
+      "物料主数据表",
+      "规格"
+    ],
+    [
+      "rd",
+      "物料主数据表",
+      "单位ID"
+    ],
+    [
+      "rd",
+      "物料主数据表",
+      "类别"
+    ],
+    [
+      "rd",
+      "产品版本表",
+      "项目ID"
+    ],
+    [
+      "rd",
+      "产品版本表",
+      "版本名称"
+    ],
+    [
+      "rd",
+      "产品版本表",
+      "确认依据"
+    ],
+    [
+      "rd",
+      "物料版本表",
+      "版本名称"
+    ],
+    [
+      "rd",
+      "物料版本表",
+      "确认依据"
+    ],
+    [
+      "rd",
+      "项目文件登记表",
+      "项目ID"
+    ],
+    [
+      "rd",
+      "项目文件登记表",
+      "正式版本"
+    ],
+    [
+      "rd",
+      "BOM登记表",
+      "BOM版本"
+    ],
+    [
+      "rd",
+      "BOM登记表",
+      "确认依据"
+    ],
+    [
+      "rd",
+      "BOM明细表",
+      "物料版本ID"
+    ],
+    [
+      "rd",
+      "BOM明细表",
+      "单位ID"
+    ],
+    [
+      "rd",
+      "BOM明细表",
+      "确认依据"
+    ],
+    [
+      "production",
+      "工单草稿表",
+      "登记时间"
+    ]
+  ],
+  "checks": [
+    {
+      "check": "产品源数据表 has no saved formula errors",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "物料源数据表 has no saved formula errors",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM总表 has no saved formula errors",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "物料需求 has no saved formula errors",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "计划总览 has no saved formula errors",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "其他物品数据表 has no saved formula errors",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "资产表 has no saved formula errors",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "产品源数据表 reviewed headers",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "物料源数据表 reviewed headers",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM总表 reviewed headers",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "计划总览 reviewed headers",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "物料需求 reviewed headers",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "其他物品数据表 reviewed headers",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "资产表 reviewed headers",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique PID P001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "product name P001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique PID P002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "product name P002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique PID P003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "product name P003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique PID P004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "product name P004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M005",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M006",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M007",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M008",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M009",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M010",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M011",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M012",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M013",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M014",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unique MID M015",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 7",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 7",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 7",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 8",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 8",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 8",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 9",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 9",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 9",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 10",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 10",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 10",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 11",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 11",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 11",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 12",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 12",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 12",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 13",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 13",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 13",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 14",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 14",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 14",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 15",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 15",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 15",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 16",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 16",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 16",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 17",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 17",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 17",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 18",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 18",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 18",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 19",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 19",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 19",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 20",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 20",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 20",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 21",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 21",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 21",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 22",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 22",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 22",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 23",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 23",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 23",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 24",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 24",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 24",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 25",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 25",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 25",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 26",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 26",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 26",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 27",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 27",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 27",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 28",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 28",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 28",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 29",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 29",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 29",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 30",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 30",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 30",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 31",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 31",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 31",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 32",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 32",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 32",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 33",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 33",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 33",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 34",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 34",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 34",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 35",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 35",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 35",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 36",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 36",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 36",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 37",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 37",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 37",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 38",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 38",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 38",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 39",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 39",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 39",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 40",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 40",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 40",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM source PID 41",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM quantity 41",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "BOM name mapping agrees with saved result 41",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "35 BOM rows, 18 exact matches and 17 unresolved",
+      "passed": true,
+      "details": {
+        "true": 18,
+        "false": 17
+      }
+    },
+    {
+      "check": "plan PID P001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "plan saved total P001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "plan PID P002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "plan saved total P002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "plan PID P003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "plan saved total P003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "plan PID P004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "plan saved total P004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "four plans; 80 proposed units in two drafts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M005",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M005",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M006",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M006",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M007",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M007",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M008",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M008",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M009",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M009",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M010",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M010",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M011",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M011",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M012",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M012",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M013",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M013",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M014",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M014",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "demand MID M015",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "saved partial material demand M015",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "source material cost P001",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "source material cost P002",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "incomplete material cost remains unavailable P003",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "incomplete material cost remains unavailable P004",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "80 business source rows",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "exceptions": [
+    {
+      "exception_id": "rel2-issue-2cf618cff1924742471710e754267ce7",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 16,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!16：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=100nF"
+    },
+    {
+      "exception_id": "rel2-issue-afd9d5be3077d9642a3d5ceba7a52c56",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 16,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!16：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-b6bb86266fd7509a85300bf64318f53a",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 17,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!17：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=1MΩ"
+    },
+    {
+      "exception_id": "rel2-issue-cec551f0c7023736e06fd5af5e58bb3f",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 18,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!18：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=47K"
+    },
+    {
+      "exception_id": "rel2-issue-c68a5f373a5b4f0de95675a33fa1f0ee",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 18,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!18：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-490a966848ba65c6a495c672337f22fb",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 19,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!19：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=10"
+    },
+    {
+      "exception_id": "rel2-issue-c649488a50a2eca39975aaa1979ea4ac",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 19,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!19：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-591883f10767feede881a0312387691d",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 20,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!20：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=CuLine30x5.5x1"
+    },
+    {
+      "exception_id": "rel2-issue-93e0c9ae00771c9e8e29b4b4c382a198",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 20,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!20：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-3ea606e73c928daad3acbce4478c166a",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 23,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!23：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=10K"
+    },
+    {
+      "exception_id": "rel2-issue-8b754548da83215a9291d9f24e86d302",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 23,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!23：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-8245b5cd4f5d3a7c9f42f410c9a14dd1",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 25,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!25：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=LED_0603-G"
+    },
+    {
+      "exception_id": "rel2-issue-f90992d798af0150d96396b31febbe14",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 25,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!25：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-ed34bb64526b8cb209153ef40bf5ff14",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 26,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!26：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=SMCJ36CA"
+    },
+    {
+      "exception_id": "rel2-issue-7cc39229bee2b0818f357c9239e8e09b",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 28,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!28：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=100nF"
+    },
+    {
+      "exception_id": "rel2-issue-972acc6cf864fe4a683a470c81f22eff",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 28,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!28：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-4ac0893db3629b54fb10b5db2bb09021",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 30,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!30：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=SMCJ36CA"
+    },
+    {
+      "exception_id": "rel2-issue-c0a8140550b4484eb44d9af8e0915a4d",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 31,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!31：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=LED_0603-G"
+    },
+    {
+      "exception_id": "rel2-issue-2232ea4e02d570eaf748518125bb4f88",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 31,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!31：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-313da8d677329c470853a23db4fd5d73",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 33,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!33：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=10kΩ"
+    },
+    {
+      "exception_id": "rel2-issue-c58e38cf7f3b83f82e299a99877bfe65",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 34,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!34：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=10"
+    },
+    {
+      "exception_id": "rel2-issue-ec36bdf491bd97362fc5e7c3b93ef9bd",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 34,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!34：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-7a240b9105248a088db76fe7f6f412e3",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 35,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!35：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=47K"
+    },
+    {
+      "exception_id": "rel2-issue-e1a2b241150ee4cb7cef4075b3775b26",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 35,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!35：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-7ffef5570e98530836ec7cc97ffb8a36",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 36,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!36：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=10K"
+    },
+    {
+      "exception_id": "rel2-issue-1045e1895e126e929160e1b3db80e98e",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 36,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!36：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-318fd96d702a7291f036ae7d0b12b68b",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 37,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!37：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=1MΩ"
+    },
+    {
+      "exception_id": "rel2-issue-153cac4dfa9f736ff050d6ad83e4ff6f",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 38,
+      "order_id": null,
+      "reason_code": "BOM物料未对应",
+      "details": "BOM总表!38：未找到唯一同名物料，物料版本ID留空；不猜测别名或替代器件。Comment=SS-12D10L5"
+    },
+    {
+      "exception_id": "rel2-issue-1f10b1d8e0c4dc693ce95a8549086c66",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": 41,
+      "order_id": null,
+      "reason_code": "来源料号待核",
+      "details": "BOM总表!41：厂家或供应商料号包含“62”，照录来源，尚未核实其业务含义。"
+    },
+    {
+      "exception_id": "rel2-issue-226001b3ff33a38408cabc3ef83d860d",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": null,
+      "order_id": null,
+      "reason_code": "版本及批准依据缺失",
+      "details": "文件名release2.0不是产品、物料或BOM的正式版本。版本、项目、批准和确认依据留空；导入记录不视为已核定BOM。"
+    },
+    {
+      "exception_id": "rel2-issue-40ab8534b74fed82d4235e566c96020a",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": null,
+      "order_id": null,
+      "reason_code": "规格单位缺失",
+      "details": "产品/物料规格、单位及部分类别没有独立来源字段，留空，不根据名称猜测。"
+    },
+    {
+      "exception_id": "rel2-issue-665e6e53233294ad4cc0a7f7a6cb92e0",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": null,
+      "order_id": null,
+      "reason_code": "库存基准缺失",
+      "details": "库存是无盘点日期的来源快照；基准日期、仓库、库位、批次、所有权主体和单位不补造，不生成库存基准、库存变动或已核定余额。"
+    },
+    {
+      "exception_id": "rel2-issue-3eb6f062837420c45760af183e73231c",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": null,
+      "order_id": null,
+      "reason_code": "计划未实际执行",
+      "details": "两条正数计划仅登记为待下达草稿（50、30），不生成生产工单、完工、领料、采购或销售收入。零计划仍按来源保存为0。"
+    },
+    {
+      "exception_id": "rel2-issue-887a33637d15ebc331b4b6c6e8708e5c",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": null,
+      "order_id": null,
+      "reason_code": "建议需求不完整",
+      "details": "物料需求仅覆盖能够匹配的18条BOM；17条未匹配时完整需求与完整采购建议留空，原表“库存充足”仅作为缓存原文。"
+    },
+    {
+      "exception_id": "rel2-issue-738733bee77c5977a345c9b75980950c",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": null,
+      "order_id": null,
+      "reason_code": "成本资产未核定",
+      "details": "库存价值、报价、采购单价、计划利润及资产数字均为来源/缓存快照，不写入成本、资产、收入确认或资金流水；币种和基准日期缺失保持为空。"
+    },
+    {
+      "exception_id": "rel2-issue-de8435915debcf99204154cdcb5d4c44",
+      "file_id": "rel2-file-2e50271034c2b24a2b4471dddeba249c",
+      "row_no": null,
+      "order_id": null,
+      "reason_code": "公式缓存边界",
+      "details": "保留全部公式和已保存值；独立复核匹配、BOM成本及计划需求，不运行Excel，也不把缓存值当作新的实时重算结果。"
+    }
+  ],
+  "source_unchanged": true,
+  "trial": "PASSED_AND_ROLLED_BACK",
+  "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02-20261023T004229591656Z.dump"
+}
