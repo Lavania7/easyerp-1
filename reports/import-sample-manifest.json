@@ -1,0 +1,257 @@
+{
+  "root": "D:\\projx\\demo\\easyerp-old2",
+  "files": [
+    {
+      "path": "finance\\企业支付宝账户2026\\Q1\\20885708369578680156_202601_账务明细(汇总)_1.csv",
+      "sha256": "f54bc7946566abc089f99af9b55372814cfdbdd331e26984a992ab9e2593a3ac",
+      "size_bytes": 626,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q1\\20885708369578680156_202601_账务明细_1.csv",
+      "sha256": "a42dc174db26bc228d7c86b8c19a2451220db922246b4865018f89e19ba27383",
+      "size_bytes": 29664,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q1\\20885708369578680156_202602_账务明细(汇总)_1.csv",
+      "sha256": "fe8dd25e8837bc8571fd5bf1957731175fdb122724aa69c43df5ce123642495e",
+      "size_bytes": 622,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q1\\20885708369578680156_202602_账务明细_1.csv",
+      "sha256": "4d28c0e1300597cd448c181c15b3c4ceaeaa62bd9afb185a17f3920515e3b170",
+      "size_bytes": 18337,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q1\\20885708369578680156_202603_账务明细(汇总)_1.csv",
+      "sha256": "cb98c47b65d4fb87f62969640ad73b3faf0ac70f0953acebccd4223e5d79c011",
+      "size_bytes": 586,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q1\\20885708369578680156_202603_账务明细_1.csv",
+      "sha256": "36a5f696730c94b2f9d74bbc14085f0c228fd9c89f85c880631f92c50ed2df8b",
+      "size_bytes": 36074,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q2\\20885708369578680156_202604_账务明细(汇总)_1.csv",
+      "sha256": "e534a3031c65c6975500dc657e68134b7c04e11d7e4785603e2c5439d11b68b6",
+      "size_bytes": 629,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q2\\20885708369578680156_202604_账务明细_1.csv",
+      "sha256": "3cc7ce3110ae4afd39d6318c1ee4cb404a327969ff1aa335afd74dec29fff053",
+      "size_bytes": 68191,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q2\\20885708369578680156_202605_账务明细(汇总)_1.csv",
+      "sha256": "e43e68cc5a4bdb1e7d4014000c1c6f9f684029e28ed442f3a048ae1a8467c2a2",
+      "size_bytes": 663,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q2\\20885708369578680156_202605_账务明细_1.csv",
+      "sha256": "9a1e06128b99f427b521a91d985c3c3383784cbd0e8da9ac1f09b68fa002d3a8",
+      "size_bytes": 60710,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q2\\20885708369578680156_202606_账务明细(汇总)_1.csv",
+      "sha256": "867838d74a6cfcf7f6f14b75fd24e888bc93a8ce6c456725fab7c65069af0d5b",
+      "size_bytes": 700,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q2\\20885708369578680156_202606_账务明细_1.csv",
+      "sha256": "ff5b45bb343343b1be1fd334540a9a81c1f6e931cf468cccdf8a3497b2238a28",
+      "size_bytes": 56894,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q3\\20885708369578680156_202607_账务明细(汇总)_1.csv",
+      "sha256": "a6f86f8d785eccb287bf56bb4887b06e1011e77c8090bbc7237ddc397ddc514f",
+      "size_bytes": 661,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q3\\20885708369578680156_202607_账务明细_1.csv",
+      "sha256": "1a228e7e727a47c4dcb9b6ac136235846b8ee859c2873b7e49d5e611413a00cf",
+      "size_bytes": 41009,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q3\\20885708369578680156_202608_账务明细(汇总)_1.csv",
+      "sha256": "7a72769f8b7a1d3ad17752e506b68d79c7b046057b797f39e302ea36b70ee024",
+      "size_bytes": 668,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q3\\20885708369578680156_202608_账务明细_1.csv",
+      "sha256": "9a8886edba62ce8ca41a59e7c23a7dc539465341c69771780d749d526de85eec",
+      "size_bytes": 46019,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q3\\20885708369578680156_202609_账务明细(汇总)_1.csv",
+      "sha256": "e5de097c8eba6094b5e1041258d373c7e37e53c31e4568418ea74b5affff4896",
+      "size_bytes": 669,
+      "type_id": "alipay-summary",
+      "profile": "alipay-summary-v1"
+    },
+    {
+      "path": "finance\\企业支付宝账户2026\\Q3\\20885708369578680156_202609_账务明细_1.csv",
+      "sha256": "e94a79f2f71464e0d74845277470334ebdd5839885e5c08315d416663983c7c7",
+      "size_bytes": 43451,
+      "type_id": "alipay-detail",
+      "profile": "alipay-detail-v1"
+    },
+    {
+      "path": "finance\\企业网银账户2026\\historydetail756.xlsx",
+      "sha256": "a134571cae7e0358066733f3ce259110da46c97eade1037eb994f2ae82f04c4c",
+      "size_bytes": 10152,
+      "type_id": "bank-history",
+      "profile": "bank-history-v1"
+    },
+    {
+      "path": "finance\\企业网银账户2026\\historydetail760.xlsx",
+      "sha256": "c61264b126e53311026cf2d82eb2b61d901538ef08452295ca1cd3eb1e8b4436",
+      "size_bytes": 8021,
+      "type_id": "bank-history",
+      "profile": "bank-history-v1"
+    },
+    {
+      "path": "finance\\企业网银账户2026\\historydetail827.xlsx",
+      "sha256": "bf0695efbbedfdd06f8fe6ef1b4aac562402cdce9ee2cf82b55b45016c833549",
+      "size_bytes": 7492,
+      "type_id": "bank-history",
+      "profile": "bank-history-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202601_0.xlsx",
+      "sha256": "72587616cd3fdfe91daabb3a53a84f35f1a4ae3de013b89f2f8827c3aa3c7af0",
+      "size_bytes": 6332,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202602_0.xlsx",
+      "sha256": "9832f4e86e4a5daf2ec5d22d48c11e41a6e327388d37be0604a2b41d4829e688",
+      "size_bytes": 4906,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202603_0.xlsx",
+      "sha256": "4f47013702091bb6f3f096c3973b08473a4cbe3e1e4f51259d465d67397e4644",
+      "size_bytes": 5536,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202604_0.xlsx",
+      "sha256": "63c9a8a48c0356b364750501e9128d74b3c46b42b2cee117d9177aea48e06cb4",
+      "size_bytes": 5709,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202605_0.xlsx",
+      "sha256": "6e567dcf8cb8fc7464bb8ea2e7cd5e79f1e5753cfefff5f86d6d5d6e619ab4c0",
+      "size_bytes": 6281,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202606_0.xlsx",
+      "sha256": "97db23e3f048f6d5c4ecbc95a21ec568b451d4f6319dc7296b2346e32bdd3255",
+      "size_bytes": 4723,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202607_0.xlsx",
+      "sha256": "8fbd985a17dbeadaf4bec7c5e24fcf1381a72679bddb1fc03ad853a62933c797",
+      "size_bytes": 4199,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202608_0.xlsx",
+      "sha256": "1db0795d0862b74f0b1d68870e4cd775b49e4e13b09ca5e7c3b24443dba0d5b4",
+      "size_bytes": 4783,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\企业聚合算账户2026\\2220072947975_202609_0.xlsx",
+      "sha256": "25face97c82e27433c5e41585297d28a3e7b92f1f313f39c12c77be1a543dd7d",
+      "size_bytes": 4820,
+      "type_id": "aggregate-settlement",
+      "profile": "aggregate-v1"
+    },
+    {
+      "path": "finance\\保证金流水2026\\part_Q1.txt",
+      "sha256": "101d611895d01f258e5244913f353d719d4c8d379f0adfd59f10ad00b0ebb5e7",
+      "size_bytes": 139,
+      "type_id": null,
+      "profile": null
+    },
+    {
+      "path": "finance\\保证金流水2026\\part_Q2.csv",
+      "sha256": "09f7fe37674930416b2513e91414d4efaf49a1f9e0b7b0f61e709b09a25b4580",
+      "size_bytes": 2499,
+      "type_id": "deposit-ledger",
+      "profile": "deposit-v1"
+    },
+    {
+      "path": "finance\\保证金流水2026\\part_Q3.csv",
+      "sha256": "1a96d80d31cd478559891f2b2617822301d58d71938ad36d6b48e81279852dde",
+      "size_bytes": 3589,
+      "type_id": "deposit-ledger",
+      "profile": "deposit-v1"
+    },
+    {
+      "path": "sales\\ExportOrderList-2026-Q1.xlsx",
+      "sha256": "17ecc44066f2875161797f0ab3de59bddae843ed602bf190d024e5593d56524c",
+      "size_bytes": 5122,
+      "type_id": "sales-orders",
+      "profile": "orders-32-v1"
+    },
+    {
+      "path": "sales\\ExportOrderList-2026-Q2.xlsx",
+      "sha256": "68a2c7d8ea8fb812e61c050092836dac3b6d62a8df156452b9bbe0897ed37ceb",
+      "size_bytes": 14138,
+      "type_id": "sales-orders",
+      "profile": "orders-32-v1"
+    },
+    {
+      "path": "sales\\ExportOrderList-2026-Q3.xlsx",
+      "sha256": "daa128acde5ae7f5c67ec61e20515879080219662ac70d3eac5563ea543760e4",
+      "size_bytes": 33269,
+      "type_id": "sales-orders",
+      "profile": "orders-29-v1"
+    }
+  ]
+}

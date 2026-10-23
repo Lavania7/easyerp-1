@@ -1,27 +1,27 @@
 # easyERP 双击启动说明
 
-目录：`D:\projx\demo\easyerp-0.2`。
+目录：`D:\projx\demo\easyerp-1`。
 
 | 双击入口 | 打开什么 |
 |---|---|
-| `启动前端.exe` | 自动启动数据库及网页服务，打开现在的经营工作台 |
-| `启动后端SQL.exe` | 自动启动数据库及本项目 pgAdmin，打开 SQL 可视化管理界面 |
+| `dashboard.exe` | 自动启动数据库及网页服务，打开现在的经营工作台 |
+| `sqlview.exe` | 自动启动数据库及本项目 pgAdmin，打开 SQL 可视化管理界面 |
 
-桌面另外提供 `easyERP-前端工作台` 和 `easyERP-后端SQL` 两个快捷方式，功能相同。
-启动时会显示小进度窗口，成功后自动关闭；不用敲启动命令。服务已经运行时会复用，再次双击只需打开界面。
+桌面另外提供 `easyERP-Dashboard` 和 `easyERP-SQLview` 两个快捷方式，功能相同，均指向当前项目目录。
+启动过程在后台进行，就绪后直接打开浏览器界面，不显示进度窗口。服务已经运行时会复用，再次双击只需打开界面。启动失败时会显示错误提示，详情保存到日志。
 关闭浏览器网页不会关闭数据库；不使用时可以直接关网页，下次双击重新打开。
 
 ## 前端
 
-默认打开正式数据，右上角“查看演示”可切换独立演示数据。
-保持此前的查询、筛选、关联追溯与 CSV 导出功能，前端使用只读账户。
+默认打开正式数据，右上角“查看演示”可切换独立演示数据。右上角「＋ 手工录入」用于新建业务记录，详情中的「编辑这条记录」用于更正。
+保持此前的查询、筛选、关联追溯与 CSV 导出功能，查询沿用只读账户；手工录入通过保存接口写入同一业务库。
 
 ## 后端 SQL
 
 后端是 pgAdmin 的图形界面，有数据库树、表、视图、SQL 定义与查询工具。
 配置已预设，数据库密码从已有受保护文件读取，不需要重复填写连接参数。
 
-1. 双击“启动后端SQL.exe”，等待浏览器打开。
+1. 双击“sqlview.exe”，等待浏览器打开。
 2. 左侧展开“服务器 / Servers”下的“easyERP 本机数据库”。
 3. 选择“easyERP 0.2 正式库”，展开“数据库 / Databases”中的 `easyerp_v02`。
 4. 展开“架构 / Schemas”，可查看 finance、legal、production、rd、sales、analysis 下的表和视图。
@@ -43,7 +43,7 @@
 - 数据库密码没有写入 .exe、桌面快捷方式或使用说明；现有 `.secrets` 继续由当前 Windows 用户保护。
 - SQL 界面的临时本机会话信息位于 `.secrets\pgadmin-runtime.json`，不要分享；一般通过 .exe 打开，避免直接保存带会话参数的地址。
 - 启动失败时查看 `var\log\launcher-frontend.log`、`launcher-backend.log`；SQL 界面日志在 `var\pgadmin`。
-- 如果快捷方式失效，可在项目目录直接双击相应 .exe；运维可用 `bin\create-shortcuts.ps1` 重新生成桌面入口。
+- 如果快捷方式失效，可在项目目录直接双击相应 .exe；运维可用 `bin\refresh-icons.ps1 -UseCurrentProject` 更新桌面入口。
 - 启动器源代码及重建脚本在 `launcher-src`，验收结果在 `reports\launcher-tests.json`、`sql-interface-tests.json`。
 
 本次新增启动入口，没有导入真实业务数据，也没有清空或重建正式业务库。

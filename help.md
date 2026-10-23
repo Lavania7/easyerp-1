@@ -229,3 +229,12 @@ PostgreSQL 路径可通过 `config.json` 或 `EASYERP_PG_BIN` 指定；Python �
 后端预设正式库和独立演示库连接，使用已有 `easyerp_app` 账户；SQL 允许修改业务数据，练习请选择演示库。
 SQL 管理页面端口为本机 8093，配置保存在本项目 `var\pgadmin`；保留 .exe 与项目目录结构。
 启动器冷启动及重复启动测试结果在 `reports\launcher-tests.json`，SQL 查询工具实测结果在 `reports\sql-interface-tests.json`。
+
+
+## 手工录入
+
+工作台右上角「＋ 手工录入」可填写各模块业务资料，保存后前端查询与 SQLview 会读取同一条 SQL 主录。订单、采购单、BOM 和会计凭证支持同时填写明细；缺失的可选信息保留为空。详情中可「编辑这条记录」。详细步骤和数据边界见 `frontend/MANUAL_ENTRY.md`。
+
+## 表格导入接口
+
+点击右上角「↑ 导入」选择文件并检查格式。已登记的类型显示「可用于导入」，未知格式提示「需要新增支持」。在「表格类型」中可停用某类，移出可导入目录，也可恢复。检查记录与设置自动保存在本地，重启后保留。此阶段仅开放格式检查与管理接口，业务数据导入尚未开放，文件明细不写入 SQL。详细说明见 `frontend/IMPORT_INTERFACE.md`。

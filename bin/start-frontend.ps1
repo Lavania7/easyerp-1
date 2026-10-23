@@ -8,7 +8,7 @@ $config = Get-Content -LiteralPath (Join-Path $root 'config.json') -Raw -Encodin
 function Test-Frontend {
     try {
         $health = Invoke-RestMethod -Uri "$url/api/health" -TimeoutSec 2
-        return ($health.ok -eq $true -and $health.read_only -eq $true)
+        return ($health.ok -eq $true -and $health.query_read_only -eq $true -and $health.manual_entry -eq $true -and $health.import_interface -eq $true)
     } catch { return $false }
 }
 if (-not (Test-Frontend)) {

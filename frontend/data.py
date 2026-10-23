@@ -272,6 +272,11 @@ class Data:
         if not obj: raise InvalidRequest('该数据对象不可访问')
         return obj
 
+    @staticmethod
+    def projection(obj):
+        # Even a scale-free NUMERIC integer must reach JavaScript as exact text.
+        return ','.join(I(c['name'])+'::text AS '+I(c['name']) if c['type'].startswith('numeric') else I(c['name']) for c in obj['columns'])
+
     def explore(self,key,catalog,export=False):
         o=self.object(key,catalog)
         expr=I(o['schema'])+'.'+I(o['name'])
@@ -280,7 +285,7 @@ class Data:
         if key=='finance.收入成本确认表' and self.p.get('scope')=='confirmed':
             where+=' AND "状态"=\'已核定\' AND '+self.period('"所属月份"',months=True)+' AND '+self.money('"币种"')
         cap=10000 if export else self.limit
-        return self.bundle({'rows':f'SELECT * FROM {expr} WHERE {where} ORDER BY {I(o["pk"])} LIMIT {cap} OFFSET {0 if export else self.offset}',
+        return self.bundle({'rows':f'SELECT {self.projection(o)} FROM {expr} WHERE {where} ORDER BY {I(o["pk"])} LIMIT {cap} OFFSET {0 if export else self.offset}',
                             'total':f'SELECT count(*) AS count FROM {expr} WHERE {where}'})
 
     def search_all(self):
@@ -300,7 +305,7 @@ class Data:
         o=self.object(key,catalog)
         refs=[r for r in catalog['references'] if r['target_schema']==o['schema'] and r['target_table']==o['name']]
         # Bounded inverse references; each references the same authoritative primary row.
-        queries={'basic':f'SELECT * FROM {I(o["schema"])}.{I(o["name"])} WHERE {I(o["pk"])}={L(value)} LIMIT 1'}
+        queries={'basic':f'SELECT {self.projection(o)} FROM {I(o["schema"])}.{I(o["name"])} WHERE {I(o["pk"])}={L(value)} LIMIT 1'}
         selected=[]
         for n,r in enumerate(refs[:16]):
             name='related_'+str(n)

@@ -1,0 +1,16 @@
+[
+  {
+    "path": "D:\\Users\\Desktop\\easyERP-Dashboard.lnk",
+    "target": "D:\\projx\\demo\\easyerp-1\\dashboard.exe",
+    "working_directory": "D:\\projx\\demo\\easyerp-1",
+    "icon": "D:\\projx\\demo\\easyerp-1\\icons\\dashboard.ico,0",
+    "status": "PASS"
+  },
+  {
+    "path": "D:\\Users\\Desktop\\easyERP-SQLview.lnk",
+    "target": "D:\\projx\\demo\\easyerp-1\\sqlview.exe",
+    "working_directory": "D:\\projx\\demo\\easyerp-1",
+    "icon": "D:\\projx\\demo\\easyerp-1\\icons\\sqlview.ico,0",
+    "status": "PASS"
+  }
+]

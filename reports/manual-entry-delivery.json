@@ -1,0 +1,71 @@
+{
+  "at_utc": "2026-10-22T19:14:59.203344+00:00",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8092/",
+  "modules": [
+    "销售",
+    "采购与库存",
+    "生产",
+    "研发",
+    "财务",
+    "法务",
+    "分析报告"
+  ],
+  "business_tables": 146,
+  "composite_forms": [
+    "销售订单及商品行",
+    "采购订单及采购行",
+    "BOM及物料行",
+    "会计凭证及分录"
+  ],
+  "manual_checks": 40,
+  "existing_query_checks": 55,
+  "browser_qa": [
+    "nested reference creation preserves entered values",
+    "add/remove child lines preserves entered values",
+    "order and line saved through real UI",
+    "saved record read from existing SQL-backed detail",
+    "editing refreshes the open detail",
+    "narrow-screen layout usable"
+  ],
+  "browser_qa_samples_removed": true,
+  "formal_business_snapshot_unchanged": true,
+  "business_sql_manifest_unchanged": true,
+  "explicitly_approved_audit_permissions": {
+    "easyerp_v02": "PASS",
+    "easyerp_v02_ui_demo": "PASS"
+  },
+  "temporary_test_service_stopped": true,
+  "database_backups": [
+    {
+      "database": "easyerp_v02",
+      "path": "D:\\projx\\demo\\easyerp-1\\backups\\manual-entry-20261022T185153Z\\easyerp_v02.dump",
+      "sha256": "8d628f418bca0f5203251e5f2fb0ffc77c7b45bc19112a5acce45561314cfb61"
+    },
+    {
+      "database": "easyerp_v02_ui_demo",
+      "path": "D:\\projx\\demo\\easyerp-1\\backups\\manual-entry-20261022T185153Z\\easyerp_v02_ui_demo.dump",
+      "sha256": "46c993071d631328375729377cf5070f27b7ff9f574923e8ee4b64b2e471cf03"
+    }
+  ],
+  "file_backup": "D:\\projx\\demo\\easyerp-1\\backups\\manual-entry-files-20261022T190145Z",
+  "files": {
+    "frontend/server.py": "4514ca9d87d6b25ccc4c1be926a7b77239466faa35fc64a34ab099433a614441",
+    "frontend/data.py": "98a2c859a3ddab60a9d3d98c085c4f912f74bfe6d26a28f7ab6134828f08e1b2",
+    "frontend/entry.py": "e03a33f4f6be9b13eddc7b9959a583d900e3f0dec96c663a646f3cf4c62bbe15",
+    "frontend/entry_schema.sql": "0e4b2c13812ec0d6844b19349fd5d1a7317467d4b71a075bc8e8bd499e3ea0b0",
+    "frontend/web/index.html": "7dbb0961fbf40378540fdab02170b865605421af10b4a454fa7adb26b9b94506",
+    "frontend/web/app.js": "6e991b86f5c5bf07eb50af1277128b171a94c2e007dbc7a28b9aa3148e6f298b",
+    "frontend/web/manual.js": "f5fe109d436a8d890fe4258366731bc6e5e72e5e2eca9493d725f0038cd04fe7",
+    "frontend/web/manual.css": "9dda384dbb19c659f394c779ce7bb353b2d34614722b279bac073bb824a1cc5b",
+    "frontend/README.md": "a97f5ba7354bf67b32dafd2a84c7ab8b07141659ece31315bc5438fc23f3d8af",
+    "frontend/MANUAL_ENTRY.md": "69578bc5378564db23a41150a0057d18f8fe9a7c2d3f6f50f4a9988f5730cbcd",
+    "bin/start-frontend.ps1": "2e464213875c60b0534d629acf51bca0575bb1fed3377deb91df57130ebff905",
+    "bin/enable-manual-entry.py": "1a8d128867277d9760d1b4cb645a67213110f31d9048bfbd4d269f69a497b732",
+    "tests/test_manual_entry.py": "2bf63d566ce49ba9532e044e27f37fcb06ec65170ad28cf41600890005c8758c",
+    "help.md": "ff27046c77e6e372ec8664bec8c7da1460b4aad65901bfff784dafbdd38a3feb",
+    "launch.md": "c502137729dc9a54ed38624cc376364927da3068380451d752eccdec7d66865e"
+  },
+  "instructions": "D:\\projx\\demo\\easyerp-1\\frontend\\MANUAL_ENTRY.md",
+  "screenshot": "D:\\projx\\demo\\easyerp-1\\reports\\manual-entry-live.jpg"
+}

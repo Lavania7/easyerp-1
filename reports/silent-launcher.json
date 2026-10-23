@@ -1,0 +1,161 @@
+{
+  "at_utc": "2026-10-22T18:29:54.4627000+00:00",
+  "status": "PASS",
+  "backup": "D:\\projx\\demo\\easyerp-1\\backups\\silent-launcher-20261022-202855",
+  "behavior": "Background startup with no progress window; open browser when ready; retain startup errors and logs",
+  "fixture_checks": [
+    {
+      "exe": "dashboard.exe",
+      "arguments": "",
+      "controlled_failure": false,
+      "exit_code": 0,
+      "window_samples": 81,
+      "visible_launcher_windows": 0,
+      "browser_request": true,
+      "status": "PASS"
+    },
+    {
+      "exe": "dashboard.exe",
+      "arguments": "--check",
+      "controlled_failure": false,
+      "exit_code": 0,
+      "window_samples": 77,
+      "visible_launcher_windows": 0,
+      "browser_request": false,
+      "status": "PASS"
+    },
+    {
+      "exe": "dashboard.exe",
+      "arguments": "--smoke",
+      "controlled_failure": false,
+      "exit_code": 0,
+      "window_samples": 78,
+      "visible_launcher_windows": 0,
+      "browser_request": true,
+      "status": "PASS"
+    },
+    {
+      "exe": "dashboard.exe",
+      "arguments": "--check",
+      "controlled_failure": true,
+      "exit_code": 1,
+      "window_samples": 77,
+      "visible_launcher_windows": 0,
+      "browser_request": null,
+      "status": "PASS"
+    },
+    {
+      "exe": "sqlview.exe",
+      "arguments": "",
+      "controlled_failure": false,
+      "exit_code": 0,
+      "window_samples": 77,
+      "visible_launcher_windows": 0,
+      "browser_request": true,
+      "status": "PASS"
+    },
+    {
+      "exe": "sqlview.exe",
+      "arguments": "--check",
+      "controlled_failure": false,
+      "exit_code": 0,
+      "window_samples": 77,
+      "visible_launcher_windows": 0,
+      "browser_request": false,
+      "status": "PASS"
+    },
+    {
+      "exe": "sqlview.exe",
+      "arguments": "--smoke",
+      "controlled_failure": false,
+      "exit_code": 0,
+      "window_samples": 75,
+      "visible_launcher_windows": 0,
+      "browser_request": true,
+      "status": "PASS"
+    },
+    {
+      "exe": "sqlview.exe",
+      "arguments": "--check",
+      "controlled_failure": true,
+      "exit_code": 1,
+      "window_samples": 77,
+      "visible_launcher_windows": 0,
+      "browser_request": null,
+      "status": "PASS"
+    }
+  ],
+  "live_checks": {
+    "normal_startup": [
+      {
+        "exe": "dashboard.exe",
+        "arguments": "",
+        "exit_code": 0,
+        "window_samples": 55,
+        "visible_launcher_windows": 0,
+        "status": "PASS"
+      },
+      {
+        "exe": "sqlview.exe",
+        "arguments": "",
+        "exit_code": 0,
+        "window_samples": 63,
+        "visible_launcher_windows": 0,
+        "status": "PASS"
+      }
+    ],
+    "frontend_health": true
+  },
+  "icons": [
+    {
+      "exe": "dashboard.exe",
+      "status": "PASS",
+      "sizes": [
+        16,
+        20,
+        24,
+        32,
+        40,
+        48,
+        64,
+        96,
+        128,
+        256
+      ],
+      "depth": 32,
+      "embedded_frames_match_source": true,
+      "sha256": "d44a1f97ac5e295edc02aca1a1f1d1563eb0469b118f21730efdcc7864ce59c2"
+    },
+    {
+      "exe": "sqlview.exe",
+      "status": "PASS",
+      "sizes": [
+        16,
+        20,
+        24,
+        32,
+        40,
+        48,
+        64,
+        96,
+        128,
+        256
+      ],
+      "depth": 32,
+      "embedded_frames_match_source": true,
+      "sha256": "a19869c227ee6c29e2d684315fa69d4cc73c6d78e528dcb08ead07c0fabfe3c9"
+    }
+  ],
+  "desktop_shortcuts": [
+    {
+      "name": "easyERP-Dashboard.lnk",
+      "target": "D:\\projx\\demo\\easyerp-1\\dashboard.exe",
+      "status": "PASS"
+    },
+    {
+      "name": "easyERP-SQLview.lnk",
+      "target": "D:\\projx\\demo\\easyerp-1\\sqlview.exe",
+      "status": "PASS"
+    }
+  ]
+}

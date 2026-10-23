@@ -1,0 +1,160 @@
+{
+  "status": "PASS",
+  "verified_at_utc": "2026-10-22T19:42:36.556718+00:00",
+  "root": "D:\\projx\\demo\\easyerp-1",
+  "url": "http://127.0.0.1:8092/",
+  "scope": "format registration, enable/disable, recognition, history; execution reserved",
+  "registered_types": 6,
+  "registered_profiles": 7,
+  "execution_available": false,
+  "checks": {
+    "import-interface-tests.json": {
+      "status": "PASS",
+      "checks": 237
+    },
+    "manual-entry-tests.json": {
+      "status": "PASS",
+      "checks": 40
+    },
+    "frontend-tests.json": {
+      "status": "PASS",
+      "checks": 55
+    }
+  },
+  "total_checks": 332,
+  "business_databases_before": {
+    "easyerp_v02": {
+      "tables": 146,
+      "rows": 0,
+      "sha256": "da93e01771c964b67973f5aaa1b20866cb8c8fb451e0998507890688b1f544ad"
+    },
+    "easyerp_v02_ui_demo": {
+      "tables": 146,
+      "rows": 58,
+      "sha256": "812b17ce809b595eff53946700c5be4bbf9937c884a52dd95f81179d18e250fa"
+    },
+    "sources": {
+      "readme.md": "0cb98ec46569d2ee9b746873d495b2b3c251e44077d38954c206ac49544fe0a4",
+      "db\\001_schemas.sql": "390fd85080b8e840be2801b7119d06f573836ccf118138ca29cfad82f68d2d16",
+      "db\\002_tables.sql": "ef9ef3ff6c6042e4608204072fe4b25ee41ddc301eedf4da846900aa47d103ce",
+      "db\\003_foreign_keys.sql": "94db3e80145c99e35aabda838c00690ce9845945cd6c555a2d6d6e611bb15fcc",
+      "db\\004_views.sql": "c1ddd739768239ec63ba6a8eea8bb1a0e913a9b886ee56ad9dc811649a085825",
+      "db\\005_operations.sql": "a07d75a51b584f0deefc5fcab15f6645961972cfdd0f261bb1f37d5931c56232",
+      "db\\006_quantity_checks.sql": "ba5ddc3f927d8638a3508eb74e51fab002ccd14885689b802d95f40d3ed23e4e"
+    }
+  },
+  "business_databases_after": {
+    "easyerp_v02": {
+      "tables": 146,
+      "rows": 0,
+      "sha256": "da93e01771c964b67973f5aaa1b20866cb8c8fb451e0998507890688b1f544ad"
+    },
+    "easyerp_v02_ui_demo": {
+      "tables": 146,
+      "rows": 58,
+      "sha256": "812b17ce809b595eff53946700c5be4bbf9937c884a52dd95f81179d18e250fa"
+    },
+    "sources": {
+      "readme.md": "0cb98ec46569d2ee9b746873d495b2b3c251e44077d38954c206ac49544fe0a4",
+      "db\\001_schemas.sql": "390fd85080b8e840be2801b7119d06f573836ccf118138ca29cfad82f68d2d16",
+      "db\\002_tables.sql": "ef9ef3ff6c6042e4608204072fe4b25ee41ddc301eedf4da846900aa47d103ce",
+      "db\\003_foreign_keys.sql": "94db3e80145c99e35aabda838c00690ce9845945cd6c555a2d6d6e611bb15fcc",
+      "db\\004_views.sql": "c1ddd739768239ec63ba6a8eea8bb1a0e913a9b886ee56ad9dc811649a085825",
+      "db\\005_operations.sql": "a07d75a51b584f0deefc5fcab15f6645961972cfdd0f261bb1f37d5931c56232",
+      "db\\006_quantity_checks.sql": "ba5ddc3f927d8638a3508eb74e51fab002ccd14885689b802d95f40d3ed23e4e"
+    }
+  },
+  "business_data_unchanged": true,
+  "postgresql_schema_or_permission_changes": false,
+  "all_types_enabled": true,
+  "local_check_counts": {
+    "live": 3,
+    "demo": 37
+  },
+  "sqlite_integrity": "ok",
+  "desktop_launcher_check_exit": 0,
+  "backup": "D:\\projx\\demo\\easyerp-1\\backups\\import-interface-20261022T193830Z",
+  "files": [
+    {
+      "path": "frontend/imports.py",
+      "before": null,
+      "after": "e6c66dd6d4e59561196e292e750e6d61f2ddec8eeae3d417e2ac7e600dff9aa3"
+    },
+    {
+      "path": "frontend/import_formats.json",
+      "before": null,
+      "after": "78f058f5b1af0fab0e347b6458abd2c5fd4f28e86f6a9cc150cc9fe727bef349"
+    },
+    {
+      "path": "frontend/server.py",
+      "before": "4514ca9d87d6b25ccc4c1be926a7b77239466faa35fc64a34ab099433a614441",
+      "after": "d8ef4d3d330a8eea5b23e8f632234c03197df217e9cc89fe252923f0a0d2c485"
+    },
+    {
+      "path": "frontend/web/import.js",
+      "before": null,
+      "after": "40bc032f77c53a9e7688d1889fdda421af099f60ba643164a180b4a20093aaa6"
+    },
+    {
+      "path": "frontend/web/import.css",
+      "before": null,
+      "after": "da393b7a19f85a8c56bedc7bd45d2ee8573e59ea7781cee2316b669fa9627432"
+    },
+    {
+      "path": "frontend/web/index.html",
+      "before": "7dbb0961fbf40378540fdab02170b865605421af10b4a454fa7adb26b9b94506",
+      "after": "fbe60851009187516c6470641836b3a873424cbc38a7e35b8cfee92d64a48e72"
+    },
+    {
+      "path": "frontend/web/app.js",
+      "before": "6e991b86f5c5bf07eb50af1277128b171a94c2e007dbc7a28b9aa3148e6f298b",
+      "after": "e489bcebfc75311fd546255b26b081d097e8ee7a3179530de08f7cd27986e525"
+    },
+    {
+      "path": "frontend/IMPORT_INTERFACE.md",
+      "before": null,
+      "after": "6e05697069aa8ae31ab45070455688d2f3c2ebdda7ed6e5ce12cb90b73da212a"
+    },
+    {
+      "path": "frontend/README.md",
+      "before": "a97f5ba7354bf67b32dafd2a84c7ab8b07141659ece31315bc5438fc23f3d8af",
+      "after": "f0ca3472b087ef2ee2045a4759610541ec34d0f7148314d2ece6838975a309f3"
+    },
+    {
+      "path": "help.md",
+      "before": "ff27046c77e6e372ec8664bec8c7da1460b4aad65901bfff784dafbdd38a3feb",
+      "after": "8c9f0383c4bd07ffd11ef4ff241622d4612d69d4f5bd525a41fb226370451090"
+    },
+    {
+      "path": "bin/start-frontend.ps1",
+      "before": "2e464213875c60b0534d629acf51bca0575bb1fed3377deb91df57130ebff905",
+      "after": "5d0876d78246d0672ad4c8165948bc6d11cc992176821c56d31e21aaca6ebcb7"
+    },
+    {
+      "path": "tests/test_import_interface.py",
+      "before": null,
+      "after": "f1aeb2444b08d2f8ec501cb192e7a00a2f1833297e0c2c92632ba35ffbaff76e"
+    },
+    {
+      "path": "reports/import-sample-manifest.json",
+      "before": null,
+      "after": "f1e92ba8f6607a734ce78cbc08083b8502425e32e4c9f2b484e8a9946daa8d16"
+    }
+  ],
+  "browser_acceptance": [
+    "file chooser batch upload",
+    "known sales XLSX recognized",
+    "unstructured TXT remains unsupported",
+    "type disabled via UI",
+    "previous check immediately shows current disabled status",
+    "type restored via UI",
+    "deployed interface checked",
+    "session token refresh after server restart",
+    "history and type settings survive service restart"
+  ],
+  "screenshots": [
+    "reports/import-interface-live.jpg",
+    "reports/import-types-live.jpg"
+  ],
+  "documentation": "frontend/IMPORT_INTERFACE.md"
+}

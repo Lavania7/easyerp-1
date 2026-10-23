@@ -1,0 +1,84 @@
+{
+  "at_utc": "2026-10-22T18:23:45.7310757+00:00",
+  "status": "PASS",
+  "revision": 2,
+  "backup": "D:\\projx\\demo\\easyerp-1\\backups\\icons-20261022-202123",
+  "style_reference": "Desktop Power BI icon: chart forms the silhouette",
+  "dashboard_design": "Green layered rising chart bars with integrated D",
+  "sqlview_design": "Blue-violet stacked cylinders with integrated S",
+  "icons": [
+    {
+      "exe": "dashboard.exe",
+      "status": "PASS",
+      "sizes": [
+        16,
+        20,
+        24,
+        32,
+        40,
+        48,
+        64,
+        96,
+        128,
+        256
+      ],
+      "depth": 32,
+      "embedded_frames_match_source": true,
+      "sha256": "b939c4bbdfccb453d5a5b50fcabca40a776c0c99abefd603bcaa8c1f72093cad"
+    },
+    {
+      "exe": "sqlview.exe",
+      "status": "PASS",
+      "sizes": [
+        16,
+        20,
+        24,
+        32,
+        40,
+        48,
+        64,
+        96,
+        128,
+        256
+      ],
+      "depth": 32,
+      "embedded_frames_match_source": true,
+      "sha256": "76884b1508d89b7b396d11846017df945dcaf67a3bb1968e383e38c5f2822d78"
+    }
+  ],
+  "standalone_icons": [
+    "D:\\projx\\demo\\easyerp-1\\icons\\dashboard.ico",
+    "D:\\projx\\demo\\easyerp-1\\icons\\sqlview.ico"
+  ],
+  "startup_checks": [
+    {
+      "exe": "dashboard.exe",
+      "exit_code": 0
+    },
+    {
+      "exe": "sqlview.exe",
+      "exit_code": 0
+    }
+  ],
+  "shortcuts": [
+    {
+      "path": "D:\\Users\\Desktop\\easyERP-Dashboard.lnk",
+      "target": "D:\\projx\\demo\\easyerp-1\\dashboard.exe",
+      "working_directory": "D:\\projx\\demo\\easyerp-1",
+      "icon": "D:\\projx\\demo\\easyerp-1\\icons\\dashboard.ico,0",
+      "status": "PASS"
+    },
+    {
+      "path": "D:\\Users\\Desktop\\easyERP-SQLview.lnk",
+      "target": "D:\\projx\\demo\\easyerp-1\\sqlview.exe",
+      "working_directory": "D:\\projx\\demo\\easyerp-1",
+      "icon": "D:\\projx\\demo\\easyerp-1\\icons\\sqlview.ico,0",
+      "status": "PASS"
+    }
+  ],
+  "explorer_visual_check": {
+    "project_exes": "PASS",
+    "desktop_shortcuts": "PASS"
+  },
+  "preview": "D:\\projx\\demo\\easyerp-1\\icons\\preview.png"
+}

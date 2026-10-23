@@ -5,11 +5,16 @@ $tempCompiler = Join-Path $env:TEMP ('easyerp-icon-' + [guid]::NewGuid().ToStrin
 try {
     & $compiler /nologo /codepage:65001 /target:exe /reference:System.Drawing.dll "/out:$tempCompiler" (Join-Path $PSScriptRoot 'IconBuilder.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Icon compiler failed' }
-    & $tempCompiler (Join-Path $PSScriptRoot 'frontend.ico') '#285947' 'e'
-    & $tempCompiler (Join-Path $PSScriptRoot 'backend.ico') '#326690' 'SQL'
-    & $compiler /nologo /codepage:65001 /target:winexe /platform:anycpu /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/win32icon:$(Join-Path $PSScriptRoot 'frontend.ico')" "/out:$(Join-Path $root '启动前端.exe')" (Join-Path $PSScriptRoot 'Launcher.cs')
+    & $tempCompiler $PSScriptRoot
+    if ($LASTEXITCODE -ne 0) { throw 'Icon generation failed' }
+    $icons = Join-Path $root 'icons'
+    New-Item -ItemType Directory -Path $icons -Force | Out-Null
+    foreach ($item in @(@('frontend.ico','dashboard.ico'),@('backend.ico','sqlview.ico'),@('dashboard.png','dashboard.png'),@('sqlview.png','sqlview.png'),@('icon-preview.png','preview.png'))) {
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot $item[0]) -Destination (Join-Path $icons $item[1]) -Force
+    }
+    & $compiler /nologo /codepage:65001 /target:winexe /platform:anycpu /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/win32icon:$(Join-Path $PSScriptRoot 'frontend.ico')" "/out:$(Join-Path $root 'dashboard.exe')" (Join-Path $PSScriptRoot 'Launcher.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Frontend compiler failed' }
-    & $compiler /nologo /codepage:65001 /target:winexe /platform:anycpu /define:BACKEND /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/win32icon:$(Join-Path $PSScriptRoot 'backend.ico')" "/out:$(Join-Path $root '启动后端SQL.exe')" (Join-Path $PSScriptRoot 'Launcher.cs')
+    & $compiler /nologo /codepage:65001 /target:winexe /platform:anycpu /define:BACKEND /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/win32icon:$(Join-Path $PSScriptRoot 'backend.ico')" "/out:$(Join-Path $root 'sqlview.exe')" (Join-Path $PSScriptRoot 'Launcher.cs')
     if ($LASTEXITCODE -ne 0) { throw 'Backend compiler failed' }
 } finally {
     if (Test-Path -LiteralPath $tempCompiler) { Remove-Item -LiteralPath $tempCompiler }

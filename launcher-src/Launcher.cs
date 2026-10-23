@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -12,12 +11,10 @@ class Launcher {
     const string Title = "easyERP · 后端 SQL";
     const string Script = "start-backend.ps1";
     const string LogName = "launcher-backend.log";
-    const string Message = "正在启动数据库与 SQL 界面…";
 #else
     const string Title = "easyERP · 前端工作台";
     const string Script = "start-frontend.ps1";
     const string LogName = "launcher-frontend.log";
-    const string Message = "正在启动数据库与前端工作台…";
 #endif
     static string Root = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
     static string LogFile;
@@ -35,38 +32,13 @@ class Launcher {
         bool smoke = Array.IndexOf(args, "--smoke") >= 0;
         try {
             string script = Path.Combine(Root, "bin", Script);
-            if (!File.Exists(script)) throw new Exception("请将启动文件保留在 easyerp-0.2 目录内；找不到 bin\\" + Script);
+            if (!File.Exists(script)) throw new Exception("请将启动文件保留在项目目录内；找不到 bin\\" + Script);
             string logs = Path.Combine(Root, "var", "log");
             Directory.CreateDirectory(logs);
             LogFile = Path.Combine(logs, LogName);
-            if (check || smoke) return Run(script, smoke);
-            Application.EnableVisualStyles();
-            Form form = new Form();
-            form.Text = Title;
-            form.ClientSize = new Size(420, 130);
-            form.StartPosition = FormStartPosition.CenterScreen;
-            form.FormBorderStyle = FormBorderStyle.FixedDialog;
-            form.MaximizeBox = false; form.MinimizeBox = false;
-            form.ControlBox = false;
-            form.Font = new Font("Microsoft YaHei UI", 10F);
-            Label label = new Label();
-            label.Text = Message; label.SetBounds(24, 23, 375, 32);
-            ProgressBar progress = new ProgressBar();
-            progress.Style = ProgressBarStyle.Marquee; progress.SetBounds(25, 72, 370, 12);
-            form.Controls.Add(label); form.Controls.Add(progress);
-            int result = 1;
-            form.Shown += delegate {
-                ThreadPool.QueueUserWorkItem(delegate {
-                    string error = null;
-                    try { result = Run(script, true); if (result != 0) error = "启动失败，详情已写入：\n" + LogFile; }
-                    catch(Exception ex) { error = ex.Message; WriteError(ex.ToString()); }
-                    form.BeginInvoke(new Action(delegate {
-                        if (error != null) MessageBox.Show(form, error, Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.Close();
-                    }));
-                });
-            };
-            Application.Run(form);
+            int result = Run(script, !check || smoke);
+            if (result != 0 && !check && !smoke)
+                MessageBox.Show("启动失败，详情已写入：\n" + LogFile, Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return result;
         } catch(Exception ex) {
             WriteError(ex.ToString());
