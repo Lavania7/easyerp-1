@@ -1,5 +1,7 @@
 # easyERP 0.2 数据库使用说明
 
+> 文档已分层：日常交接先看 [项目首页](readme.md)，全局业务规则看 [global-rules.md](docs/global-rules.md)，基础SQL规范原件已移至 [sql-specification.md](docs/sql-specification.md)。下文“readme.md原文”均指该历史规范；旧部署时点的数据量和路径不代表当前状态。
+
 工作目录：`D:\projx\demo\easyerp-1`。本机部署日期：2026-10-22。
 
 ## 1. 已上线内容与范围
@@ -179,7 +181,7 @@ PostgreSQL 路径可通过 `config.json` 或 `EASYERP_PG_BIN` 指定；Python �
 
 | 路径 | 内容 |
 |---|---|
-| `readme.md` | 只读建模依据 |
+| `docs/sql-specification.md` | 原字节保留的建模依据 |
 | `bin\build_schema.py` | 按 Markdown SQL 块提取规范 DDL，记录来源行号 |
 | `db\001_schemas.sql` 至 `004_views.sql` | 从原文提取的 schema、表、外键与视图 |
 | `db\005_operations.sql` | 索引、运维核对、凭证保护 |
@@ -225,7 +227,7 @@ PostgreSQL 路径可通过 `config.json` 或 `EASYERP_PG_BIN` 指定；Python �
 项目目录提供 `启动前端.exe` 和 `启动后端SQL.exe`；桌面快捷方式分别为 `easyERP-前端工作台` 和 `easyERP-后端SQL`。
 前者自动启动所需服务并打开经营工作台；后者自动启动数据库和 pgAdmin SQL 可视化界面，不需要输入启动命令。
 
-详细步骤见 [启动说明](启动说明.md)。后端可查看表、视图、SQL 定义和查询结果，常用只读 SQL 在 `sql\常用查询.sql`。
+详细步骤见 [启动说明](launch.md)。后端可查看表、视图、SQL 定义和查询结果，常用只读 SQL 在 `sql\常用查询.sql`。
 后端预设正式库和独立演示库连接，使用已有 `easyerp_app` 账户；SQL 允许修改业务数据，练习请选择演示库。
 SQL 管理页面端口为本机 8093，配置保存在本项目 `var\pgadmin`；保留 .exe 与项目目录结构。
 启动器冷启动及重复启动测试结果在 `reports\launcher-tests.json`，SQL 查询工具实测结果在 `reports\sql-interface-tests.json`。

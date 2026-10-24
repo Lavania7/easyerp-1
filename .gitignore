@@ -7,3 +7,10 @@ __pycache__/
 # Local Codex guidance
 /AGENTS.md
 /.agents/
+
+# Local business inputs and import evidence
+/import/inbox/**/*
+!/import/inbox/**/
+!/import/inbox/**/.gitkeep
+/import/batches/*
+!/import/batches/.gitkeep

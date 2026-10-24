@@ -45,3 +45,6 @@
 `format_eligible`仅表示格式许可；`can_execute`还要求标准CSV业务校验通过、具有记录且尚未完成导入。其他类型始终不可执行。检查结果不等于已入库，入库以PostgreSQL批次审计为准。
 
 验收：`tests/test_standard_import.py`在独立演示库验证标准导入并清理测试数据；`tests/test_standard_templates.py`逐表验证下载；`tests/test_import_interface.py`继续验证既有36份样例和类型管理。主题和语言说明见[PREFERENCES_AND_STANDARD_IMPORT.md](PREFERENCES_AND_STANDARD_IMPORT.md)。
+
+
+本机Agent文件导入使用[同一业务规则](../docs/global-rules.md)及[导入箱流程](../docs/import-workflow.md)，通过 `bin/import_inbox.py` 复用本模块服务，不增加第二套入库规则。

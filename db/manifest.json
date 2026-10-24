@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
-  "source": "readme.md",
+  "source": "docs/sql-specification.md",
+  "source_marker": "readme.md",
   "source_sha256": "0cb98ec46569d2ee9b746873d495b2b3c251e44077d38954c206ac49544fe0a4",
   "counts": {
     "schemas": 6,

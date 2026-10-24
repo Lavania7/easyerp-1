@@ -130,8 +130,11 @@ class ERP:
 
     def verify_files(self):
         m = json.loads((ROOT/'db'/'manifest.json').read_text(encoding='utf-8'))
-        if hashlib.sha256((ROOT/'readme.md').read_bytes()).hexdigest()!=m['source_sha256']:
-            raise RuntimeError('readme.md 已改变；请审查后重新构建，当前库不会被覆盖')
+        source = (ROOT / m.get('source', 'readme.md')).resolve()
+        if not source.is_relative_to(ROOT.resolve()):
+            raise RuntimeError('规范来源路径不在项目内')
+        if hashlib.sha256(source.read_bytes()).hexdigest()!=m['source_sha256']:
+            raise RuntimeError(f'{m.get("source", "readme.md")} 已改变；请审查后重新构建，当前库不会被覆盖')
         for name,digest in m['sql_files'].items():
             if hashlib.sha256((ROOT/'db'/name).read_bytes()).hexdigest()!=digest:
                 raise RuntimeError(f'{name} 校验失败；请审查后重新构建')

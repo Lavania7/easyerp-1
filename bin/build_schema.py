@@ -1,4 +1,4 @@
-"""Extract the specification verbatim; never rewrite readme.md."""
+"""Extract the archived SQL specification; retain historical SQL markers for stable builds."""
 from pathlib import Path
 import hashlib
 import json
@@ -8,9 +8,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def build():
-    source = ROOT / 'readme.md'
+    source = ROOT / 'docs' / 'sql-specification.md'
     raw = source.read_bytes()
     text = raw.decode('utf-8-sig')
+    # Historical comments stay byte-identical; manifest.source resolves their actual document.
     groups = [[], [], [], []]
     entries = []
     for match in re.finditer(r'\x60{3}sql\s*\n(.*?)\x60{3}', text, re.S):
@@ -40,7 +41,8 @@ def build():
         raise ValueError(f'Specification changed; review before deploying: {counts}')
     for file in sorted((ROOT / 'db').glob('*.sql')):
         files[file.name] = hashlib.sha256(file.read_bytes()).hexdigest()
-    manifest = {'version': '0.2.0', 'source': 'readme.md',
+    manifest = {'version': '0.2.0', 'source': 'docs/sql-specification.md',
+                'source_marker': 'readme.md',
                 'source_sha256': hashlib.sha256(raw).hexdigest(),
                 'counts': counts, 'sql_files': files, 'blocks': entries}
     (ROOT / 'db' / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')

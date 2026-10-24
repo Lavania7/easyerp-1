@@ -48,7 +48,7 @@ assert startup.is_file() and str(ROOT) in startup.read_text(encoding='utf-16')
 log=(ROOT/'var'/'log'/'startup.log').read_bytes().decode('utf-16',errors='ignore')
 # Startup readiness is additionally confirmed by the live SQL connection above.
 report={'verified_at_utc':datetime.now(timezone.utc).isoformat(),'status':'PASS','connection':info,
-        'source_sha256':hashlib.sha256((ROOT/'readme.md').read_bytes()).hexdigest(),
+        'source_sha256':hashlib.sha256((ROOT/json.loads((ROOT/'db/manifest.json').read_text(encoding='utf-8'))['source']).read_bytes()).hexdigest(),
         'business_objects':{'schemas':6,'tables':146,'foreign_keys':475,'views':15},
         'additional_operations_views':3,'business_rows':business_rows,
         'business_test_count':len(tests['sql_tests']),'role_test_count':tests['role_tests'],

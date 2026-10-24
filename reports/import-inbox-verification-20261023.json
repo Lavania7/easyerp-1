@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "checks": [
+    "frontend missing-value confirmation blocks writes",
+    "same check retry returns one PostgreSQL audit and one record",
+    "frontend fill-empty merge preserves existing nonblank values",
+    "explicit new check supports frontend latest-nonblank merge",
+    "file change after inspection blocks execution",
+    "formal business data and constraints unchanged",
+    "demo business data and constraints restored",
+    "relocated specification matches installed database source/build digests"
+  ],
+  "test_records_removed": true,
+  "formal_data_unchanged": true,
+  "formal_constraints_unchanged": true,
+  "demo_restored": true,
+  "source_sha256": "0cb98ec46569d2ee9b746873d495b2b3c251e44077d38954c206ac49544fe0a4",
+  "sql_hashes_unchanged": true,
+  "unit_tests": 11
+}
