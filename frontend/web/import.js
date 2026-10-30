@@ -1,7 +1,7 @@
 'use strict';
 (() => {
   const h=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const when=v=>v?new Date(v).toLocaleString(window.ERPUI?.locale()||'zh-CN',{hour12:false}):'—';
+  const when=v=>v?new Date(v).toLocaleString(window.ERPUI?.locale()||'zh-CN',{timeZone:window.ERPDefaults.timeZone,hour12:false}):'—';
   const dialog=document.createElement('dialog');
   dialog.id='import-interface';dialog.className='import-dialog';dialog.setAttribute('aria-label','表格导入');document.body.append(dialog);
   let meta=null,tab='check',mode='live',results=[],history=null,events=[],offset=0,scope='all',filter='',busy=false,prompting=false,focus=null,notice='',job=0;

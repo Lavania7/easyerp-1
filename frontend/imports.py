@@ -205,7 +205,7 @@ class Imports:
         if key == 'standard-master':
             raise ImportError('标准主录表始终启用，不能停用。')
         if not isinstance(key, str) or key not in self.types:
-            raise ImportError('此表格类型未登记，需要开发新增支持。', 404)
+            raise ImportError('此表格类型尚未配置，需要开发新增支持。', 404)
         if type(body['enabled']) is not bool or type(body['version']) is not int:
             raise ImportError('启用状态或版本无效。')
         with self.connect() as db:

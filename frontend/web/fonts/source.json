@@ -1,0 +1,34 @@
+{
+  "project": "Adobe Source Han Sans",
+  "license": "SIL Open Font License 1.1",
+  "files": [
+    {
+      "file": "SourceHanSansCN-VF.ttf",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/Variable/TTF/Subset/SourceHanSansCN-VF.ttf",
+      "git_blob_sha1": "2086cf31b77c58079a8faba28511c2cc23dcbe71",
+      "sha256": "25a01e41b5cc99893eb35a6cd2cc7611841dc19eb03cbaf7f0c1de8210f2ba0b",
+      "bytes": 17749860
+    },
+    {
+      "file": "SourceHanSansCN-VF.ttf.woff2",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/Variable/WOFF2/TTF/Subset/SourceHanSansCN-VF.ttf.woff2",
+      "git_blob_sha1": "052b1aa5f1479c4aadbf40a6244aaffe5ba4c7c3",
+      "sha256": "f971e3bff46f76b49e1d5510556c2297c618ec4b491a295a4e741cdd38257799",
+      "bytes": 7711988
+    },
+    {
+      "file": "LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/LICENSE.txt",
+      "git_blob_sha1": "3ff0ccaba06857bf292ade9a50f16a0f02b3b8d4",
+      "sha256": "fcac737e761ec63dbfbdce11030a1780161920d80315edba9c8beff1c2bac5a2",
+      "bytes": 4463
+    }
+  ],
+  "font_names": {
+    "1": "\u601d\u6e90\u9ed1\u4f53 CN VF",
+    "2": "Regular",
+    "4": "\u601d\u6e90\u9ed1\u4f53 CN VF",
+    "6": "SourceHanSansCNVF-ExtraLight",
+    "17": "ExtraLight"
+  }
+}

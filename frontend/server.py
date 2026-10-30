@@ -147,7 +147,7 @@ class Handler(BaseHTTPRequestHandler):
         parsed=urlsplit(self.path)
         path=parsed.path
         if not path.startswith('/api/'):
-            files={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/manual.js':'manual.js','/manual.css':'manual.css','/import.js':'import.js','/import.css':'import.css','/templates.js':'templates.js','/templates.css':'templates.css','/preferences.js':'preferences.js','/preferences.css':'preferences.css','/dark.css':'dark.css','/locales.js':'locales.js','/i18n.js':'i18n.js'}
+            files={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css','/favicon.svg':'favicon.svg','/manual.js':'manual.js','/manual.css':'manual.css','/import.js':'import.js','/import.css':'import.css','/templates.js':'templates.js','/templates.css':'templates.css','/preferences.js':'preferences.js','/preferences.css':'preferences.css','/dark.css':'dark.css','/locales.js':'locales.js','/i18n.js':'i18n.js','/fonts/SourceHanSansCN-VF.ttf.woff2':'fonts/SourceHanSansCN-VF.ttf.woff2'}
             if path not in files: return self.send(404,encode({'error':'页面不存在'}))
             file=WEB/files[path]
             return self.send(200,file.read_bytes(),mimetypes.guess_type(file.name)[0] or 'application/octet-stream')

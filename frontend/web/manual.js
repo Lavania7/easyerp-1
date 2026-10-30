@@ -4,7 +4,6 @@
   const titles={sales:'销售',inventory:'采购与库存',production:'生产',finance:'财务',rd:'研发',legal:'法务',analysis:'分析报告'};
   const schemaFor={inventory:'production',production:'production',sales:'sales',finance:'finance',rd:'rd',legal:'legal',analysis:'analysis'};
   const labels={'sales.销售订单登记表':'销售订单','production.采购订单表':'采购订单','rd.BOM登记表':'BOM','finance.会计凭证表':'会计凭证'};
-  const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone;
   const dialog=document.createElement('dialog'); dialog.id='manual-entry'; dialog.className='entry-dialog'; dialog.setAttribute('aria-label','手工录入'); document.body.append(dialog);
   let catalog=null,context=null,stack=[],group='sales',showAll=false,filter='',lastFocus=null,uiVersion=0;
   const object=key=>catalog.objects.find(o=>o.key===key);
@@ -20,7 +19,7 @@
   }
   function shell(title,subtitle,body) {
     const mode=context?.mode||state.mode;
-    dialog.innerHTML=`<div class="entry-head"><div><span class="entry-mode ${mode==='demo'?'demo':''}">${modeLabel(mode)}</span><h2>${h(title)}</h2><p>${h(subtitle)}</p></div><button type="button" class="icon-button" data-entry-close aria-label="关闭录入">×</button></div><div class="entry-content">${body}</div>`;
+    dialog.innerHTML=`<div class="entry-head"><div><span class="entry-mode ${mode==='demo'?'demo':''}">${modeLabel(mode)}</span><h2>${h(title)}</h2>${subtitle?`<p>${h(subtitle)}</p>`:''}</div><button type="button" class="icon-button" data-entry-close aria-label="关闭录入">×</button></div><div class="entry-content">${body}</div>`;
     dialog.scrollTop=0;
   }
   async function loadCatalog(mode) {
@@ -41,27 +40,30 @@
     const favorites=catalog.preferred[group]||[];
     const rows=catalog.objects.filter(o=>o.schema===schema && (showAll||favorites.includes(o.name)) && (!filter||[o.name,name(o.key),window.ERPUI?.t(o.name),window.ERPUI?.t(name(o.key))].join(' ').toLocaleLowerCase().includes(filter.toLocaleLowerCase())));
     rows.sort((a,b)=>{if(showAll)return (window.ERPUI?.t(a.name)||a.name).localeCompare(window.ERPUI?.t(b.name)||b.name,window.ERPUI?.locale()||'zh-CN');return favorites.indexOf(a.name)-favorites.indexOf(b.name);});
-    shell('手工录入','选择业务类型，填写后保存到当前数据源。',`<div class="entry-tabs">${Object.entries(titles).map(([key,label])=>`<button type="button" data-entry-group="${key}" class="${group===key?'active':''}">${label}</button>`).join('')}</div><div class="entry-chooser-tools"><input id="entry-chooser-search" type="search" placeholder="搜索业务或主录名称" aria-label="搜索录入业务" value="${h(filter)}"><select id="entry-chooser-scope" aria-label="显示范围"><option value="common" ${!showAll?'selected':''}>常用业务</option><option value="all" ${showAll?'selected':''}>全部主录</option></select></div><div class="entry-cards">${rows.map(o=>`<button type="button" class="entry-card" data-entry-object="${h(o.key)}"><span>↗</span><strong>${h(name(o.key))}</strong><small>${o.children?h(o.children.label)+' · 一次保存':'新建记录 · 支持关联资料选择'}</small></button>`).join('')||'<p class="muted">没有匹配的录入业务。</p>'}</div><p class="entry-list-note">必填项标有 *。未掌握的可选信息可留空；数量、金额为空时不会按 0 保存。保存后可从本页和 SQLview 查询同一条记录。</p>`);
+    shell('手工录入','',`<div class="entry-tabs">${Object.entries(titles).map(([key,label])=>`<button type="button" data-entry-group="${key}" class="${group===key?'active':''}">${label}</button>`).join('')}</div><div class="entry-chooser-tools"><input id="entry-chooser-search" type="search" placeholder="搜索业务或主录名称" aria-label="搜索录入业务" value="${h(filter)}"><select id="entry-chooser-scope" aria-label="显示范围"><option value="common" ${!showAll?'selected':''}>常用业务</option><option value="all" ${showAll?'selected':''}>全部主录</option></select></div><div class="entry-cards">${rows.map(o=>`<button type="button" class="entry-card" data-entry-object="${h(o.key)}"><span>↗</span><strong>${h(name(o.key))}</strong></button>`).join('')||'<p class="muted">没有匹配的录入业务。</p>'}</div>`);
   }
-  function localTimestamp(value) {
+  function businessTimestamp(value) {
     if(!value)return '';
     const d=new Date(value);if(Number.isNaN(d.getTime()))return '';
-    const pad=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    return new Date(d.getTime()+8*60*60*1000).toISOString().slice(0,19);
   }
   function field(col, owner, values, disabled=false) {
-    const obj=object(owner.object),isPK=col.name===obj.pk,value=values[col.name];
+    const obj=object(owner.object),isPK=col.name===obj.pk,value=col.name==='币种'&&context.operation==='create'?window.ERPDefaults.currency:values[col.name];
     const required=col.required&&!col.default&&!col.automatic&&!isPK;
     const id='ef-'+owner.uid+'-'+obj.columns.indexOf(col);
     const attr=`id="${id}" data-entry-value data-owner="${h(owner.uid)}" data-field="${h(col.name)}" ${required?'required':''} ${disabled?'disabled':''}`;
     let control='',hint='',wide=false;
-    if(col.reference){
+    if(col.name==='币种'){
+      control=`<input ${attr} type="text" value="${h(value??'')}" readonly maxlength="3">`;
+      hint=context.operation==='create'?'人民币（CNY）':'保留原记录币种';
+    }else if(col.reference){
       control=`<div class="entry-ref"><input type="search" data-ref-search="${id}" placeholder="搜索名称或编号" aria-label="搜索${h(col.name)}的关联记录" autocomplete="off"><select ${attr} data-ref-object="${h(owner.object)}" data-selected="${h(value??'')}"><option value="">${value?h(value):'请选择关联记录'}</option>${value?`<option value="${h(value)}" selected>${h(value)}</option>`:''}</select><button type="button" data-entry-new-ref="${id}" aria-label="新建${h(object(col.reference.target)?.name)}">新建</button></div>`;
       hint=object(col.reference.target)?.name||'';
     }else if(col.options.length){
       control=`<select ${attr}><option value="">请选择</option>${col.options.map(v=>`<option value="${h(v)}" ${value===v?'selected':''}>${h(v)}</option>`).join('')}</select>`;
     }else if(col.type==='date') control=`<input ${attr} type="date" value="${h(value||'')}">`;
     else if(col.type==='timestamp with time zone'){
-      control=`<input ${attr} type="datetime-local" step="1" value="${localTimestamp(value)}">`;hint='按本机时区 '+timezone+' 保存';
+      control=`<input ${attr} type="datetime-local" step="1" value="${businessTimestamp(value)}">`;hint='按北京时间（UTC+8）保存';
     }else if(col.type.startsWith('numeric')||col.type==='integer'){
       control=`<input ${attr} type="text" inputmode="decimal" value="${h(value??'')}" autocomplete="off" placeholder="请明确填写，0 也需要录入">`;
       hint=col.type==='integer'?'整数':(col.type.match(/,(\d+)\)/)?'最多 '+col.type.match(/,(\d+)\)/)[1]+' 位小数':'十进制数');
@@ -72,7 +74,6 @@
       const maximum=col.type.match(/character\((\d+)\)/)?.[1]||20000;
       control=`<input ${attr} type="text" value="${h(value??'')}" maxlength="${maximum}" ${isPK?'placeholder="留空自动编号，也可自定义"':''}>`;
       if(isPK)hint=context.operation==='update'?'记录编号保持不变':'留空时自动生成唯一编号';
-      if(col.name==='币种')hint='三个大写字母，例如 CNY、USD、EUR';
     }
     return `<label class="entry-field ${wide?'wide':''}" data-field="${h(col.name)}"><span class="entry-label">${h(col.name)}${required?'<span class="entry-required-mark">*</span>':''}</span>${control}${hint?`<small>${h(hint)}</small>`:''}</label>`;
   }
@@ -88,7 +89,7 @@
   function renderForm() {
     const obj=object(context.object),editing=context.operation==='update',spec=!editing&&obj.children;
     const childHtml=spec?context.children.map((row,i)=>`<section class="entry-section"><h3>${h(spec.label)} ${i+1}<button type="button" class="entry-row-remove" data-entry-remove-row="${h(row.uid)}" ${context.children.length<=spec.minimum?'disabled':''}>移除此行</button></h3>${fields(row,[spec.parent_field])}</section>`).join('')+`<button type="button" class="entry-row-add" data-entry-add-row>＋ 添加${h(spec.label)}</button>`:'';
-    shell((editing?'修改':'新建')+name(obj.key),editing?'只修改明确需要调整的字段；保存时会核对当前 SQL 记录版本。':'填写真实业务信息；主录与明细会一起保存。',`<form class="entry-form" novalidate><div class="entry-error" role="alert" tabindex="-1" hidden></div><section class="entry-section"><h3>${editing?'记录信息':'基本信息'}${editing?'<small class="muted">'+h(context.id)+'</small>':''}</h3>${fields({object:obj.key,uid:'parent',values:context.values})}</section>${childHtml}<div class="entry-footer"><p>${modeLabel(context.mode)} · ${spec?'主录和全部明细一次提交':'保存后可在前端与 SQLview 查询'}<br>可选空项保留为未登记。</p><div><button type="button" class="button" data-entry-close>${stack.length?'返回上一级':'取消'}</button><button class="button primary" type="submit" id="entry-submit">保存到${context.mode==='demo'?'演示库':'正式库'}</button></div></div></form>`);
+    shell((editing?'修改':'新建')+name(obj.key),'',`<form class="entry-form" novalidate><div class="entry-error" role="alert" tabindex="-1" hidden></div><section class="entry-section"><h3>${editing?'记录信息':'基本信息'}${editing?'<small class="muted">'+h(context.id)+'</small>':''}</h3>${fields({object:obj.key,uid:'parent',values:context.values})}</section>${childHtml}<div class="entry-footer"><div><button type="button" class="button" data-entry-close>${stack.length?'返回上一级':'取消'}</button><button class="button primary" type="submit" id="entry-submit">保存到${context.mode==='demo'?'演示库':'正式库'}</button></div></div></form>`);
     const version=++uiVersion;
     dialog.querySelector('form').addEventListener('submit',save);
     dialog.querySelectorAll('details.entry-more').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)loadVisibleReferences(version);}));
@@ -97,7 +98,7 @@
   function ownerByUid(uid){return uid==='parent'?context:context.children.find(r=>r.uid===uid);}
   function readValue(input,col){
     if(input.value==='')return null;
-    if(col.type==='timestamp with time zone')return new Date(input.value).toISOString();
+    if(col.type==='timestamp with time zone')return new Date(input.value+window.ERPDefaults.utcOffset).toISOString();
     return input.value;
   }
   function collect() {

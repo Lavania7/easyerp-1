@@ -28,6 +28,6 @@
 
 新环境可在数据库已就绪后运行 `python .\bin\enable-manual-entry.py`，为正式库和已存在的独立演示库安装同样的附加审计支持。之后使用 `dashboard.exe` 启动；代码更新后需只重启本项目的前端服务。
 
-接口：`GET /api/entry/meta`、`GET /api/entry/options`、`GET /api/entry/record`、`POST /api/entry/save`。金额使用精确十进制字符串；不接受超出数据库小数位数的自动舍入。时间保存时带时区，日期字段只保留明确填写的日期。
+接口：`GET /api/entry/meta`、`GET /api/entry/options`、`GET /api/entry/record`、`POST /api/entry/save`。金额使用精确十进制字符串；不接受超出数据库小数位数的自动舍入。时间输入与回显固定使用北京时间（UTC+8），提交时显式携带+08:00换算为UTC，日期字段只保留明确填写的日期。新建记录的币种固定为CNY；编辑已有记录保留原币种，币种框不可改写。
 
 `tests/test_manual_entry.py` 验证实际 HTTP 和 PostgreSQL 写入、全部模块元数据、主明细事务、BOM 与凭证、精确数值、NULL、重复请求、并发、SQL 侧修改冲突和访问边界。样例只进入独立演示库，结束后清理；正式业务数据签名在测试前后必须一致。报告：`reports/manual-entry-tests.json`。
