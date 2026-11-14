@@ -1,0 +1,87 @@
+// Real browser navigation only: no business fixtures or POST requests.
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const {chromium}=require(process.env.EASYERP_PLAYWRIGHT_MODULE||'playwright');
+const url=process.env.EASYERP_URL||'http://127.0.0.1:8092',passed=[];
+const check=(name,value=true)=>{assert.ok(value,name);passed.push(name);console.log('PASS: '+name);};
+(async()=>{
+ const browser=await chromium.launch({headless:true,channel:process.env.EASYERP_BROWSER_CHANNEL||'msedge'});
+ try{
+  const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];let posts=0;
+  page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(request.method()==='POST'&&request.url().includes('/api/'))posts++;});
+  const base=mode=>url+'/?mode='+mode+'&start=2026-01-01&end=2026-12-31&currency=CNY&tz=Asia%2FShanghai&search=';
+  const crumbs=selector=>page.locator((selector||'#breadcrumb-list')+'>li').evaluateAll(items=>items.map(li=>li.querySelector('a,button,[aria-current]')?.textContent.trim()));
+  const expectPath=async(expected,selector='#breadcrumb-list')=>{
+   await page.waitForFunction(({expected,selector})=>{const actual=[...document.querySelectorAll(selector+'>li')].map(li=>li.querySelector('a,button,[aria-current]')?.textContent.trim());return JSON.stringify(actual)===JSON.stringify(expected);},{expected,selector});
+   assert.deepEqual(await crumbs(selector),expected);
+  };
+  const open=async(hash,mode='live')=>{await page.goto(base(mode)+'#/'+hash);await page.locator('#breadcrumbs').waitFor();await page.locator('#content .loading').waitFor({state:'detached'});};
+  await open('rd?object='+encodeURIComponent('rd.BOM明细表'));
+  await expectPath(['工作空间','数据中心','研发','BOM明细表']);
+  check('R&D follows workspace / data center / department / master table');
+  check('breadcrumb is a labeled navigation list with one current page',await page.locator('#breadcrumbs').getAttribute('aria-label')==='分级导航'&&await page.locator('#breadcrumbs ol').count()===1&&await page.locator('#breadcrumbs [aria-current="page"]').count()===1);
+  check('all parent levels are links',await page.locator('#breadcrumbs a').count()===3);
+  await page.locator('#breadcrumbs [data-breadcrumb-page="data"]').click();await expectPath(['工作空间','数据中心']);
+  check('data center ancestor returns to its real landing page',await page.locator('.workspace-card').count()===7);
+  await page.locator('.workspace-card[data-page="sales"]').click();await page.locator('#object-filter').waitFor();
+  let selected=await page.locator('#object-filter option:checked').textContent();await expectPath(['工作空间','数据中心','销售',selected]);
+  check('sales module extends the data-center path');
+  const option=await page.locator('#object-filter option').evaluateAll(options=>options.find(o=>!o.selected)&&({value:options.find(o=>!o.selected).value,label:options.find(o=>!o.selected).textContent}));
+  await page.locator('#object-filter').selectOption(option.value);await expectPath(['工作空间','数据中心','销售',option.label]);
+  check('changing the selected master table updates the leaf');
+  await page.locator('#search').fill('breadcrumb-safe-filter');await page.locator('#apply').click();await expectPath(['工作空间','数据中心','销售',option.label]);
+  await page.locator('#breadcrumbs [data-breadcrumb-page="data"]').click();await expectPath(['工作空间','数据中心']);
+  const query=new URL(page.url()).searchParams;
+  check('ancestor navigation retains source, period and search',query.get('mode')==='live'&&query.get('start')==='2026-01-01'&&query.get('end')==='2026-12-31'&&query.get('search')==='breadcrumb-safe-filter');
+  for(const [route,label] of [['inventory','采购与库存'],['production','生产实绩'],['finance','财务'],['legal','法务'],['analysis','分析报告']]){
+   await open(route);await page.locator('#object-filter').waitFor();selected=await page.locator('#object-filter option:checked').textContent();await expectPath(['工作空间','数据中心',label,selected]);
+   check(route+' derives its parent and label from the menu');
+  }
+  await open('archive?object='+encodeURIComponent('legal.公司主体档案表'),'demo');
+  await expectPath(['工作空间','档案馆','公司主体档案表']);check('archive tables belong directly to the archive');
+  await page.locator('#content [data-record="legal.公司主体档案表"]').first().click();await page.locator('#drawer .drawer-header h2').waitFor();
+  const company=await page.locator('#drawer .drawer-header h2').textContent();
+  await expectPath(['工作空间','档案馆','公司主体档案表',company],'[data-drawer-breadcrumbs]');
+  check('record details extend the path inside the modal drawer',await page.locator('.shell').evaluate(el=>el.inert));
+  await page.locator('#drawer [data-tab="related"]').click();
+  await expectPath(['工作空间','档案馆','公司主体档案表',company,'关联明细'],'[data-drawer-breadcrumbs]');
+  check('detail tabs extend one level deeper');
+  await page.locator('#drawer [data-record="finance.资金账户档案表"]').first().click();
+  await page.waitForFunction(()=>document.querySelector('[data-drawer-breadcrumbs]')?.children.length===5);
+  check('following a related record recursively extends the trail',(await crumbs('[data-drawer-breadcrumbs]')).length===5);
+  await page.locator('#drawer [data-breadcrumb-detail="0"]').click();
+  await expectPath(['工作空间','档案馆','公司主体档案表',company],'[data-drawer-breadcrumbs]');check('record ancestor returns to the prior record');
+  await page.locator('#drawer [data-breadcrumb-page="archive"][data-breadcrumb-object=""]').click();await page.locator('#drawer').waitFor({state:'hidden'});
+  check('menu ancestor closes the drawer and restores background navigation',!await page.locator('.shell').evaluate(el=>el.inert));
+  await open('workflow?view=records');await expectPath(['工作空间','工作流','办理事项']);
+  check('unknown subpage falls back to the actual default tab',await page.locator('[data-ws-view="items"]').getAttribute('aria-pressed')==='true');
+  await open('workflow');await expectPath(['工作空间','工作流','办理事项']);
+  await page.locator('[data-ws-view="production"]').click();await expectPath(['工作空间','工作流','生产执行']);
+  check('production execution uses its actual workflow parent',new URLSearchParams(page.url().split('#')[1].split('?')[1]).get('view')==='production');
+  await page.reload();await expectPath(['工作空间','工作流','生产执行']);check('workspace subpage survives refresh');
+  await page.goBack();await expectPath(['工作空间','工作流','办理事项']);check('browser back restores the previous workspace subpage');
+  await open('audit?view=records');await page.locator('#object-filter').waitFor();selected=await page.locator('#object-filter option:checked').textContent();
+  await expectPath(['工作空间','审计','核定记录',selected]);check('audit records use the audit / review-records hierarchy');
+  const auditOption=await page.locator('#object-filter option').evaluateAll(options=>options.find(o=>!o.selected).value);
+  await page.locator('#object-filter').selectOption(auditOption);selected=await page.locator('#object-filter option:checked').textContent();await expectPath(['工作空间','审计','核定记录',selected]);
+  check('changing a table preserves its workspace subpage',new URLSearchParams(page.url().split('#')[1].split('?')[1]).get('view')==='records');
+  await page.locator('#breadcrumbs [data-breadcrumb-page="audit"][data-breadcrumb-view=""]').click();await expectPath(['工作空间','审计','月度审计报告']);check('audit ancestor returns to the report landing page');
+  await open('plans');await expectPath(['工作空间','企业计划']);check('company plans have the correct direct parent');
+  await page.locator('#breadcrumbs a').first().focus();await page.keyboard.press('Enter');await expectPath(['工作空间','仪表盘']);check('ancestors are keyboard accessible');
+  await open('rd?object='+encodeURIComponent('rd.BOM明细表'),'demo');await expectPath(['工作空间','数据中心','研发','BOM明细表']);check('demo and live sources use the same hierarchy');
+  await page.locator('#language-toggle').click();await expectPath(['Workspace','Data center','Research & development','BOM lines']);check('English navigation translates');
+  await page.locator('#language-toggle').click();
+  await page.waitForFunction(()=>document.querySelector('#breadcrumbs').getAttribute('aria-label')==='Pfadnavigation');check('German navigation translates');
+  await page.locator('#language-toggle').click();await expectPath(['工作空间','数据中心','研发','BOM明细表']);
+  await open('rd?object='+encodeURIComponent('rd.BOM明细表'));await expectPath(['工作空间','数据中心','研发','BOM明细表']);
+  if(process.env.EASYERP_BREADCRUMB_SCREENSHOT)await page.locator('.topbar').screenshot({path:process.env.EASYERP_BREADCRUMB_SCREENSHOT});
+  await page.setViewportSize({width:390,height:844});
+  check('deep breadcrumb remains visible on narrow screens',await page.locator('#breadcrumbs').isVisible()&&await page.locator('#breadcrumbs [aria-current]').isVisible());
+  check('header and breadcrumb fit the narrow viewport',await page.evaluate(()=>{const r=document.querySelector('#breadcrumbs').getBoundingClientRect();return document.documentElement.scrollWidth<=innerWidth+1&&r.left>=0&&r.right<=innerWidth+1;}));
+  if(process.env.EASYERP_BREADCRUMB_SCREENSHOT)await page.locator('.topbar').screenshot({path:process.env.EASYERP_BREADCRUMB_SCREENSHOT.replace(/\.png$/, '-mobile.png')});
+  while(await page.locator('html').getAttribute('data-theme')!=='dark')await page.locator('#theme-toggle').click();
+  check('dark theme keeps the active crumb readable',await page.locator('#crumb').evaluate(el=>getComputedStyle(el).color!==getComputedStyle(el.parentElement.parentElement).backgroundColor));
+  check('navigation issued no business writes',posts===0);check('no uncaught JavaScript errors',errors.length===0);
+  fs.writeFileSync(process.env.EASYERP_BREADCRUMB_REPORT||path.join(__dirname,'../reports/breadcrumb-tests.json'),JSON.stringify({status:'PASS',checks:passed.length,passed},null,2));
+ }finally{await browser.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});

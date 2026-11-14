@@ -1,19 +1,20 @@
 """Create the explicitly labelled, isolated UI sample database once."""
-from pathlib import Path
+
 import sys
 from data import ROOT
 from easyerp import ERP
 from business_queries import expand_queries
 
-e=ERP()
-db=e.c['database']+'_ui_demo'
+e = ERP()
+db = e.c["database"] + "_ui_demo"
 e.ensure_database(db)
-exists=e.sql('SELECT count(*) FROM finance."人员档案表";',db=db).stdout.strip()
-if exists!='0':
-    print('Isolated UI demo already prepared; existing sample retained.')
+exists = e.sql('SELECT count(*) FROM finance."人员档案表";', db=db).stdout.strip()
+if exists != "0":
+    print("Isolated UI demo already prepared; existing sample retained.")
     sys.exit(0)
-e.sql(expand_queries((ROOT/'tests'/'business.sql').read_text(encoding='utf-8')),db=db)
-e.sql('''BEGIN;
+e.sql(expand_queries((ROOT / "tests" / "business.sql").read_text(encoding="utf-8")), db=db)
+e.sql(
+    """BEGIN;
 UPDATE legal."公司主体档案表" SET "公司名称"='示例智造（演示）' WHERE "主体ID"='co';
 UPDATE finance."人员档案表" SET "姓名"='林青（演示）' WHERE "人员ID"='person';
 UPDATE rd."产品主数据表" SET "名称"='工业控制板',"规格"='EC-01 · 标准版' WHERE "PID"='pid';
@@ -33,5 +34,7 @@ INSERT INTO finance."资金用途核定表"("用途核定ID","资金记录ID","�
 INSERT INTO finance."账户期间余额表" VALUES ('balance','account','2026-10-01','2026-10-20',1,500,580,'仅演示样本','person');
 INSERT INTO finance."账户核对表" VALUES ('reconcile','balance',580,'已核定','演示核对',1);
 INSERT INTO sales."售后事件表"("售后事件ID","销售订单行ID","类型","发生时间","原因","处理状态") VALUES ('after','line','使用咨询','2026-10-20T10:00:00Z','客户反馈：需要确认安装接口（演示）','新建');
-COMMIT;''',db=db)
-print('Isolated sample ready: '+db)
+COMMIT;""",
+    db=db,
+)
+print("Isolated sample ready: " + db)

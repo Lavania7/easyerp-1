@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "checks": 20,
+  "passed": [
+    "ordinary table keeps the short ID column",
+    "ordinary views show neither long IDs nor SHA-256",
+    "inline update hides its primary key input and heading ID",
+    "inline create hides the auto-generated primary key",
+    "inline save produces a short base36 ID",
+    "full entry dialog hides its primary key",
+    "success page exposes neither long ID nor SHA-256",
+    "full editor selects references by human-readable name",
+    "full editor hides its own short ID",
+    "inline editor shows names without reference IDs",
+    "inline editor labels references without the ID suffix",
+    "workspace plan selector shows names only",
+    "workspace linked records are displayed as names",
+    "workspace save omits private identity fields",
+    "workspace values retain internal short references",
+    "SHA-256 is hidden from file tables too",
+    "live empty/create editor hides its record ID",
+    "name-based editor fits a narrow viewport",
+    "rendered UI never displays long IDs or SHA-256",
+    "no uncaught JavaScript errors"
+  ],
+  "test_rows_removed": true,
+  "formal_business_unchanged": true
+}

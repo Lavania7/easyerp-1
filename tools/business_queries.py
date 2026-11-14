@@ -1,4 +1,5 @@
 """Read-only SELECT templates composed as subqueries, without database views."""
+
 import re
 
 QUERIES = {
@@ -178,13 +179,18 @@ WHERE b."BOM版本" IS NOT NULL AND b."确认依据" IS NOT NULL
  AND l."单位ID" IS NOT NULL AND l."确认依据" IS NOT NULL
 """
 
+
 def expand_queries(sql, *, strict_bom=False):
     """Compose trusted SELECT templates without replacing SQL string literals."""
     queries = QUERIES
     if strict_bom:
         queries = {**queries, 'rd."已核定BOM明细表"': STRICT_BOM}
-    keys = '|'.join(re.escape(key) for key in queries)
+    keys = "|".join(re.escape(key) for key in queries)
     pattern = re.compile(r"'(?:''|[^'])*'|--[^\n]*|/\*.*?\*/|(?P<query>" + keys + r")", re.S)
     # Templates read base tables only; PostgreSQL permits unaliased subqueries.
-    return pattern.sub(lambda match: '(' + queries[match.group('query')] + ')'
-                       if match.group('query') else match.group(), sql)
+    return pattern.sub(
+        lambda match: (
+            "(" + queries[match.group("query")] + ")" if match.group("query") else match.group()
+        ),
+        sql,
+    )

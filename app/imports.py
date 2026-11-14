@@ -1,4 +1,5 @@
 """Versioned format recognition, standard CSV import and local check history."""
+
 from pathlib import Path, PurePosixPath
 from datetime import datetime, timezone
 from contextlib import contextmanager
@@ -28,19 +29,23 @@ def stamp():
 
 
 def packed(value):
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def trimmed(row):
-    row = [str(v or '').strip().removeprefix('\ufeff') for v in row]
+    row = [str(v or "").strip().removeprefix("\ufeff") for v in row]
     while row and not row[-1]:
         row.pop()
     return row
 
 
+def validate_xml(raw):
+    if b"<!DOCTYPE" in raw.upper() or b"<!ENTITY" in raw.upper():
+        raise ImportError("文件包含不支持的 XML 定义。")
+
+
 def xml(raw):
-    if b'<!DOCTYPE' in raw.upper() or b'<!ENTITY' in raw.upper():
-        raise ImportError('文件包含不支持的 XML 定义。')
+    validate_xml(raw)
     return ET.fromstring(raw)
 
 
@@ -52,117 +57,163 @@ def xlsx(raw):
             infos = archive.infolist()
             names = [i.filename for i in infos]
             if len(infos) > 2000 or len(names) != len(set(names)):
-                raise ImportError('工作簿结构过于复杂或包含重复文件。')
+                raise ImportError("工作簿结构过于复杂或包含重复文件。")
             if sum(i.file_size for i in infos) > MAX_EXPANDED:
-                raise ImportError('工作簿展开后过大，请拆分后检查。', 413)
+                raise ImportError("工作簿展开后过大，请拆分后检查。", 413)
             if any(i.flag_bits & 1 for i in infos):
-                raise ImportError('请先在本机另存为未加密的 XLSX 文件。')
-            if any('vbaproject' in n.lower() for n in names):
-                raise ImportError('当前格式目录仅支持不含宏的 XLSX 文件。')
+                raise ImportError("请先在本机另存为未加密的 XLSX 文件。")
+            if any("vbaproject" in n.lower() for n in names):
+                raise ImportError("当前格式目录仅支持不含宏的 XLSX 文件。")
             shared = []
-            if 'xl/sharedStrings.xml' in names:
-                shared = [''.join(e.itertext()) for e in xml(archive.read('xl/sharedStrings.xml'))]
-            book = xml(archive.read('xl/workbook.xml'))
-            rels = {r.get('Id'): r for r in xml(archive.read('xl/_rels/workbook.xml.rels'))}
+            if "xl/sharedStrings.xml" in names:
+                shared = ["".join(e.itertext()) for e in xml(archive.read("xl/sharedStrings.xml"))]
+            book = xml(archive.read("xl/workbook.xml"))
+            rels = {r.get("Id"): r for r in xml(archive.read("xl/_rels/workbook.xml.rels"))}
             sheets = []
-            for sheet in book.findall('./{*}sheets/{*}sheet'):
-                rid = sheet.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
+            for sheet in book.findall("./{*}sheets/{*}sheet"):
+                rid = sheet.get(
+                    "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
+                )
                 rel = rels.get(rid)
-                if rel is None or rel.get('TargetMode') == 'External':
-                    raise ImportError('工作表引用无效。')
-                target = rel.get('Target', '')
-                path = str(PurePosixPath(target.lstrip('/'))) if target.startswith('/') else str(PurePosixPath('xl') / target)
-                if '..' in PurePosixPath(path).parts or '\\' in path or not path.startswith('xl/'):
-                    raise ImportError('工作表路径无效。')
+                if rel is None or rel.get("TargetMode") == "External":
+                    raise ImportError("工作表引用无效。")
+                target = rel.get("Target", "")
+                path = (
+                    str(PurePosixPath(target.lstrip("/")))
+                    if target.startswith("/")
+                    else str(PurePosixPath("xl") / target)
+                )
+                if ".." in PurePosixPath(path).parts or "\\" in path or not path.startswith("xl/"):
+                    raise ImportError("工作表路径无效。")
                 content = archive.read(path)
-                xml(content)  # reject declarations and malformed XML before streaming rows
+                validate_xml(content)
                 top = {}
                 row_count = cell_count = max_columns = 0
                 last_row = 0
-                for event, elem in ET.iterparse(io.BytesIO(content), events=('end',)):
-                    if elem.tag.rsplit('}', 1)[-1] != 'row':
+                for event, elem in ET.iterparse(io.BytesIO(content), events=("end",)):
+                    if elem.tag.rsplit("}", 1)[-1] != "row":
                         continue
                     row_count += 1
-                    row_index = int(elem.get('r', row_count))
+                    row_index = int(elem.get("r", row_count))
                     if row_index <= last_row or row_index > MAX_ROWS or row_count > MAX_ROWS:
-                        raise ImportError('工作表行号重复、无效或超过 100,000 行。')
+                        raise ImportError("工作表行号重复、无效或超过 100,000 行。")
                     last_row = row_index
                     cells = {}
                     for cell in elem:
-                        if cell.tag.rsplit('}', 1)[-1] != 'c':
+                        if cell.tag.rsplit("}", 1)[-1] != "c":
                             continue
                         cell_count += 1
-                        ref = cell.get('r', '')
-                        letters = ''.join(c for c in ref if 'A' <= c <= 'Z')
+                        ref = cell.get("r", "")
+                        letters = "".join(c for c in ref if "A" <= c <= "Z")
                         col = 0
                         for letter in letters:
                             col = col * 26 + ord(letter) - 64
                         if not col or col > 256 or col in cells or cell_count > MAX_CELLS:
-                            raise ImportError('工作表列号无效或内容超出检查范围。')
-                        if cell.find('{*}v') is not None or cell.find('{*}is') is not None or cell.find('{*}f') is not None:
+                            raise ImportError("工作表列号无效或内容超出检查范围。")
+                        if (
+                            cell.find("{*}v") is not None
+                            or cell.find("{*}is") is not None
+                            or cell.find("{*}f") is not None
+                        ):
                             max_columns = max(max_columns, col)
                         if row_index <= 20:
-                            value = cell.find('{*}v')
-                            text = value.text or '' if value is not None else ''
-                            kind = cell.get('t')
-                            if kind == 's':
+                            value = cell.find("{*}v")
+                            text = value.text or "" if value is not None else ""
+                            kind = cell.get("t")
+                            if kind == "s":
                                 text = shared[int(text)]
-                            elif kind == 'inlineStr':
-                                text = ''.join(t.text or '' for t in cell.findall('.//{*}t'))
-                            if cell.find('{*}f') is not None:
-                                text = '[公式表头不支持]'
+                            elif kind == "inlineStr":
+                                text = "".join(t.text or "" for t in cell.findall(".//{*}t"))
+                            if cell.find("{*}f") is not None:
+                                text = "[公式表头不支持]"
                             cells[col] = text
                         else:
                             cells[col] = None
                     if row_index <= 20:
-                        top[row_index] = trimmed([cells.get(c, '') for c in range(1, max(cells, default=0) + 1)])
+                        top[row_index] = trimmed(
+                            [cells.get(c, "") for c in range(1, max(cells, default=0) + 1)]
+                        )
                     elem.clear()
-                sheets.append({'name': sheet.get('name', ''), 'top': top, 'rows': row_count, 'max_columns': max_columns})
+                sheets.append(
+                    {
+                        "name": sheet.get("name", ""),
+                        "top": top,
+                        "rows": row_count,
+                        "max_columns": max_columns,
+                    }
+                )
                 if len(sheets) > 20:
-                    raise ImportError('一次最多检查 20 张工作表。')
+                    raise ImportError("一次最多检查 20 张工作表。")
             if not sheets:
-                raise ImportError('工作簿中没有工作表。')
-            return {'container': 'xlsx', 'encoding': None, 'sheets': sheets}
+                raise ImportError("工作簿中没有工作表。")
+            return {"container": "xlsx", "encoding": None, "sheets": sheets}
     except ImportError:
         raise
-    except (zipfile.BadZipFile, KeyError, ET.ParseError, ValueError, IndexError, OSError, RuntimeError, NotImplementedError) as exc:
-        raise ImportError('无法读取此 XLSX，请确认文件完整且未加密。') from exc
+    except (
+        zipfile.BadZipFile,
+        KeyError,
+        ET.ParseError,
+        ValueError,
+        IndexError,
+        OSError,
+        RuntimeError,
+        NotImplementedError,
+    ) as exc:
+        raise ImportError("无法读取此 XLSX，请确认文件完整且未加密。") from exc
 
 
 def text_table(raw):
     text = None
-    for encoding in ('utf-8-sig', 'gb18030'):
+    for encoding in ("utf-8-sig", "gb18030"):
         try:
             text = raw.decode(encoding)
             break
         except UnicodeError:
             pass
-    if text is None or '\x00' in text:
-        raise ImportError('无法读取文本编码；支持 UTF-8 和 GB18030。')
+    if text is None or "\x00" in text:
+        raise ImportError("无法读取文本编码；支持 UTF-8 和 GB18030。")
+    top = {}
+    row_count = cell_count = max_columns = 0
     try:
-        rows = list(csv.reader(io.StringIO(text, newline=''), strict=True))
+        for row_count, row in enumerate(csv.reader(io.StringIO(text, newline=""), strict=True), 1):
+            cell_count += len(row)
+            if row_count > MAX_ROWS or cell_count > MAX_CELLS or len(row) > 256:
+                raise ImportError("文本内容超出检查范围，请拆分后检查。", 413)
+            values = trimmed(row)
+            max_columns = max(max_columns, len(values))
+            if row_count <= 20:
+                top[row_count] = values
     except csv.Error as exc:
-        raise ImportError('CSV 分隔符或引号不完整。') from exc
-    if len(rows) > MAX_ROWS or sum(map(len, rows)) > MAX_CELLS or any(len(r) > 256 for r in rows):
-        raise ImportError('文本内容超出检查范围，请拆分后检查。', 413)
-    if not rows or not any(trimmed(r) for r in rows):
-        raise ImportError('文件为空。')
-    return {'container': 'csv', 'encoding': encoding,
-            'sheets': [{'name': '', 'rows': len(rows), 'max_columns': max(len(trimmed(r)) for r in rows),
-                        'top': {i: trimmed(r) for i, r in enumerate(rows[:20], 1)}}]}
+        raise ImportError("CSV 分隔符或引号不完整。") from exc
+    if not max_columns:
+        raise ImportError("文件为空。")
+    return {
+        "container": "csv",
+        "encoding": encoding,
+        "sheets": [
+            {
+                "name": "",
+                "rows": row_count,
+                "max_columns": max_columns,
+                "top": top,
+            }
+        ],
+    }
 
 
 class Imports:
     def __init__(self, root=None, catalog=None):
         self.root = Path(root) if root else BASE.parent
-        self.path = self.root / 'var' / 'import-interface.sqlite3'
-        self.catalog = json.loads((Path(catalog) if catalog else BASE / 'import_formats.json').read_text(encoding='utf-8'))
-        self.types = {t['id']: t for t in self.catalog['types']}
-        if len(self.types) != len(self.catalog['types']):
-            raise RuntimeError('Duplicate import type')
+        self.path = self.root / "var" / "import-interface.sqlite3"
+        self.catalog = json.loads(
+            (Path(catalog) if catalog else BASE / "import_formats.json").read_text(encoding="utf-8")
+        )
+        self.types = {t["id"]: t for t in self.catalog["types"]}
+        if len(self.types) != len(self.catalog["types"]):
+            raise RuntimeError("Duplicate import type")
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as db:
-            db.executescript('''
+            db.executescript("""
                 CREATE TABLE IF NOT EXISTS settings (
                     type_id TEXT PRIMARY KEY, enabled INTEGER NOT NULL,
                     version INTEGER NOT NULL, updated_at TEXT NOT NULL);
@@ -173,7 +224,7 @@ class Imports:
                     id INTEGER PRIMARY KEY AUTOINCREMENT, mode TEXT NOT NULL,
                     filename TEXT NOT NULL, sha256 TEXT NOT NULL,
                     recorded_at TEXT NOT NULL, result TEXT NOT NULL);
-            ''')
+            """)
 
     @contextmanager
     def connect(self):
@@ -185,195 +236,334 @@ class Imports:
         finally:
             db.close()
 
-    def metadata(self, mode='live'):
+    def metadata(self, mode="live"):
         self.mode(mode)
         from standard_import import StandardImport
+
         with self.connect() as db:
-            settings = {r['type_id']: dict(r) for r in db.execute('SELECT * FROM settings')}
+            settings = {r["type_id"]: dict(r) for r in db.execute("SELECT * FROM settings")}
         types = []
         for key, kind in self.types.items():
-            state = settings.get(key, {'enabled': 1, 'version': 0, 'updated_at': None})
-            types.append({**kind, **state, 'enabled': bool(state['enabled']), 'registered_at': self.catalog['registered_at']})
+            state = settings.get(key, {"enabled": 1, "version": 0, "updated_at": None})
+            types.append(
+                {
+                    **kind,
+                    **state,
+                    "enabled": bool(state["enabled"]),
+                    "registered_at": self.catalog["registered_at"],
+                }
+            )
         types.insert(0, StandardImport(mode).registration())
-        return {'types': types, 'catalog_version': self.catalog['version'], 'execution_available': True,
-                'scope': 'workspace', 'max_file_bytes': MAX_FILE, 'extensions': ['.xlsx', '.csv', '.txt']}
+        return {
+            "types": types,
+            "catalog_version": self.catalog["version"],
+            "execution_available": True,
+            "scope": "workspace",
+            "max_file_bytes": MAX_FILE,
+            "extensions": [".xlsx", ".csv", ".txt"],
+        }
 
-    def configure(self, body, mode='live'):
-        if not isinstance(body, dict) or set(body) != {'type_id', 'enabled', 'version'}:
-            raise ImportError('请提供类型、启用状态和当前版本。')
-        key = body['type_id']
-        if key == 'standard-master':
-            raise ImportError('标准主录表始终启用，不能停用。')
+    def configure(self, body, mode="live"):
+        if not isinstance(body, dict) or set(body) != {"type_id", "enabled", "version"}:
+            raise ImportError("请提供类型、启用状态和当前版本。")
+        key = body["type_id"]
+        if key == "standard-master":
+            raise ImportError("标准主录表始终启用，不能停用。")
         if not isinstance(key, str) or key not in self.types:
-            raise ImportError('此表格类型尚未配置，需要开发新增支持。', 404)
-        if type(body['enabled']) is not bool or type(body['version']) is not int:
-            raise ImportError('启用状态或版本无效。')
+            raise ImportError("此表格类型尚未配置，需要开发新增支持。", 404)
+        if type(body["enabled"]) is not bool or type(body["version"]) is not int:
+            raise ImportError("启用状态或版本无效。")
         with self.connect() as db:
-            db.execute('BEGIN IMMEDIATE')
-            row = db.execute('SELECT * FROM settings WHERE type_id=?', (key,)).fetchone()
-            version = row['version'] if row else 0
-            enabled = bool(row['enabled']) if row else True
-            if body['version'] != version:
-                raise ImportError('此类型已在其他页面修改，请刷新后重试。', 409)
-            if body['enabled'] != enabled:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("SELECT * FROM settings WHERE type_id=?", (key,)).fetchone()
+            version = row["version"] if row else 0
+            enabled = bool(row["enabled"]) if row else True
+            if body["version"] != version:
+                raise ImportError("此类型已在其他页面修改，请刷新后重试。", 409)
+            if body["enabled"] != enabled:
                 now = stamp()
-                db.execute('INSERT OR REPLACE INTO settings VALUES(?,?,?,?)', (key, int(body['enabled']), version + 1, now))
-                db.execute('INSERT INTO events(type_id,enabled,version,recorded_at) VALUES(?,?,?,?)',
-                           (key, int(body['enabled']), version + 1, now))
+                db.execute(
+                    "INSERT OR REPLACE INTO settings VALUES(?,?,?,?)",
+                    (key, int(body["enabled"]), version + 1, now),
+                )
+                db.execute(
+                    "INSERT INTO events(type_id,enabled,version,recorded_at) VALUES(?,?,?,?)",
+                    (key, int(body["enabled"]), version + 1, now),
+                )
         return self.metadata(mode)
 
     @staticmethod
     def mode(mode):
-        if mode not in ('live', 'demo'):
-            raise ImportError('无效数据来源。')
+        if mode not in ("live", "demo"):
+            raise ImportError("无效数据来源。")
         return mode
 
-    def check(self, filename, raw, mode='live'):
+    def check(self, filename, raw, mode="live"):
         mode = self.mode(mode)
-        if not isinstance(filename, str) or not filename or len(filename) > 240 or any(ord(c) < 32 or c in '/\\' for c in filename):
-            raise ImportError('文件名无效，请重新选择文件。')
+        if (
+            not isinstance(filename, str)
+            or not filename
+            or len(filename) > 240
+            or any(ord(c) < 32 or c in "/\\" for c in filename)
+        ):
+            raise ImportError("文件名无效，请重新选择文件。")
         if not raw:
-            raise ImportError('文件为空。')
+            raise ImportError("文件为空。")
         if len(raw) > MAX_FILE:
-            raise ImportError('单个文件不能超过 16 MB。', 413)
+            raise ImportError("单个文件不能超过 16 MB。", 413)
         extension = Path(filename).suffix.lower()
-        if extension not in ('.xlsx', '.csv', '.txt'):
-            raise ImportError('当前仅检查 XLSX、CSV 和 TXT 文件；其他格式需要新增支持。', 415)
+        if extension not in (".xlsx", ".csv", ".txt"):
+            raise ImportError("当前仅检查 XLSX、CSV 和 TXT 文件；其他格式需要新增支持。", 415)
         try:
-            shape = xlsx(raw) if extension == '.xlsx' else text_table(raw)
+            shape = xlsx(raw) if extension == ".xlsx" else text_table(raw)
             from standard_import import StandardImport
+
             standard = StandardImport(mode)
-            plan = standard.plan(filename, raw) if extension == '.csv' else None
+            plan = standard.plan(filename, raw) if extension == ".csv" else None
             matches = []
-            for kind in self.catalog['types']:
-                for profile in kind['profiles']:
-                    if profile['container'] != shape['container'] or len(shape['sheets']) != 1:
+            for kind in self.catalog["types"]:
+                for profile in kind["profiles"]:
+                    if profile["container"] != shape["container"] or len(shape["sheets"]) != 1:
                         continue
-                    sheet = shape['sheets'][0]
-                    if profile.get('sheet') is not None and profile['sheet'] != sheet['name']:
+                    sheet = shape["sheets"][0]
+                    if profile.get("sheet") is not None and profile["sheet"] != sheet["name"]:
                         continue
-                    if sheet['top'].get(profile['header_row']) != profile['columns']:
+                    if sheet["top"].get(profile["header_row"]) != profile["columns"]:
                         continue
-                    if sheet['max_columns'] > len(profile['columns']):
+                    if sheet["max_columns"] > len(profile["columns"]):
                         continue
-                    if any(sheet['top'].get(int(n)) != v for n, v in profile.get('markers', {}).items()):
+                    if any(
+                        sheet["top"].get(int(n)) != v for n, v in profile.get("markers", {}).items()
+                    ):
                         continue
-                    matches.append({'type_id': kind['id'], 'type_name': kind['name'], 'profile': profile['id'],
-                                    'profile_name': profile['name'], 'sheet': sheet['name'],
-                                    'header_row': profile['header_row'], 'columns': profile['columns']})
-            result = {'status': 'recognized' if len(matches) == 1 else 'unknown', 'match': matches[0] if len(matches) == 1 else None,
-                      'encoding': shape['encoding'], 'sheets': [{'name': s['name'], 'physical_rows': s['rows']} for s in shape['sheets']],
-                      'reason': '格式已登记。' if len(matches) == 1 else '此文件结构尚未支持，需要增加或更新格式识别规则。'}
+                    matches.append(
+                        {
+                            "type_id": kind["id"],
+                            "type_name": kind["name"],
+                            "profile": profile["id"],
+                            "profile_name": profile["name"],
+                            "sheet": sheet["name"],
+                            "header_row": profile["header_row"],
+                            "columns": profile["columns"],
+                        }
+                    )
+            result = {
+                "status": "recognized" if len(matches) == 1 else "unknown",
+                "match": matches[0] if len(matches) == 1 else None,
+                "encoding": shape["encoding"],
+                "sheets": [
+                    {"name": s["name"], "physical_rows": s["rows"]} for s in shape["sheets"]
+                ],
+                "reason": "格式已登记。"
+                if len(matches) == 1
+                else "此文件结构尚未支持，需要增加或更新格式识别规则。",
+            }
             if plan is not None:
                 result = standard.inspect(plan)
         except ImportError as exc:
-            result = {'status': 'invalid', 'match': None, 'sheets': [], 'encoding': None, 'reason': str(exc)}
-        result.update({'filename': filename, 'sha256': hashlib.sha256(raw).hexdigest(), 'size_bytes': len(raw),
-                       'recorded_at': stamp(), 'mode': mode, 'catalog_version': self.catalog['version'],
-                       'execution_available': bool(result.get('match', {}).get('type_id') == 'standard-master') if result.get('match') else False})
+            result = {
+                "status": "invalid",
+                "match": None,
+                "sheets": [],
+                "encoding": None,
+                "reason": str(exc),
+            }
+        result.update(
+            {
+                "filename": filename,
+                "sha256": hashlib.sha256(raw).hexdigest(),
+                "size_bytes": len(raw),
+                "recorded_at": stamp(),
+                "mode": mode,
+                "catalog_version": self.catalog["version"],
+                "execution_available": bool(
+                    result.get("match", {}).get("type_id") == "standard-master"
+                )
+                if result.get("match")
+                else False,
+            }
+        )
         # Persist eligibility and settings version from the same serialized transaction.
         with self.connect() as db:
-            db.execute('BEGIN IMMEDIATE')
-            if result['match']:
-                row = db.execute('SELECT enabled,version FROM settings WHERE type_id=?', (result['match']['type_id'],)).fetchone()
-                result['enabled_at_check'] = bool(row['enabled']) if row else True
-                result['settings_version'] = row['version'] if row else 0
-                if result['match']['type_id'] == 'standard-master':
-                    result['enabled_at_check'] = True
-                    result['settings_version'] = 0
+            db.execute("BEGIN IMMEDIATE")
+            if result["match"]:
+                row = db.execute(
+                    "SELECT enabled,version FROM settings WHERE type_id=?",
+                    (result["match"]["type_id"],),
+                ).fetchone()
+                result["enabled_at_check"] = bool(row["enabled"]) if row else True
+                result["settings_version"] = row["version"] if row else 0
+                if result["match"]["type_id"] == "standard-master":
+                    result["enabled_at_check"] = True
+                    result["settings_version"] = 0
             else:
-                result['enabled_at_check'] = False
-            db.execute('INSERT INTO checks(mode,filename,sha256,recorded_at,result) VALUES(?,?,?,?,?)',
-                       (mode, filename, result['sha256'], result['recorded_at'], packed(result)))
-            result['id'] = db.execute('SELECT last_insert_rowid()').fetchone()[0]
+                result["enabled_at_check"] = False
+            db.execute(
+                "INSERT INTO checks(mode,filename,sha256,recorded_at,result) VALUES(?,?,?,?,?)",
+                (mode, filename, result["sha256"], result["recorded_at"], packed(result)),
+            )
+            result["id"] = db.execute("SELECT last_insert_rowid()").fetchone()[0]
         return self.current(result)
 
     def current(self, result, states=None):
-        states = states if states is not None else {t['id']: t for t in self.metadata(result.get('mode', 'live'))['types']}
-        match = result.get('match')
-        current = states.get(match['type_id']) if match else None
-        result['currently_enabled'] = bool(current and current['enabled'])
-        result['requires_recheck'] = bool(match and (result['catalog_version'] != self.catalog['version'] or
-                                                    not current or match['profile'] not in {p['id'] for p in current['profiles']}))
-        result['format_eligible'] = bool(result['status'] == 'recognized' and current and current['enabled'] and not result['requires_recheck'])
-        standard = bool(match and match['type_id'] == 'standard-master')
+        states = (
+            states
+            if states is not None
+            else {t["id"]: t for t in self.metadata(result.get("mode", "live"))["types"]}
+        )
+        match = result.get("match")
+        current = states.get(match["type_id"]) if match else None
+        result["currently_enabled"] = bool(current and current["enabled"])
+        result["requires_recheck"] = bool(
+            match
+            and (
+                result["catalog_version"] != self.catalog["version"]
+                or not current
+                or match["profile"] not in {p["id"] for p in current["profiles"]}
+            )
+        )
+        result["format_eligible"] = bool(
+            result["status"] == "recognized"
+            and current
+            and current["enabled"]
+            and not result["requires_recheck"]
+        )
+        standard = bool(match and match["type_id"] == "standard-master")
         if standard:
             from standard_import import POLICY_VERSION
-            profile = next((p for p in current['profiles'] if p['id'] == match['profile']), None) if current else None
-            result['requires_recheck'] = result['requires_recheck'] or not profile or profile['signature'] != match.get('signature') or result.get('import_policy_version') != POLICY_VERSION
-            result['can_execute'] = bool(result['validated'] and result.get('row_count') and not result['requires_recheck'] and not result.get('execution'))
+
+            profile = (
+                next((p for p in current["profiles"] if p["id"] == match["profile"]), None)
+                if current
+                else None
+            )
+            result["requires_recheck"] = (
+                result["requires_recheck"]
+                or not profile
+                or profile["signature"] != match.get("signature")
+                or result.get("import_policy_version") != POLICY_VERSION
+            )
+            result["can_execute"] = bool(
+                result["validated"]
+                and result.get("row_count")
+                and not result["requires_recheck"]
+                and not result.get("execution")
+            )
         else:
-            result['can_execute'] = False
-        result['label'] = ('已停用 · 不可导入' if not result['currently_enabled'] else '规则已更新 · 请重新检查' if result['requires_recheck'] else '已登记 · 可用于导入') if match else ('无法检查' if result['status'] == 'invalid' else '需要新增支持')
+            result["can_execute"] = False
+        result["label"] = (
+            (
+                "已停用 · 不可导入"
+                if not result["currently_enabled"]
+                else "规则已更新 · 请重新检查"
+                if result["requires_recheck"]
+                else "已登记 · 可用于导入"
+            )
+            if match
+            else ("无法检查" if result["status"] == "invalid" else "需要新增支持")
+        )
         if standard:
-            result['label'] = '已导入' if result.get('execution') else '业务校验未通过' if not result['validated'] else '校验通过 · 可导入' if result['can_execute'] else '请填写数据或重新检查'
-        result['format_eligible'] = result['format_eligible'] and not result['requires_recheck']
+            result["label"] = (
+                "已导入"
+                if result.get("execution")
+                else "业务校验未通过"
+                if not result["validated"]
+                else "校验通过 · 可导入"
+                if result["can_execute"]
+                else "请填写数据或重新检查"
+            )
+        result["format_eligible"] = result["format_eligible"] and not result["requires_recheck"]
         return result
 
-    def execute(self, check_id, filename, raw, mode='live', allow_incomplete=None, merge=None):
+    def execute(self, check_id, filename, raw, mode="live", allow_incomplete=None, merge=None):
         mode = self.mode(mode)
-        if isinstance(check_id, bool) or not isinstance(check_id, (str, int)) or not str(check_id).isdigit() or len(str(check_id)) > 12:
-            raise ImportError('请先检查文件，再执行标准主录表导入。')
+        if (
+            isinstance(check_id, bool)
+            or not isinstance(check_id, (str, int))
+            or not str(check_id).isdigit()
+            or len(str(check_id)) > 12
+        ):
+            raise ImportError("请先检查文件，再执行标准主录表导入。")
         with self.connect() as db:
-            row = db.execute('SELECT * FROM checks WHERE id=? AND mode=?', (int(check_id), mode)).fetchone()
+            row = db.execute(
+                "SELECT * FROM checks WHERE id=? AND mode=?", (int(check_id), mode)
+            ).fetchone()
         if not row:
-            raise ImportError('检查记录不存在或数据来源不一致。', 409)
-        checked = json.loads(row['result'])
-        if row['filename'] != filename or row['sha256'] != hashlib.sha256(raw).hexdigest():
-            raise ImportError('文件已变化，请重新检查后导入。', 409)
-        if not checked.get('match') or checked['match']['type_id'] != 'standard-master':
-            raise ImportError('当前仅开放标准主录表CSV导入，其他类型仍只检查格式。', 415)
-        if not checked.get('validated') or not checked.get('row_count'):
-            raise ImportError('文件尚未通过业务校验，请修改后重新检查。')
+            raise ImportError("检查记录不存在或数据来源不一致。", 409)
+        checked = json.loads(row["result"])
+        if row["filename"] != filename or row["sha256"] != hashlib.sha256(raw).hexdigest():
+            raise ImportError("文件已变化，请重新检查后导入。", 409)
+        if not checked.get("match") or checked["match"]["type_id"] != "standard-master":
+            raise ImportError("当前仅开放标准主录表CSV导入，其他类型仍只检查格式。", 415)
+        if not checked.get("validated") or not checked.get("row_count"):
+            raise ImportError("文件尚未通过业务校验，请修改后重新检查。")
         from standard_import import StandardImport, POLICY_VERSION
-        if checked.get('import_policy_version') != POLICY_VERSION or not checked.get('import_key'):
-            raise ImportError('导入规则已更新，请重新检查文件。', 409)
-        if allow_incomplete in ('true','false'):
-            allow_incomplete = allow_incomplete == 'true'
+
+        if checked.get("import_policy_version") != POLICY_VERSION or not checked.get("import_key"):
+            raise ImportError("导入规则已更新，请重新检查文件。", 409)
+        if allow_incomplete in ("true", "false"):
+            allow_incomplete = allow_incomplete == "true"
         elif allow_incomplete is None:
             allow_incomplete = False
         elif type(allow_incomplete) is not bool:
-            raise ImportError('空缺确认参数无效。')
-        if merge == '':
+            raise ImportError("空缺确认参数无效。")
+        if merge == "":
             merge = None
-        if merge not in (None,'latest','fill_empty'):
-            raise ImportError('请选择使用最新数据或只补填原空白项。')
+        if merge not in (None, "latest", "fill_empty"):
+            raise ImportError("请选择使用最新数据或只补填原空白项。")
         service = StandardImport(mode)
-        plan = service.plan(filename, raw, checked['import_key'])
-        if not plan or plan['signature'] != checked['match']['signature']:
-            raise ImportError('主录表结构已变化，请重新下载模板并检查。', 409)
+        plan = service.plan(filename, raw, checked["import_key"])
+        if not plan or plan["signature"] != checked["match"]["signature"]:
+            raise ImportError("主录表结构已变化，请重新下载模板并检查。", 409)
         previous = service.previous(plan, int(check_id), merge, allow_incomplete)
         if previous:
             result = previous
-        elif plan['errors']:
-            raise ImportError('；'.join(plan['errors']))
+        elif plan["errors"]:
+            raise ImportError("；".join(plan["errors"]))
         else:
-            if plan['blank_cells'] and not allow_incomplete:
-                raise ImportError('检查到表信息不全，是否还要导入？',409)
+            if plan["blank_cells"] and not allow_incomplete:
+                raise ImportError("检查到表信息不全，是否还要导入？", 409)
             if service.existing_count(plan) and merge is None:
-                raise ImportError('是否要使用最新一次的数据？',409)
+                raise ImportError("是否要使用最新一次的数据？", 409)
             result = service.write(plan, int(check_id), merge, allow_incomplete)
         # PostgreSQL audit is the commit authority. Retrying after a local history error is safe.
-        checked['execution'] = result
-        checked['can_execute'] = False
+        checked["execution"] = result
+        checked["can_execute"] = False
         with self.connect() as db:
-            db.execute('UPDATE checks SET result=? WHERE id=? AND mode=?', (packed(checked), int(check_id), mode))
+            db.execute(
+                "UPDATE checks SET result=? WHERE id=? AND mode=?",
+                (packed(checked), int(check_id), mode),
+            )
         return result
 
-    def history(self, mode='live', offset=0):
+    def history(self, mode="live", offset=0):
         mode = self.mode(mode)
         try:
             offset = int(offset)
         except (ValueError, TypeError):
-            raise ImportError('分页参数无效。')
+            raise ImportError("分页参数无效。")
         if not 0 <= offset <= 1000000:
-            raise ImportError('分页参数超出范围。')
-        states = {t['id']: t for t in self.metadata(mode)['types']}
+            raise ImportError("分页参数超出范围。")
+        states = {t["id"]: t for t in self.metadata(mode)["types"]}
         with self.connect() as db:
-            rows = db.execute('SELECT id,result FROM checks WHERE mode=? ORDER BY id DESC LIMIT 20 OFFSET ?', (mode, offset)).fetchall()
-            total = db.execute('SELECT count(*) FROM checks WHERE mode=?', (mode,)).fetchone()[0]
-        return {'rows': [self.current({**json.loads(r['result']), 'id': r['id']}, states) for r in rows], 'total': total, 'offset': offset, 'limit': 20}
+            rows = db.execute(
+                "SELECT id,result FROM checks WHERE mode=? ORDER BY id DESC LIMIT 20 OFFSET ?",
+                (mode, offset),
+            ).fetchall()
+            total = db.execute("SELECT count(*) FROM checks WHERE mode=?", (mode,)).fetchone()[0]
+        return {
+            "rows": [
+                self.current({**json.loads(r["result"]), "id": r["id"]}, states) for r in rows
+            ],
+            "total": total,
+            "offset": offset,
+            "limit": 20,
+        }
 
     def events(self):
         with self.connect() as db:
-            return {'rows': [dict(r) for r in db.execute('SELECT * FROM events ORDER BY id DESC LIMIT 50')]}
+            return {
+                "rows": [
+                    dict(r) for r in db.execute("SELECT * FROM events ORDER BY id DESC LIMIT 50")
+                ]
+            }
