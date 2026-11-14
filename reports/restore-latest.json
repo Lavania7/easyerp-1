@@ -1,4 +1,5 @@
 {
-  "backup": "D:\\projx\\demo\\easyerp-0.2\\backups\\easyerp_v02-20261022T162536532603Z.dump",
-  "passed": true
+  "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02_test_11030740f8-20261030T095303427002Z.dump",
+  "passed": true,
+  "data_signature_matched": true
 }

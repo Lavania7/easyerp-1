@@ -18,7 +18,7 @@ def main():
     parser.add_argument('--url', default='http://127.0.0.1:8092')
     parser.add_argument('--report', type=Path)
     args = parser.parse_args()
-    sys.path.insert(0, str(args.project_root / 'frontend'))
+    sys.path.insert(0, str(args.project_root / 'app'))
     from data import Data, I, L
 
     checks = []

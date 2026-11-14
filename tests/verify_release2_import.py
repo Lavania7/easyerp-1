@@ -10,7 +10,7 @@ import sys
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--project-root',type=Path,required=True);p.add_argument('--report',type=Path,required=True);p.add_argument('--url',default='http://127.0.0.1:8092');a=p.parse_args()
-    sys.path.insert(0,str(a.project_root/'bin'));from easyerp import ERP;from import_release2 import signature,qualified,sqlval;from inspect_release2 import inspect
+    sys.path.insert(0,str(a.project_root/'tools'));from easyerp import ERP;from import_release2 import signature,qualified,sqlval;from inspect_release2 import inspect
     e=ERP();report=json.loads(a.report.read_text(encoding='utf-8'));fid=report['file_id'];checks=[]
     def check(label,passed):
         checks.append({'check':label,'passed':bool(passed)})

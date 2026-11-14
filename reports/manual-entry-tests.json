@@ -1,5 +1,5 @@
 {
-  "at_utc": "2026-10-22T19:38:52.095648+00:00",
+  "at_utc": "2026-10-30T09:37:41.515337+00:00",
   "status": "PASS",
   "checks": 40,
   "passed": [
@@ -45,6 +45,6 @@
     "formal business data signature unchanged"
   ],
   "test_rows_removed": true,
-  "formal_signature_before": "122fed94d4612da79b896073e38a27366e40f14890f96562d686ab54ab40004e",
-  "formal_signature_after": "122fed94d4612da79b896073e38a27366e40f14890f96562d686ab54ab40004e"
+  "formal_signature_before": "10256b099543bd56ea4411ec337e40021d22d24535a6cc722d1e902c275d7326",
+  "formal_signature_after": "10256b099543bd56ea4411ec337e40021d22d24535a6cc722d1e902c275d7326"
 }

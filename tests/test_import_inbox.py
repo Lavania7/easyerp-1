@@ -12,8 +12,8 @@ import tempfile
 import unittest
 
 PROJECT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PROJECT / 'bin'))
-spec = importlib.util.spec_from_file_location('import_inbox', PROJECT / 'bin/import_inbox.py')
+sys.path.insert(0, str(PROJECT / 'tools'))
+spec = importlib.util.spec_from_file_location('import_inbox', PROJECT / 'tools/import_inbox.py')
 adapter = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(adapter)
 import easyerp

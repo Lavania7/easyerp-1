@@ -1,0 +1,17 @@
+{
+  "at_utc": "2026-10-30T09:57:36.885681+00:00",
+  "version": "company-profile-v1",
+  "sql_sha256": "f3881906ac94877627461065144e253d197c3b93b27f379d2efbf74f1bae18d9",
+  "results": [
+    {
+      "database": "easyerp_v02",
+      "status": "already installed",
+      "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02-20261030T095210112193Z.dump"
+    },
+    {
+      "database": "easyerp_v02_ui_demo",
+      "status": "already installed",
+      "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02_ui_demo-20261030T095211418062Z.dump"
+    }
+  ]
+}

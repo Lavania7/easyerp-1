@@ -10,7 +10,7 @@ import json
 import sys
 
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT/'bin'))
+sys.path.insert(0,str(ROOT/'tools'))
 from easyerp import ERP,write_json
 e=ERP(); demo=e.c['database']+'_ui_demo'; passed=[]
 base={'mode':'demo','start':'2026-10-01','end':'2026-10-22','currency':'CNY','tz':'UTC'}
@@ -45,7 +45,7 @@ try:
     check('empty export preserves source field names','销售订单行ID' in header and '商品实付' in header)
     check('HTTP uses read-only DB role',get('health')['status'][0]['role']=='easyerp_read')
     meta=get('meta')
-    check('all 15 standard views plus 3 operations views exposed',sum(x['kind']=='v' for x in meta['objects'])==18)
+    check('only authoritative business tables exposed',len(meta['objects'])==146 and all(x['kind']=='r' for x in meta['objects']))
     for obj in meta['objects']:
         if obj['kind']=='v':
             get('explore',object=obj['schema']+'.'+obj['name'])

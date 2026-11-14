@@ -17,7 +17,7 @@ parser.add_argument('--url',default='http://127.0.0.1:8092')
 parser.add_argument('--project-root',type=Path,default=Path(__file__).resolve().parents[1])
 args=parser.parse_args()
 ROOT=args.project_root
-sys.path.insert(0,str(ROOT/'bin'))
+sys.path.insert(0,str(ROOT/'tools'))
 from easyerp import ERP, literal as L, ident as I
 e=ERP();demo=e.c['database']+'_ui_demo'
 run='qa_'+uuid.uuid4().hex[:14]

@@ -19,7 +19,7 @@ p.add_argument('--url',default='http://127.0.0.1:8094')
 p.add_argument('--sample-root',type=Path,default=Path(r'D:\projx\demo\easyerp-old2'))
 args=p.parse_args()
 ROOT=args.project_root
-sys.path.insert(0,str(ROOT/'frontend'))
+sys.path.insert(0,str(ROOT/'app'))
 from imports import Imports, ImportError as FormatError, MAX_FILE
 passed=[]
 def check(label,condition):
@@ -55,7 +55,7 @@ manifest=json.loads((ROOT/'reports/import-sample-manifest.json').read_text(encod
 sales=args.sample_root/'sales/ExportOrderList-2026-Q3.xlsx';sales_raw=sales.read_bytes()
 sample_results=[]
 with tempfile.TemporaryDirectory(prefix='easyerp-import-test-') as temp:
- svc=Imports(temp,ROOT/'frontend/import_formats.json')
+ svc=Imports(temp,ROOT/'app/import_formats.json')
  check('six registered types / seven explicit profiles',len(svc.types)==6 and sum(len(t['profiles']) for t in svc.types.values())==7)
  check('standard CSV execution available in catalog',svc.metadata()['execution_available'] is True)
  for item in manifest['files']:
@@ -76,7 +76,7 @@ with tempfile.TemporaryDirectory(prefix='easyerp-import-test-') as temp:
  check('disabled type rejects recognized file',not svc.check(sales.name,sales_raw)['format_eligible'])
  old=next(r for r in svc.history('live')['rows'] if r['id']==original['id'])
  check('history re-evaluates current disable status',old['enabled_at_check'] and not old['currently_enabled'] and not old['format_eligible'])
- restart=Imports(temp,ROOT/'frontend/import_formats.json')
+ restart=Imports(temp,ROOT/'app/import_formats.json')
  check('disabled setting survives new service instance',not next(t for t in restart.metadata()['types'] if t['id']==row['id'])['enabled'])
  check('type setting shared across modes',not restart.check(sales.name,sales_raw,'demo')['format_eligible'])
  try:svc.configure({'type_id':row['id'],'enabled':True,'version':0});check('stale version rejected',False)

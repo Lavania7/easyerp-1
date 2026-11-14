@@ -1,0 +1,16 @@
+{
+  "passed": [
+    "Catalog ownership and retired flags",
+    "Retired entry and template boundaries",
+    "Atomic purchase edit, exact decimals, stale child rollback",
+    "Original-order purchase registration without detailed item coding",
+    "Combined warehouse and stock, nullable balances, exact difference",
+    "Protected HTTP file workflow, retry and source isolation"
+  ],
+  "formal_business_unchanged": true,
+  "test_rows_removed": true,
+  "file_unit_tests": 4,
+  "ui_test_items_removed": 2,
+  "formal_workflow_file_unchanged": true,
+  "malformed_request_rejected": true
+}

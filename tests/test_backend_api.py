@@ -38,23 +38,25 @@ print('DESKTOP_KEY_READY',bool(master.get('data',{}).get('present')))
 profile=profiles['profiles'][0]
 gid=profile['group_id'];sid=profile['server_id']
 connected=json.loads(request(f'/browser/server/connect/{gid}/{sid}',{},'POST',headers))
-print('CONNECT',json.dumps(connected,ensure_ascii=False)[:1800])
+print('CONNECT',connected.get('success')==1)
 assert connected.get('success')==1
 trans=731421
 did=connected['data']['did']
 initialized=json.loads(request(f'/sqleditor/initialize/sqleditor/{trans}/{gid}/{sid}/{did}',{'dbname':profile['database']},'POST',headers))
-print('INITIALIZE',json.dumps(initialized,ensure_ascii=False)[:1800])
+print('INITIALIZE',initialized.get('success')==1)
 assert initialized.get('success')==1
 sql="SELECT current_database() AS database,current_user AS role,(SELECT count(*) FROM information_schema.tables WHERE table_schema IN ('finance','legal','production','rd','sales','analysis') AND table_type='BASE TABLE') AS business_tables,(SELECT count(*) FROM information_schema.views WHERE table_schema IN ('finance','legal','production','rd','sales','analysis')) AS standard_views;"
 started=json.loads(request(f'/sqleditor/query_tool/start/{trans}',{'sql':sql},'POST',headers))
-print('QUERY',json.dumps(started,ensure_ascii=False)[:1800])
+print('QUERY',started.get('success')==1)
 for i in range(30):
     result=json.loads(request(f'/sqleditor/poll/{trans}',headers=headers))
     if result.get('data',{}).get('status')!='Busy':break
     time.sleep(.2)
-print('RESULT',json.dumps(result,ensure_ascii=False)[:4000])
+print('RESULT',json.dumps(result.get('data',{}).get('result'),ensure_ascii=False))
 assert result['success']==1 and result['data']['status']=='Success'
-assert result['data']['result']==[['easyerp_v02','easyerp_app','146','15']]
+expected=json.loads((ROOT/'db/manifest.json').read_text(encoding='utf-8'))['counts']
+database=json.loads((ROOT/'config.json').read_text(encoding='utf-8'))['database']
+assert result['data']['result']==[[database,'easyerp_app',str(expected['tables']),str(expected['views'])]]
 request(f'/sqleditor/close/{trans}',method='DELETE',headers=headers)
 (ROOT/'reports'/'sql-interface-tests.json').write_text(json.dumps({
   'at_utc':datetime.now(timezone.utc).isoformat(),'status':'PASS',

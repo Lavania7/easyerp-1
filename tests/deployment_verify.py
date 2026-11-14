@@ -9,7 +9,7 @@ import sys
 import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT/'bin'))
+sys.path.insert(0,str(ROOT/'tools'))
 from easyerp import ERP, ident, write_json
 
 e=ERP()

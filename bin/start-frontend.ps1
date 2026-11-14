@@ -4,7 +4,7 @@ $OutputEncoding = [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $root = Split-Path $PSScriptRoot -Parent
 $url = 'http://127.0.0.1:8092'
 $config = Get-Content -LiteralPath (Join-Path $root 'config.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-& (Join-Path $PSScriptRoot 'easyerp-db.ps1') start | Out-Null
+& (Join-Path $root 'tools\easyerp-db.ps1') start | Out-Null
 function Test-Frontend {
     try {
         $health = Invoke-RestMethod -Uri "$url/api/health" -TimeoutSec 2
@@ -14,7 +14,7 @@ function Test-Frontend {
 if (-not (Test-Frontend)) {
     $listener = Get-NetTCPConnection -State Listen -LocalPort 8092 -ErrorAction SilentlyContinue
     if ($listener) { throw '8092 端口已被占用，请检查前端日志。' }
-    Start-Process -FilePath $config.python -ArgumentList @((Join-Path $root 'frontend\server.py')) -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput (Join-Path $root 'var\log\frontend-console.log') -RedirectStandardError (Join-Path $root 'var\log\frontend-error.log') | Out-Null
+    Start-Process -FilePath $config.python -ArgumentList @((Join-Path $root 'app\server.py')) -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput (Join-Path $root 'var\log\frontend-console.log') -RedirectStandardError (Join-Path $root 'var\log\frontend-error.log') | Out-Null
     $ready = $false
     for ($attempt=0; $attempt -lt 20; $attempt++) {
         if (Test-Frontend) { $ready=$true; break }

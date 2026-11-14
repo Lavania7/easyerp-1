@@ -1,0 +1,16 @@
+{
+  "version": "purchase-intake-v1",
+  "at_utc": "2026-11-14T12:30:26.732076+00:00",
+  "results": [
+    {
+      "database": "easyerp_v02",
+      "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02-20261114T122957726141Z.dump",
+      "business_facts_unchanged": true
+    },
+    {
+      "database": "easyerp_v02_ui_demo",
+      "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02_ui_demo-20261114T123016653424Z.dump",
+      "business_facts_unchanged": true
+    }
+  ]
+}

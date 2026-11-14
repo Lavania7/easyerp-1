@@ -7,7 +7,7 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request,urlopen
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT/'frontend'))
+sys.path.insert(0,str(ROOT/'app'))
 from data import Data,I,L
 from standard_import import StandardImport
 BASE='http://127.0.0.1:8092';prefix='qa_csv_'+uuid.uuid4().hex[:14]

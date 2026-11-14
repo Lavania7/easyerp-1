@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "checks": 21,
+  "passed": [
+    "My Work has edit toggle beside its record count",
+    "task maps to its own purpose record rather than parent fund",
+    "view mode hides task edit controls",
+    "My Work uses the shared blue edit mode",
+    "task editor loads the authoritative record",
+    "saving refreshes My Work and keeps editing enabled",
+    "saved task content is read back from SQL",
+    "resolved task leaves the pending list after save",
+    "all displayed task types preserve their own source identity",
+    "topbar spans the full page width from the left edge",
+    "company full name precedes a vertical divider and breadcrumb",
+    "old Current Company caption is removed",
+    "sidebar starts below the full-width topbar",
+    "long company name wraps fully on narrow screens",
+    "mobile topbar retains the workspace breadcrumb",
+    "mobile sidebar opens below the resized header",
+    "company popover remains available from mobile topbar",
+    "dark theme keeps topbar divider visible",
+    "English labels preserve full company name",
+    "German labels preserve full company name",
+    "no uncaught JavaScript errors"
+  ],
+  "at_utc": "2026-10-30T10:17:21.029394+00:00",
+  "direct_sql_verified": true,
+  "parent_fund_unchanged": true,
+  "test_rows_removed": true,
+  "formal_signature_before": "fcc7d3941eaac8fe6cbd85f0edeaff87814a3a2f01d884da1e667a5e0668716d",
+  "formal_signature_after": "fcc7d3941eaac8fe6cbd85f0edeaff87814a3a2f01d884da1e667a5e0668716d"
+}

@@ -1,0 +1,51 @@
+:root[data-theme] .button.table-edit-toggle,:root[data-theme] .button.table-edit-save{background:#0879d9;border-color:#0879d9;color:#fff}
+:root[data-theme] .button.table-edit-toggle:hover,:root[data-theme] .button.table-edit-save:hover{background:#0666ba;border-color:#0666ba}
+:root[data-theme] .table-edit-toggle{display:inline-flex;gap:7px;align-items:center;justify-content:center;flex-shrink:0}
+:root[data-theme] .table-edit-toggle .icon{width:16px;height:16px}
+:root[data-theme] .table-edit-panel .table-edit-column{display:none}
+:root[data-theme] .table-edit-panel.is-editing{border-color:#1687e2;box-shadow:0 0 0 1px #1687e2;background:#eff7ff}
+:root[data-theme] .table-edit-panel.is-editing .table-toolbar,:root[data-theme] .table-edit-panel.is-editing .pagination{background:#e8f3ff}
+:root[data-theme] .table-edit-panel.is-editing th{background:#e0efff;border-color:#c7e1fa;color:#35617f}
+:root[data-theme] .table-edit-panel.is-editing td{border-color:#d8eafb}
+:root[data-theme] .table-edit-panel.is-editing tbody tr:hover,:root[data-theme] .table-edit-panel.is-editing .table-row-selected{background:#dcecfc}
+:root[data-theme] .table-edit-panel.is-editing .table-edit-column{display:table-cell}
+:root[data-theme] .table-row-edit{display:inline-flex;align-items:center;gap:6px;background:transparent;border:0;padding:5px;color:#086ec2;font-size:inherit}
+:root[data-theme] .table-row-edit:hover{background:#d5e9ff;border-radius:4px}
+:root[data-theme] .table-row-edit .icon{width:15px;height:15px}
+:root[data-theme] .table-row-editor>td{padding:0;max-width:none;white-space:normal;overflow:visible}
+:root[data-theme] .table-edit-form{position:sticky;left:0;width:min(1100px,100%);padding:22px;background:#f4f9ff;border-top:1px solid #8bbfed;border-bottom:1px solid #8bbfed;max-width:min(1100px,calc(100vw - 340px))}
+:root[data-theme] .table-edit-heading{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:#215b88}
+:root[data-theme] .table-edit-heading code{overflow-wrap:anywhere;color:var(--muted)}
+:root[data-theme] .table-edit-note{color:var(--muted);line-height:1.7;margin:10px 0 18px}
+:root[data-theme] .table-edit-form fieldset{border:0;padding:0;margin:0;min-width:0}
+:root[data-theme] .table-edit-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+:root[data-theme] .table-edit-field{display:flex;flex-direction:column;gap:7px;min-width:0;color:var(--ink)}
+:root[data-theme] .table-edit-field.wide{grid-column:1/-1}
+:root[data-theme] .table-edit-field input,:root[data-theme] .table-edit-field select,:root[data-theme] .table-edit-field textarea{width:100%;max-width:none;min-width:0;min-height:38px;padding:9px 10px;border:1px solid #bdd7ed;border-radius:5px;background:#fff;color:var(--ink);font:inherit;resize:vertical}
+:root[data-theme] .table-edit-field input:disabled,:root[data-theme] .table-edit-field select:disabled,:root[data-theme] .table-edit-field textarea:disabled{opacity:.7;background:#eaf1f8}
+:root[data-theme] .table-edit-field input:focus,:root[data-theme] .table-edit-field select:focus,:root[data-theme] .table-edit-field textarea:focus{outline:2px solid #1687e2;outline-offset:1px}
+:root[data-theme] .table-edit-field small{color:var(--muted)}
+:root[data-theme] .table-edit-ref{display:flex;gap:7px;flex-wrap:wrap}
+:root[data-theme] .table-edit-ref>*{flex:1 1 140px}
+:root[data-theme] .table-edit-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+:root[data-theme] .table-edit-error{padding:12px 15px;border:1px solid #d68080;border-radius:5px;background:#fff0f0;color:#9c3333;line-height:1.7;margin-bottom:15px}
+:root[data-theme] .table-edit-field.invalid input,:root[data-theme] .table-edit-field.invalid select,:root[data-theme] .table-edit-field.invalid textarea{border-color:#c65353}
+:root[data-theme] .table-editor-loading{padding:25px;color:#28689b}
+:root[data-theme="dark"] .button.table-edit-toggle,:root[data-theme="dark"] .button.table-edit-save{background:#0879d9;border-color:#1687e2;color:#fff}
+:root[data-theme="dark"] .button.table-edit-toggle:hover,:root[data-theme="dark"] .button.table-edit-save:hover{background:#096bb9}
+:root[data-theme="dark"] .table-edit-panel.is-editing,:root[data-theme="dark"] .table-edit-panel.is-editing .table-toolbar,:root[data-theme="dark"] .table-edit-panel.is-editing .pagination{background:#142b40}
+:root[data-theme="dark"] .table-edit-panel.is-editing th{background:#1a354f;color:#a7d5fc;border-color:#285071}
+:root[data-theme="dark"] .table-edit-panel.is-editing td{border-color:#25465f}
+:root[data-theme="dark"] .table-edit-panel.is-editing tbody tr:hover,:root[data-theme="dark"] .table-edit-panel.is-editing .table-row-selected{background:#1a3c5a}
+:root[data-theme="dark"] .table-edit-panel .table-edit-form{background:#11283d}
+:root[data-theme="dark"] .table-edit-heading,:root[data-theme="dark"] .table-row-edit{color:#90caff}
+:root[data-theme="dark"] .table-row-edit:hover{background:#24537a}
+:root[data-theme="dark"] .table-edit-field input,:root[data-theme="dark"] .table-edit-field select,:root[data-theme="dark"] .table-edit-field textarea{background:#152e44;border-color:#426886;color:#eee}
+:root[data-theme="dark"] .table-edit-field input:disabled,:root[data-theme="dark"] .table-edit-field select:disabled,:root[data-theme="dark"] .table-edit-field textarea:disabled{background:#203b50;color:#bdcad6;opacity:1}
+:root[data-theme="dark"] .table-edit-error{background:#3b2525;color:#ffb9b9}
+@media(max-width:900px){:root[data-theme] .table-edit-panel .table-toolbar{flex-wrap:wrap}:root[data-theme] .table-edit-panel .object-select{flex:1 1 240px;max-width:100%}:root[data-theme] .table-edit-form{max-width:calc(100vw - 70px)}}
+@media(max-width:600px){:root[data-theme] .table-edit-form{padding:16px;max-width:calc(100vw - 36px)}:root[data-theme] .table-edit-fields{grid-template-columns:1fr}:root[data-theme] .table-edit-field.wide{grid-column:auto}:root[data-theme] .table-edit-panel .table-toolbar{padding:12px;gap:8px}:root[data-theme] .table-edit-panel .standard-tag{display:none}:root[data-theme] .table-edit-panel .source-code{white-space:normal;overflow-wrap:anywhere}}
+
+:root[data-theme] .object-mode-toggle{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:52px;min-height:26px;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--accent);font-size:11px;line-height:1.2;font-weight:600;white-space:nowrap}
+:root[data-theme] .object-mode-toggle:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent-line)}
+:root[data-theme] .object-mode-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:3px}

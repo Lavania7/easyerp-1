@@ -1,0 +1,22 @@
+{
+  "version": "workspace-v1",
+  "at_utc": "2026-11-14T12:17:18.959402+00:00",
+  "results": [
+    {
+      "mode": "live",
+      "database": "easyerp_v02",
+      "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02-20261114T121646603711Z.dump",
+      "business_facts_unchanged": true,
+      "legacy_records": 2,
+      "new_handoffs": 2
+    },
+    {
+      "mode": "demo",
+      "database": "easyerp_v02_ui_demo",
+      "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02_ui_demo-20261114T121706064457Z.dump",
+      "business_facts_unchanged": true,
+      "legacy_records": 0,
+      "new_handoffs": 0
+    }
+  ]
+}
