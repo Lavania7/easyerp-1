@@ -5,7 +5,11 @@ CREATE TABLE finance."人员档案表" (
   "姓名" text NOT NULL,
   "部门" text NOT NULL,
   "任职开始日期" date,
-  "任职结束日期" date
+  "任职结束日期" date,
+  "基准工资" numeric(20,4),
+  "工资账户开户行" text,
+  "工资账户ID" text,
+  CONSTRAINT finance_people_base_salary_nonnegative CHECK ("基准工资" >= 0)
 );
 
 -- readme.md:121
@@ -17,8 +21,7 @@ CREATE TABLE finance."资金账户档案表" (
   "币种" char(3) NOT NULL,
   "账户性质" text NOT NULL,
   "启用日期" date,
-  "停用日期" date,
-  "余额来源" text
+  "停用日期" date
 );
 
 -- readme.md:141
@@ -769,7 +772,10 @@ CREATE TABLE production."供应商档案表" (
   "供应商ID" text PRIMARY KEY,
   "名称" text NOT NULL,
   "联系方式" text,
-  "相关文件路径" text
+  "统一社会信用代码" text,
+  "户名" text,
+  "账户ID" text,
+  "开户行" text
 );
 
 -- readme.md:1360
@@ -1197,10 +1203,8 @@ CREATE TABLE production."交付明细表" (
 -- readme.md:2044
 CREATE TABLE rd."计量单位表" (
   "单位ID" text PRIMARY KEY,
-  "单位代码" text NOT NULL,
   "单位名称" text NOT NULL,
-  "计量维度" text NOT NULL,
-  UNIQUE ("单位代码")
+  "备注" text
 );
 
 -- readme.md:2060

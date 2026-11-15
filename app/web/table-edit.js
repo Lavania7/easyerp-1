@@ -56,15 +56,15 @@
     const original = fieldValue(col, draft.base[col.name]);
     const value = draft.inputs.has(col.name) ? draft.inputs.get(col.name) : original;
     const locked = (!create && col.name === obj.pk) || col.automatic || col.name === '币种';
-    const required = col.required && !locked && (!create || (!col.default && col.name !== obj.pk));
-    const attrs = `id="table-field-${index}" data-table-field="${h(col.name)}" data-i18n-ignore ${locked ? 'disabled' : ''} ${required ? 'required' : ''}`;
+    const required = col.required && !col.allow_empty_selection && !locked && (!create || (!col.default && col.name !== obj.pk));
+    const attrs = `id="table-field-${index}" data-table-field="${h(col.name)}" data-i18n-ignore ${col.reference ? `aria-describedby="table-field-${index}-source"` : ''} ${locked ? 'disabled' : ''} ${required ? 'required' : ''}`;
     let control = '',
       wide = false;
     if (col.reference && !locked) {
-      control = `<div class="table-edit-ref"><input type="search" data-table-ref-search="${index}" placeholder="搜索名称" aria-label="搜索${h(col.name.replace(/ID$/, ''))}的关联记录" autocomplete="off"><select ${attrs} data-table-reference><option value="">请选择关联记录</option>${value ? `<option value="${h(value)}" selected>正在读取关联名称…</option>` : ''}</select></div>`;
+      control = `<div class="table-edit-ref"><input type="search" data-table-ref-search="${index}" placeholder="搜索名称" aria-label="搜索${h(col.name.replace(/ID$/, ''))}的关联记录" autocomplete="off"><select ${attrs} data-table-reference><option value="">${col.allow_empty_selection ? 'N/A' : '请选择关联记录'}</option>${value ? `<option value="${h(value)}" selected>正在读取关联名称…</option>` : ''}</select></div>`;
     } else if (col.options.length || col.type === 'boolean') {
       const choices = col.type === 'boolean' ? ['true', 'false'] : col.options;
-      control = `<select ${attrs}><option value="">请选择</option>${choices.map((v) => `<option value="${h(v)}" ${value === v ? 'selected' : ''}>${h(v)}</option>`).join('')}</select>`;
+      control = `<select ${attrs}><option value="">${col.allow_empty_selection ? 'N/A' : '请选择'}</option>${choices.map((v) => `<option value="${h(v)}" ${value === v ? 'selected' : ''}>${h(v)}</option>`).join('')}</select>`;
     } else if (col.type === 'date') control = `<input ${attrs} type="date" value="${h(value)}">`;
     else if (col.type === 'timestamp with time zone')
       control = `<input ${attrs} type="datetime-local" step="1" value="${h(value)}"><small>按北京时间（UTC+8）保存</small>`;
@@ -79,7 +79,7 @@
       const maximum = col.type.match(/character\((\d+)\)/)?.[1] || 20000;
       control = `<input ${attrs} type="text" ${numeric ? 'inputmode="decimal"' : ''} maxlength="${col.name === obj.pk ? 150 : maximum}" value="${h(value)}" ${create && col.name === obj.pk ? 'placeholder="留空自动编号，也可自定义"' : ''}>`;
     }
-    return `<label class="table-edit-field ${wide ? 'wide' : ''}"><span data-ui-label>${h(col.reference ? { 'PID': '产品', 'MID': '物料', '工单号': '生产工单' }[col.name] || col.name.replace(/ID$/, '') : col.name)}${required ? ' *' : ''}</span>${control}</label>`;
+    return `<label class="table-edit-field ${wide ? 'wide' : ''}"><span data-ui-label>${h(col.reference ? { 'PID': '产品', 'MID': '物料', '工单号': '生产工单' }[col.name] || col.name.replace(/ID$/, '') : col.name)}${required ? ' *' : ''}</span>${control}${col.reference ? referenceSourceHint(col.reference.target, active.metadata.objects, `table-field-${index}-source`) : ''}</label>`;
   }
   function errorBox(session, error) {
     if (!session.form?.isConnected) {
@@ -120,7 +120,7 @@
       });
       if (active !== session || !select.isConnected || select._version !== version) return;
       select.innerHTML =
-        '<option value="">请选择关联记录</option>' +
+        `<option value="">${col.allow_empty_selection ? 'N/A' : '请选择关联记录'}</option>` +
         result.rows
           .map(
             (r) =>
@@ -160,6 +160,7 @@
     try {
       const metadata = await catalog(mode);
       if (openSequence !== serial || !row.isConnected || state.mode !== mode) return;
+      session.metadata = metadata;
       const obj = metadata.objects.find((o) => o.key === object);
       if (!obj || obj.retired) throw new Error('该主录暂不支持修改。');
       let draft = drafts.get(key);
@@ -248,8 +249,8 @@
     try {
       const values = create ? { ...draft.base } : {};
       for (const [name, value] of draft.inputs) {
-        if (create && value === '') continue; // Let SQL defaults and optional NULLs apply.
         const col = obj.columns.find((c) => c.name === name);
+        if (create && value === '' && !col.allow_empty_selection) continue; // Untouched defaults remain SQL defaults.
         values[name] =
           value === ''
             ? null

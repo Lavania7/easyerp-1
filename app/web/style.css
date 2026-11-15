@@ -989,7 +989,7 @@ footer {
   inset: 0;
   background: #32323250;
   z-index: 20;
-  backdrop-filter: blur(2px);
+  backdrop-filter: none;
 }
 .drawer {
   position: fixed;

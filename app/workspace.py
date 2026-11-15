@@ -13,6 +13,7 @@ import uuid
 import msvcrt
 
 from data import ROOT, InvalidRequest
+from easyerp import ERP
 from identifiers import WORKSPACE_PREFIXES, base36, workspace_identity
 
 LOCK = threading.RLock()
@@ -51,6 +52,26 @@ FIELDS = {
     "unresolved",
     "type",
 }
+DEPARTMENT_ALIASES = {
+    "finance": {"finance", "财务", "财务部", "fin"},
+    "legal": {"legal", "法务", "法务部", "leg"},
+    "production": {"production", "生产", "生产部", "采购与库存", "生产实绩", "prd"},
+    "rd": {"rd", "研发", "研发部", "r&d", "rnd"},
+    "sales": {"sales", "销售", "销售部", "sal"},
+    "analysis": {"analysis", "分析", "分析部", "数据分析", "分析报告", "ana"},
+}
+REPORT_TYPES = {"月度审计": 1, "季度审计": 3, "年度审计": 12}
+
+
+def report_period(values):
+    month = values.get("month", "")
+    if not re.fullmatch(r"[0-9]{4}-(0[1-9]|1[0-2])", month) or month.startswith("0000"):
+        raise WorkspaceError("请填写有效的审计期间")
+    span = REPORT_TYPES.get(values.get("type") or "月度审计")
+    if span is None:
+        raise WorkspaceError("请选择月度、季度或年度审计")
+    first = (int(month[5:]) - 1) // span * span + 1
+    return f"{month[:4]}-{first:02d}", f"{month[:4]}-{first + span - 1:02d}"
 
 
 class WorkspaceError(InvalidRequest):
@@ -64,7 +85,7 @@ class Workspace:
         if mode not in ("live", "demo"):
             raise WorkspaceError("无效数据来源")
         self.mode = mode
-        self.root = Path(root) if root else ROOT / "var" / "workspace"
+        self.root = Path(root) if root else ERP(mode=mode).workspace_root(mode)
         self.path = self.root / (mode + ".json")
 
     @contextmanager
@@ -150,11 +171,16 @@ class Workspace:
         if params.get("start") and params.get("end") and params["start"] > params["end"]:
             raise WorkspaceError("请选择有效的起止日期")
         search = params.get("search", "").strip().casefold()
+        department = params.get("department", "")
+        if department and department not in DEPARTMENT_ALIASES:
+            raise WorkspaceError("未知部门")
         with self.locked():
             items = copy.deepcopy(list(self.read()["items"].values()))
         rows = []
         for item in items:
             if item["kind"] != kind:
+                continue
+            if kind == "report" and department and item["values"].get("department", "").strip().casefold() not in DEPARTMENT_ALIASES[department]:
                 continue
             if search and search not in json.dumps(item["values"], ensure_ascii=False).casefold():
                 continue
@@ -163,7 +189,13 @@ class Workspace:
             # Undated plans/tasks remain visible rather than acquiring invented dates.
             day = item["values"].get("start") or item["values"].get("due")
             if kind == "report":
-                day = item["values"].get("month", "")
+                first, last = report_period(item["values"])
+                if params.get("start") and last < params["start"][:7]:
+                    continue
+                if params.get("end") and first > params["end"][:7]:
+                    continue
+                rows.append(item)
+                continue
             if (
                 day
                 and params.get("start")
@@ -245,10 +277,8 @@ class Workspace:
                         raise WorkspaceError("请填写有效日期")
             if values.get("start") and values.get("due") and values["start"] > values["due"]:
                 raise WorkspaceError("截止日期不能早于开始日期")
-            if kind == "report" and not re.fullmatch(
-                r"\d{4}-(0[1-9]|1[0-2])", values.get("month", "")
-            ):
-                raise WorkspaceError("请填写审计月份")
+            if kind == "report":
+                values["month"], _ = report_period(values)
             if values.get("plan_id"):
                 values["plan_id"] = data.get("id_aliases", {}).get(
                     values["plan_id"], values["plan_id"]

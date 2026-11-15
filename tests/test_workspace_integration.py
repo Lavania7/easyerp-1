@@ -43,7 +43,7 @@ try:
         obj=objects[key];rows=call('/api/explore?object='+__import__('urllib.parse',fromlist=['quote']).quote(key)+'&date_filter=0&limit=1')['rows'];assert rows,key;return rows[0][obj['pk']]
     supplier=first('production.供应商档案表')
     unit=run+'_unit';mid=run+'_mid';material=run+'_material'
-    save('rd.计量单位表',{'单位ID':unit,'单位代码':run,'单位名称':'验收单位','计量维度':'数量'})
+    save('rd.计量单位表',{'单位ID':unit,'单位名称':'验收单位','备注':'隔离验收'})
     ids.insert(0,('rd.计量单位表','单位ID',unit))
     save('rd.物料主数据表',{'MID':mid,'名称':'隔离验收物料','规格':'仅用于测试','单位ID':unit,'类别':'验收样例'})
     ids.insert(0,('rd.物料主数据表','MID',mid))

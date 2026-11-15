@@ -1,5 +1,6 @@
 // Browser companion for test_table_edit.py. Fixtures and cleanup belong to Python.
 'use strict';
+const {objectValues, objectValue, selectObject}=require('./object_menu_helpers.cjs');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const {chromium}=require(process.env.EASYERP_PLAYWRIGHT_MODULE||'playwright');
@@ -128,11 +129,11 @@ const check=(name,condition=true)=>{assert.ok(condition,name);passed.push(name);
     check('new draft survives leaving edit mode',(await input('客户名称').inputValue()).includes('新增草稿'));
     await page.locator('#refresh').click();await form().waitFor({state:'detached'});await add().click();await form().waitFor();
     check('new draft survives refresh',await input('客户ID').inputValue()===fixture.newCustomer);
-    await page.locator('#object-filter').selectOption('production.供应商档案表');
+    await selectObject(page,'production.供应商档案表');
     await page.waitForFunction(()=>document.querySelector('.table-edit-panel')?.dataset.editSource==='production.供应商档案表');
     await toggle().click();await add().click();await form().waitFor();
     check('different tables have separate new drafts',await input('名称').inputValue()==='');
-    await form().locator('[data-table-cancel]').click();await page.locator('#object-filter').selectOption('sales.客户档案表');
+    await form().locator('[data-table-cancel]').click();await selectObject(page,'sales.客户档案表');
     await page.waitForFunction(()=>document.querySelector('.table-edit-panel')?.dataset.editSource==='sales.客户档案表');
     await toggle().click();await add().click();await form().waitFor();
     await page.locator('#source-toggle').click();await page.locator('[data-source-value="live"]').click();
@@ -197,8 +198,8 @@ const check=(name,condition=true)=>{assert.ok(condition,name);passed.push(name);
     check('duplicate new ID preserves form and existing record',await input('金额').inputValue()==='1'&&(await api('record',{object:'finance.资金流水表',id:fixture.newFund})).values['金额']==='0.0000');
     await form().locator('[data-table-cancel]').click();
     await page.goto(fixture.url+'/?mode=live#/rd');await toggle().waitFor();
-    const snapshots=await page.locator('#object-filter option').evaluateAll(options=>options.filter(o=>o.value.startsWith('erp_ops.')&&!o.value.endsWith('导入BOM与物料对应')).map(o=>o.value));
-    if(snapshots.length){await page.locator('#object-filter').selectOption(snapshots[0]);await page.waitForFunction(()=>document.querySelector('[data-table-edit-toggle]')?.disabled===true);check('source snapshots remain immutable');}
+    const snapshots=await objectValues(page).then(options=>options.filter(value=>value.startsWith('erp_ops.')&&!value.endsWith('导入BOM与物料对应')));
+    if(snapshots.length){await selectObject(page,snapshots[0]);await page.waitForFunction(()=>document.querySelector('[data-table-edit-toggle]')?.disabled===true);check('source snapshots remain immutable');}
     check('browser has no uncaught JavaScript errors',errors.length===0);
     fs.writeFileSync(fixture.result,JSON.stringify({status:'PASS',checks:passed.length,passed},null,2));
     console.log(JSON.stringify({status:'PASS',checks:passed.length,passed},null,2));

@@ -5,6 +5,20 @@ easyERP 运行与维护
 本文合并原根目录 ``launch.md``、``help.md`` 和 ``server.md``，集中说明启动、数据库操作、备份恢复、远程部署与连接监控。当前配置以项目根目录 ``config.json`` 为准；历史验收报告只说明对应时间执行过的检查。
 
 
+当前正式／演示拓扑（2026-11-15）
+--------------------------------
+
+用户已批准并完成阶段A：正式 ``easyerp_v02`` 当前使用 ``127.0.0.1:55434``，集群目录 ``D:\database\easyerp-live\pgdata``；运行根目录 ``D:\database\easyerp-live``，凭据在该目录的 ``.secrets``，正式工作空间为 ``workspace\live.json``，正式导入历史为 ``var\import-interface.sqlite3``。
+
+演示 ``easyerp_v02_ui_demo`` 仍使用 ``127.0.0.1:55433``、项目 ``var\pgdata``、原 ``.secrets`` 和 ``var\workspace\demo.json``。用户仅批准A并要求保留旧源，因此原55433集群中的旧 ``easyerp_v02`` 只作为回滚来源保留；当前正式界面、录入和导入不连接该旧源。未执行阶段B：旧正式库、旧live工作空间、旧SQLite正式检查及旧正式备份/导出文件均保留。
+
+``config.json.database_sources.live``／``demo`` 中的 ``database``、``port``、``data_directory``、``private_directory``、``workspace_directory`` 和 ``runtime_root`` 分别覆盖对应来源的旧顶层默认值。显式配置的演示库名直接使用，不再额外拼接 ``_ui_demo``；缺少来源配置时才沿用旧的共用集群及演示库后缀规则。顶层 ``database=easyerp_v02``／``port=55433`` 当前仅保留兼容，不能据此把55433认作当前正式连接。
+
+数据库工具默认指向配置后的正式来源；``start`` 会启动/核对显式配置的两种来源。SQLview下次配置时分别使用 ``ERP(mode="live")`` 和 ``ERP(mode="demo")`` 的库、端口和受限pgpass路径更新项目连接档案，仍使用 ``easyerp_app``，不保存密码或公开临时会话。本次未启动8093，已运行的旧pgAdmin会话需要重新加载正确档案后使用。
+
+下文旧默认端口、``D:\projx\demo\easyerp-1`` 路径及远程部署片段属于命令示例和历史环境；实际本项目在 ``D:\projx\release\easyerp-1``，连接前以来源配置和实际 ``data_directory`` 核对，不把这些示例当作当前正式连接。阶段A证据在目标 ``migration\restored.json``，状态为 ``cutover``；来源关系图显示保留旧源到当前正式库的真实恢复边。
+
+
 日常启动
 --------
 
@@ -54,14 +68,14 @@ EXE 依赖本机 Windows .NET Framework、Python、PostgreSQL 和 pgAdmin，并�
      - ``http://127.0.0.1:8092/``
    * - pgAdmin
      - 本机 ``8093``，通过 SQLview 获取当前会话
-   * - PostgreSQL
-     - ``127.0.0.1:55433``
-   * - 正式库
-     - ``easyerp_v02``
-   * - 演示库
-     - ``easyerp_v02_ui_demo``
-   * - 数据目录
-     - ``var/pgdata``
+   * - 当前正式PostgreSQL
+     - ``127.0.0.1:55434``，``easyerp_v02``
+   * - 当前演示PostgreSQL
+     - ``127.0.0.1:55433``，``easyerp_v02_ui_demo``
+   * - 正式数据目录
+     - ``D:\database\easyerp-live\pgdata``
+   * - 演示数据目录
+     - 项目 ``var/pgdata``（同时保留旧正式库供回滚）
 
 
 两个网页服务仅绑定本机，前端保留 Host、Origin 和保存令牌检查。pgAdmin 的临时会话信息保存在 ``.secrets/pgadmin-runtime.json``，不要公开完整会话地址。日志在 ``var/log/launcher-frontend.log``、``launcher-backend.log``、``frontend.log``、``frontend-error.log``；pgAdmin 使用 ``var/pgadmin`` 独立配置。
@@ -193,6 +207,10 @@ EXE 依赖本机 Windows .NET Framework、Python、PostgreSQL 和 pgAdmin，并�
 ``tools/build_schema.py`` 从 ``doc/sql-specification.rst`` 提取基础 DDL。RST 中的 ``sql-source-line`` 注释保留历史 SQL 行号，生成文件中的 ``readme.md:行号`` 继续作为原来源标记；清单同时记录当前 RST 行号。规范全文和 SQL 文件都保持严格哈希检查。
 
 只有全部 SQL 文件的哈希完全一致，构建器才记录旧规范哈希与同一构建摘要的兼容关系。文档换格式不改写正式库版本行、不迁移业务结构；真实 SQL 差异仍走受控迁移。``build_schema.py`` 仅生成文件，不升级现有数据库。原有视图删除迁移保留，应用查询通过 ``tools/business_queries.py`` 直接读取主录。
+
+供应商字段升级使用 ``tools/migrate_supplier_profile.py``，默认预览，``--apply`` 才逐库备份并迁移正式库和已有演示库；``--database`` 可指定单库。通用 ``easyerp-db.ps1 migrate`` 也支持此升级。迁移严格验证旧构建、目标集群和旧列结构，在同一事务内锁定主录、保留供应商ID及全部外键，并逐表核对原有业务事实。旧相关文件路径保存在迁移前dump及仅管理员可读的 ``erp_ops.supplier_profile_retired_fields``，不再出现在表单或CSV中。新增字段保持NULL；账户ID为供应商收款账号文本。执行后刷新页面，动态元数据缓存最长60秒更新。
+
+计量单位字段简化使用 ``tools/migrate_unit_profile.py``，默认预览，``--apply`` 才逐库备份并迁移正式库和已有演示库；``--database`` 可指定单库。通用 ``easyerp-db.ps1 migrate`` 也支持此升级，并为旧安装先执行已审核的供应商升级。新建、编辑及CSV只需维护“单位名称”和可选“备注”；单位ID保留并自动生成，25张表的26处单位ID外键和单位换算关系保持不变。旧单位代码和计量维度原值归档到仅管理员可读的 ``erp_ops.unit_profile_retired_fields``，同时保留迁移前dump；备注初始为NULL。迁移在同一事务锁定、逐表对比原有事实和外键，遇到未知依赖整体回滚，不级联删除。执行后刷新页面，动态元数据缓存最长60秒更新。
 
 重建启动器：
 

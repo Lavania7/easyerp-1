@@ -10,6 +10,14 @@
   box-shadow: 0 24px 100px #2e2e2e35;
   overflow: auto;
 }
+.reference-source {
+  display: block;
+  color: var(--muted);
+  line-height: 1.6;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  margin-top: 5px;
+}
 .entry-dialog::backdrop {
   background: #30303070;
   backdrop-filter: none;

@@ -6,6 +6,8 @@ import runpy
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from easyerp import ERP
 config = json.loads((ROOT / "config.json").read_text(encoding="utf-8-sig"))
 web = Path(config["postgres_bin"]).parent / "pgAdmin 4" / "web"
 sys.path.insert(0, str(web))
@@ -17,11 +19,23 @@ from pgadmin.utils import load_database_servers
 
 profiles = []
 with app.test_request_context():
-    for label, database in [
-        ("easyERP 0.2 正式库", config["database"]),
-        ("easyERP 0.2 演示库", config["database"] + "_ui_demo"),
+    for label, mode in [
+        ("easyERP 0.2 正式库", "live"),
+        ("easyERP 0.2 演示库", "demo"),
     ]:
+        source = ERP(mode=mode)
+        database = source.c["database"]
+        port = source.c["port"]
+        passfile = str(source.private / "pgpass.conf")
         existing = Server.query.filter_by(name=label).first()
+        if existing is not None:
+            if existing.username != "easyerp_app" or existing.password:
+                raise RuntimeError("Expected existing app role with pgpass, no stored password")
+            existing.host = "127.0.0.1"
+            existing.port = port
+            existing.maintenance_db = database
+            existing.connection_params = {**(existing.connection_params or {}), "passfile": passfile}
+            db.session.commit()
         if existing is None:
             profile = {
                 "Servers": {
@@ -29,11 +43,11 @@ with app.test_request_context():
                         "Name": label,
                         "Group": "easyERP 本机数据库",
                         "Host": "127.0.0.1",
-                        "Port": config["port"],
+                        "Port": port,
                         "MaintenanceDB": database,
                         "Username": "easyerp_app",
                         "ConnectionParameters": {
-                            "passfile": str(ROOT / ".secrets" / "pgpass.conf"),
+                            "passfile": passfile,
                             "sslmode": "prefer",
                             "connect_timeout": 10,
                         },
@@ -48,8 +62,9 @@ with app.test_request_context():
         if (
             existing is None
             or existing.host != "127.0.0.1"
-            or existing.port != config["port"]
+            or existing.port != port
             or existing.maintenance_db != database
+            or (existing.connection_params or {}).get("passfile") != passfile
         ):
             raise RuntimeError("pgAdmin profile does not match the project connection")
         if existing.username != "easyerp_app" or existing.password:
@@ -60,6 +75,8 @@ with app.test_request_context():
                 "server_id": existing.id,
                 "group_id": existing.servergroup_id,
                 "database": database,
+                "port": port,
+                "mode": mode,
                 "role": existing.username,
             }
         )

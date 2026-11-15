@@ -98,11 +98,11 @@ class InvalidRequest(ValueError):
 class Data:
     def __init__(self, params=None):
         self.p = params or {}
-        self.erp = ERP()
         self.mode = self.p.get("mode", "live")
         if self.mode not in ("live", "demo"):
             raise InvalidRequest("无效数据来源")
-        self.db = self.erp.c["database"] + ("_ui_demo" if self.mode == "demo" else "")
+        self.erp = ERP(mode=self.mode)
+        self.db = self.erp.c["database"]
         self.start = self.p.get("start", date.today().replace(day=1).isoformat())
         self.end = self.p.get("end", date.today().isoformat())
         try:

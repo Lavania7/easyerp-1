@@ -1,5 +1,5 @@
--- Optional CSV business values stay NULL after the user confirms incomplete data.
--- Only the affected NOT NULL columns are relaxed, inside the import transaction.
+-- Confirmed CSV gaps and explicitly empty manual selectors stay NULL.
+-- Only affected NOT NULL columns are relaxed, inside the save/import transaction.
 CREATE TABLE IF NOT EXISTS erp_ops.frontend_csv_nullability (
     schema_name text NOT NULL,
     table_name text NOT NULL,
@@ -30,7 +30,7 @@ BEGIN
     IF schema_value IS NULL OR schema_value NOT IN ('sales','production','finance','rd','legal','analysis') OR kind_value<>'r' THEN
         RAISE EXCEPTION 'unsupported_csv_table' USING ERRCODE='22023';
     END IF;
-    IF import_request IS NULL OR import_request !~ '^csv2-[0-9a-f]{64}$' OR fields IS NULL OR
+    IF import_request IS NULL OR import_request !~ '^(csv2|entry2)-[0-9a-f]{64}$' OR fields IS NULL OR
        cardinality(fields) NOT BETWEEN 1 AND 256 OR array_position(fields,NULL) IS NOT NULL THEN
         RAISE EXCEPTION 'invalid_csv_request' USING ERRCODE='22023';
     END IF;

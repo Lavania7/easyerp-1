@@ -1,6 +1,6 @@
 {
-  "database": "easyerp_v02_test_11030740f8",
-  "at_utc": "2026-10-30T09:52:59.699086+00:00",
+  "database": "easyerp_v02_test_3da7fcac8a",
+  "at_utc": "2026-11-15T04:10:36.984909+00:00",
   "passed": true,
   "sql_tests": [
     "PASS no actual hours stays NULL",
@@ -41,7 +41,7 @@
   ],
   "role_tests": 6,
   "populated_restore": {
-    "backup": "D:\\projx\\demo\\easyerp-1\\backups\\easyerp_v02_test_11030740f8-20261030T095303427002Z.dump",
+    "backup": "D:\\projx\\release\\easyerp-1\\backups\\easyerp_v02_test_3da7fcac8a-20261115T041039346804Z.dump",
     "passed": true,
     "data_signature_matched": true
   }

@@ -1,5 +1,6 @@
 // Read-only checks for master-record browsing after SQL views are removed.
 'use strict';
+const {objectValues, objectValue, selectObject}=require('./object_menu_helpers.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(process.env.EASYERP_PLAYWRIGHT_MODULE||'playwright');
 const url=process.env.EASYERP_URL||'http://127.0.0.1:8092',passed=[];
@@ -20,14 +21,14 @@ const check=(label,condition=true)=>{assert.ok(condition,label);passed.push(labe
     await page.goto(url+'/?mode='+mode+'&start=2026-01-01&end=2026-12-31#/'+route);
     await page.locator('#object-filter').waitFor();
     check(mode+' '+route+' removes the SQL mode control',await page.locator('#object-mode-toggle').count()===0);
-    const options=await page.locator('#object-filter option').evaluateAll(items=>items.map(o=>o.value));
+    const options=await objectValues(page);
     check(mode+' '+route+' lists only its master records',options.length>0&&options.every(value=>value.startsWith(schema+'.')&&kinds.get(value)==='r'));
     check(mode+' '+route+' renders without query errors',await page.locator('.error-panel').count()===0);
     const selected=options[Math.min(1,options.length-1)];
-    await page.locator('#object-filter').selectOption(selected);
+    await selectObject(page,selected);
     await page.waitForFunction(value=>document.querySelector('.table-edit-panel')?.dataset.editSource===value,selected);
     await page.reload();await page.locator('#object-filter').waitFor();
-    check(mode+' '+route+' retains master record selection',await page.locator('#object-filter').inputValue()===selected);
+    check(mode+' '+route+' retains master record selection',await objectValue(page)===selected);
    }
   }
   await page.setViewportSize({width:390,height:844});

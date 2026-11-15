@@ -251,3 +251,42 @@
   :root[data-theme] .workspace-blank { padding: 21px 8px 34px; }
 }
 /* END workspace proportion refinement 2026-11-14 */
+
+:root[data-theme] #main .panel-head {
+  align-items: center;
+}
+:root[data-theme] #main .panel-head > h2 {
+  margin: 0;
+  line-height: 1.25;
+}
+:root[data-theme] #main .table-toolbar > :is(h2, .source-code, .count) {
+  margin-block: 0;
+  align-self: center;
+}
+:root[data-theme] .sidebar {
+  padding-top: 0;
+}
+:root[data-theme] #nav {
+  margin-top: 0;
+}
+:root[data-theme] .nav-dashboard {
+  min-height: calc(var(--department-strip-height) - 1px);
+}
+:root[data-theme] #main [data-table-scroll] {
+  overflow: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-gutter: stable;
+}
+:root[data-theme] #main [data-table-scroll] > table {
+  width: max-content;
+  min-width: 100%;
+}
+:root[data-theme] #main [data-table-scroll].is-table-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+@media (max-width:700px) {
+  :root[data-theme] .sidebar {
+    padding-top: 13px;
+  }
+}

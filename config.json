@@ -2,5 +2,25 @@
   "database": "easyerp_v02",
   "port": 55433,
   "postgres_bin": "E:\\PostgreSQL18\\bin",
-  "python": "E:\\DevTools\\Python314\\python.exe"
+  "python": "E:\\DevTools\\Python314\\python.exe",
+  "database_sources": {
+    "live": {
+      "postgres_bin": "E:\\PostgreSQL18\\bin",
+      "python": "E:\\DevTools\\Python314\\python.exe",
+      "database": "easyerp_v02",
+      "port": 55434,
+      "runtime_root": "D:\\database\\easyerp-live",
+      "data_directory": "D:\\database\\easyerp-live\\pgdata",
+      "private_directory": "D:\\database\\easyerp-live\\.secrets",
+      "workspace_directory": "D:\\database\\easyerp-live\\workspace"
+    },
+    "demo": {
+      "database": "easyerp_v02_ui_demo",
+      "port": 55433,
+      "data_directory": "D:\\projx\\release\\easyerp-1\\var\\pgdata",
+      "private_directory": "D:\\projx\\release\\easyerp-1\\.secrets",
+      "workspace_directory": "D:\\projx\\release\\easyerp-1\\var\\workspace",
+      "runtime_root": "D:\\projx\\release\\easyerp-1"
+    }
+  }
 }

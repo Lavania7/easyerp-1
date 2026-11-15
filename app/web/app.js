@@ -68,7 +68,8 @@ let meta = null,
   route = 'overview',
   exploreObject = '',
   lastList = null,
-  drawerTrail = [];
+  drawerTrail = [],
+  renderedNavigationHash = location.hash;
 
 const defaults = {
   sales: 'sales.销售订单行表',
@@ -250,13 +251,34 @@ function refFor(key, object) {
   return r ? `${r.target_schema}.${r.target_table}` : knownRefs[key];
 }
 
+function referenceDestination(object) {
+  const definition = meta?.objects.find((o) => o.schema + '.' + o.name === object);
+  if (!definition) return null;
+  const page = ['archive', 'audit', 'workflow', 'plans'].includes(definition.area)
+    ? definition.area
+    : 'data';
+  const hash = navigationHash(page, object, page === 'audit' ? 'records' : '', definition.schema);
+  return hash + '&reference=1';
+}
+
+function referenceHeader(field, label, object) {
+  const reference = meta?.references.find(
+    (r) => r.source_schema + '.' + r.source_table === object && r.source_column === field
+  );
+  const target = reference && reference.target_schema + '.' + reference.target_table;
+  const href = target && referenceDestination(target);
+  return href
+    ? `<a class="reference-link" href="${esc(href)}" data-reference="${esc(target)}" title="${esc(target)}">${esc(label)}</a>`
+    : esc(label);
+}
+
 function display(value, key, row = {}, object = '') {
   if (value == null) return '<span class="muted">N/A</span>';
   if (typeof value === 'boolean') return value ? '是' : '否';
   if (/状态|进展/.test(key)) return badge(value);
   if (/日期|时间|月份/.test(key)) return dateText(value);
   if (
-    /金额|实付|单价|收入|成本|差额|余额|税额|分摊$/.test(key) &&
+    /金额|实付|单价|收入|成本|差额|余额|税额|基准工资|分摊$/.test(key) &&
     /^-?\d+(\.\d+)?$/.test(String(value))
   )
     return `<span class="number">${decimal(value)}</span>`;
@@ -287,7 +309,7 @@ function editOrigin(source) {
 function editToggle(source, supported = !!editOrigin(source)) {
   return `<button type="button" class="button primary table-edit-toggle" data-table-edit-toggle aria-pressed="false" ${supported ? '' : 'disabled title="请在对应业务主录中修改。"'}>${pencilIcon}<span>编辑</span></button>`;
 }
-const hiddenIdentityField = (key) => /^(sha256|long_id|longid|长ID|长编号)$/i.test(key);
+const hiddenIdentityField = (key) => /^(sha[-_]?256|long_id|longid|长ID|长编号|长标识|身份摘要)$/i.test(key);
 function table(rows, columns = null, options = {}) {
   const origin = options.editObject && editOrigin(options.editObject),
     key = origin && origin.schema + '.' + origin.name;
@@ -295,12 +317,19 @@ function table(rows, columns = null, options = {}) {
   const object = meta?.objects.find(
     (o) => o.schema + '.' + o.name === (options.object || options.editObject)
   );
-  const fields = rows.length ? Object.keys(rows[0]) : (object?.columns || []).map((c) => c.name);
+  const fields = [...new Set([
+    ...(object?.columns || []).map((c) => c.name),
+    ...rows.flatMap((row) => Object.keys(row)),
+  ])];
+  if (columns && options.object && object?.kind === 'r') {
+    const shown = new Set(columns.map(([field]) => field));
+    columns = [...columns, ...fields.filter((field) => !shown.has(field) &&
+      !field.startsWith('_') && !hiddenIdentityField(field)).map((field) => [field, field])];
+  }
   const cols = (
     columns ||
     fields
       .filter((k) => !k.startsWith('_') && !hiddenIdentityField(k))
-      .slice(0, 10)
       .map((k) => [k, k])
   ).filter((c) => !hiddenIdentityField(c[0]));
   if (!cols.length)
@@ -309,17 +338,62 @@ function table(rows, columns = null, options = {}) {
   const emptyRow = rows.length
     ? ''
     : `<tr class="table-view-empty"><td colspan="${cols.length + (options.detail ? 1 : 0) + (editable ? 1 : 0)}">${empty(options.emptyTitle || 'N/A')}</td></tr>`;
-  return `<div class="table-wrap"><table><thead><tr>${cols.map((c) => `<th>${esc(c[1])}</th>`).join('')}${options.detail ? '<th></th>' : ''}${editable ? '<th class="table-edit-column">修改</th>' : ''}</tr></thead><tbody>${emptyRow}${rows
+  return `<div class="table-wrap" data-table-scroll tabindex="0"><table><thead><tr>${cols.map(([field, label, , referenceField = field]) => `<th data-table-column="${esc(field)}">${referenceHeader(referenceField, label, options.object || options.editObject || '')}</th>`).join('')}${options.detail ? '<th></th>' : ''}${editable ? '<th class="table-edit-column">修改</th>' : ''}</tr></thead><tbody>${emptyRow}${rows
     .map((row) => {
       const target = options.editRecord
         ? options.editRecord(row)
         : origin && row[origin.pk] != null
           ? { object: key, id: row[origin.pk] }
           : null;
-      return `<tr ${target ? `data-row-object="${esc(target.object)}" data-row-id="${esc(target.id)}"` : ''}>${cols.map(([field, label, format]) => `<td title="${esc(row[field] ?? 'N/A')}">${format ? format(row[field], row) : display(row[field], field, row, options.object || '')}</td>`).join('')}${options.detail ? `<td><button class="table-button" data-detail="${options.detail}" data-id="${esc(row[options.id])}">查看 ↗</button></td>` : ''}${editable ? `<td class="table-edit-column">${target ? `<button type="button" class="table-row-edit" data-row-edit aria-label="修改这条记录" aria-expanded="false">${pencilIcon}<span data-ui-label>修改</span></button>` : '<span class="muted">N/A</span>'}</td>` : ''}</tr>`;
+      return `<tr ${target ? `data-row-object="${esc(target.object)}" data-row-id="${esc(target.id)}" tabindex="0" aria-expanded="false" aria-label="展开或收起记录详情"` : ''}>${cols.map(([field, label, format]) => `<td title="${esc(row[field] ?? 'N/A')}">${format ? format(row[field], row) : display(row[field], field, row, options.object || '')}</td>`).join('')}${options.detail ? `<td><button class="table-button" data-detail="${options.detail}" data-id="${esc(row[options.id])}">查看 ↗</button></td>` : ''}${editable ? `<td class="table-edit-column">${target ? `<button type="button" class="table-row-edit" data-row-edit aria-label="修改这条记录" aria-expanded="false">${pencilIcon}<span data-ui-label>修改</span></button>` : '<span class="muted">N/A</span>'}</td>` : ''}</tr>`;
     })
     .join('')}</tbody></table></div>`;
 }
+
+let tableDrag = null;
+let tableDragClick = null;
+document.addEventListener('pointerdown', (event) => {
+  const wrap = event.target.closest('[data-table-scroll]');
+  if (!wrap || event.pointerType !== 'mouse' || event.button !== 0 ||
+      wrap.scrollWidth <= wrap.clientWidth ||
+      event.target.closest('button,a,input,select,textarea,label,[contenteditable]')) return;
+  tableDrag = { wrap, id: event.pointerId, x: event.clientX, y: event.clientY,
+    left: wrap.scrollLeft, active: false };
+});
+document.addEventListener('pointermove', (event) => {
+  const drag = tableDrag;
+  if (!drag || drag.id !== event.pointerId) return;
+  const dx = event.clientX - drag.x;
+  if (!drag.active) {
+    if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(event.clientY - drag.y)) return;
+    drag.active = true;
+    drag.wrap.setPointerCapture(event.pointerId);
+    drag.wrap.classList.add('is-table-dragging');
+    window.getSelection()?.removeAllRanges();
+  }
+  event.preventDefault();
+  drag.wrap.scrollLeft = drag.left - dx;
+});
+const endTableDrag = (event) => {
+  const drag = tableDrag;
+  if (!drag || drag.id !== event.pointerId) return;
+  if (drag.active) {
+    tableDragClick = { wrap: drag.wrap, until: performance.now() + 300 };
+    drag.wrap.classList.remove('is-table-dragging');
+    if (drag.wrap.hasPointerCapture(event.pointerId)) drag.wrap.releasePointerCapture(event.pointerId);
+  }
+  tableDrag = null;
+};
+document.addEventListener('pointerup', endTableDrag);
+document.addEventListener('pointercancel', endTableDrag);
+document.addEventListener('click', (event) => {
+  const drag = tableDragClick;
+  tableDragClick = null;
+  if (drag && performance.now() < drag.until && drag.wrap.contains(event.target)) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+}, true);
 
 function params(extra = {}) {
   return new URLSearchParams({
@@ -331,7 +405,7 @@ function params(extra = {}) {
 }
 
 async function api(path, extra = {}) {
-  const r = await fetch('/api/' + path + '?' + params(extra));
+  const r = await fetch('/api/' + path + '?' + params(window.easyerpTableTools?.augmentParams(path, extra) || extra));
   let body;
   try {
     body = await r.json();
@@ -339,6 +413,7 @@ async function api(path, extra = {}) {
     throw new Error('前端服务未返回有效数据');
   }
   if (!r.ok) throw new Error(body.error || '暂时无法读取数据');
+  window.easyerpTableTools?.rememberResult(path, extra, body);
   return body;
 }
 
@@ -402,9 +477,73 @@ function sync() {
   const u = new URL(location.href);
   for (const k of ['mode', 'start', 'end', 'currency', 'tz', 'search'])
     u.searchParams.set(k, state[k]);
-  history.replaceState(null, '', u);
+  const navigation = { ...history.state, easyerpView: { ...state } };
+  if (!referenceContext()) delete navigation.easyerpReference;
+  history.replaceState(navigation, '', u);
   syncDatePresets();
 }
+
+function referenceContext() {
+  const context = history.state?.easyerpReference;
+  return context?.hash === location.hash && context.origin?.state?.mode === state.mode
+    ? context
+    : null;
+}
+
+function captureReferenceOrigin() {
+  const href = new URL(location.href);
+  const query = new URLSearchParams(href.hash.split('?')[1] || '');
+  const source = document.querySelector('#content .table-edit-panel')?.dataset.editSource;
+  if (meta?.objects.some((o) => o.schema + '.' + o.name === source))
+    query.set('object', source);
+  href.hash = '#/' + route + '?' + query;
+  return {
+    href: href.pathname + href.search + href.hash,
+    state: { ...state },
+    path: currentNavigationPath().map(({ label, business }) => ({ label, business })),
+    scroll: window.scrollY,
+  };
+}
+
+async function followReference(object) {
+  const hash = referenceDestination(object);
+  if (!hash) return;
+  const origin = referenceContext()?.origin || captureReferenceOrigin();
+  history.replaceState({ ...history.state, easyerpView: { ...state } }, '', location.href);
+  closeDrawer();
+  state.offset = 0;
+  state.scope = '';
+  state.status = '';
+  state.search = '';
+  state.person = '';
+  state.subject = '';
+  history.pushState({ easyerpReference: { hash, origin }, easyerpView: { ...state } }, '', hash);
+  exploreObject = object;
+  await render();
+}
+
+function restoreNavigationState() {
+  const saved = history.state?.easyerpView;
+  if (!saved) return;
+  if (state.mode !== saved.mode) meta = null;
+  Object.assign(state, saved);
+}
+
+document.addEventListener('click', async (event) => {
+  const link = event.target.closest('[data-reference],[data-reference-return]');
+  if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  if (link.hasAttribute('data-reference-return')) {
+    const origin = referenceContext()?.origin;
+    if (!origin) return;
+    closeDrawer();
+    history.pushState({ easyerpView: origin.state }, '', origin.href);
+    restoreNavigationState();
+    exploreObject = new URLSearchParams(location.hash.split('?')[1] || '').get('object') || '';
+    await render();
+    window.scrollTo(0, origin.scroll);
+  } else await followReference(link.dataset.reference);
+});
 
 function move(page, object = '', extra = {}) {
   exploreObject = object;
@@ -435,7 +574,7 @@ function navigationTree() {
   const children = navs
     .filter(([key]) => [...workspacePages, 'audit'].includes(key))
     .map(([page, label]) => {
-      const node = { key: page, page, label, href: navigationHash(page), children: [] };
+      const node = { key: page, page, label, department: page === 'audit' ? '' : state.department, href: navigationHash(page, '', '', page === 'audit' ? '' : state.department), children: [] };
       node.children = menu.departments.map(([department, name]) => {
         const child = {
           key: page + ':' + department,
@@ -457,6 +596,11 @@ function navigationTree() {
           }));
         return child;
       });
+      if (page === 'audit')
+        node.children.unshift(...menu.tabs.audit.filter(([view]) => view !== 'records').map(([view, label]) => ({
+          key: page + ':' + view, page, department: '', view, label,
+          href: navigationHash(page, '', view, ''), children: [],
+        })));
       return node;
     });
   return {
@@ -476,15 +620,39 @@ function navigationPath(tree, key, parents = []) {
   }
   return null;
 }
+function referenceSourceHint(key, objects = meta?.objects || [], id = '') {
+  const tree = navigationTree();
+  let path;
+  if (key === 'workspace.plan') path = navigationPath(tree, 'plans')?.slice(1);
+  else {
+    const obj = objects.find((o) => (o.key || o.schema + '.' + o.name) === key);
+    if (!obj) return '';
+    const parent = objects.find((o) => o.children?.object === key);
+    const owner = parent || obj;
+    const area = ['archive', 'audit', 'workflow', 'plans'].includes(owner.area) ? owner.area : 'data';
+    path = navigationPath(tree, area + ':' + owner.schema + (area === 'audit' ? ':records' : ''))?.slice(1) || [];
+    path.push({ label: owner.label || owner.name });
+    if (parent) path.push({ label: obj.label || obj.name });
+  }
+  if (!path?.length) return '';
+  return `<small class="reference-source" ${id ? `id="${esc(id)}"` : ''} data-reference-source="${esc(key)}" data-ui-label><span>来源位置</span>：${path.map((node) => `<span>${esc(node.label)}</span>`).join(' / ')}</small>`;
+}
 function currentNavigationPath() {
   const tree = navigationTree(),
     menu = window.easyerpWorkspace.navigation();
   if (state.dashboard) return [tree, { key: 'overview', label: '仪表盘', page: 'overview' }];
   if (route === 'blank') return [tree];
+  const query = new URLSearchParams(location.hash.split('?')[1] || '');
+  const target = query.has('reference') && meta?.objects.find((o) => o.schema + '.' + o.name === query.get('object'));
+  if (target) {
+    const path = navigationPath(tree, activeWorkspacePage() + ':' + target.schema + (route === 'audit' ? ':records' : '')) || [tree];
+    return [...path, { label: target.label || target.name, page: route, object: query.get('object') }];
+  }
   let view = menu.tabs[route]
     ? new URLSearchParams(location.hash.split('?')[1] || '').get('view') || 'items'
     : '';
   if (menu.tabs[route] && !menu.tabs[route].some(([key]) => key === view)) view = 'items';
+  if (route === 'audit' && !state.department && view === 'records') view = 'items';
   if (route === 'workflow')
     view =
       state.department === 'production' && (state.scope === 'pending' || view === 'production')
@@ -494,7 +662,7 @@ function currentNavigationPath() {
     key =
       page +
       (state.department ? ':' + state.department : '') +
-      (view && state.department ? ':' + view : '');
+      (view && (state.department || page === 'audit') ? ':' + view : '');
   const path = navigationPath(tree, key) || [tree];
   const source = document.querySelector('#content .table-edit-panel')?.dataset.editSource;
   const object = meta?.objects.find((o) => o.schema + '.' + o.name === source);
@@ -541,9 +709,13 @@ function renderBreadcrumbs() {
       label: { related: '关联明细', progress: '业务进展', files: '文件与依据' }[drawerTab],
       business: false,
     });
-  $('#breadcrumb-list').innerHTML = breadcrumbItems(path, true);
+  const origin = referenceContext()?.origin;
+  const source = origin
+    ? `<li class="breadcrumb-origin"><a class="breadcrumb-return" href="${esc(origin.href)}" data-reference-return>${origin.path.map((node, index) => `${index ? '<span class="breadcrumb-separator" aria-hidden="true">/</span>' : ''}<span ${node.business ? 'data-i18n-ignore' : 'data-ui-label'}>${esc(node.label)}</span>`).join('')}</a></li><li class="breadcrumb-jump" aria-hidden="true">→</li>`
+    : '';
+  $('#breadcrumb-list').innerHTML = source + breadcrumbItems(path, true);
   const drawer = document.querySelector('[data-drawer-breadcrumbs]');
-  if (drawer) drawer.innerHTML = breadcrumbItems(path);
+  if (drawer) drawer.innerHTML = source + breadcrumbItems(path);
 }
 document.addEventListener('click', (event) => {
   const ancestor = event.target.closest('[data-breadcrumb-page],[data-breadcrumb-detail]');
@@ -681,7 +853,7 @@ async function overview() {
 
   const balances = d.balances.length
     ? `<div class="panel-body">${d.balances.map((r) => `<div class="list-row"><div><button data-record="finance.账户期间余额表" data-id="${esc(r['余额记录ID'])}">${esc(r['账户名'])}</button><div class="sub">${esc(r['期间结束'])} · 已核定余额</div></div><div class="amount">${decimal(r['原始余额'])} <small>${esc(r['币种'])}</small></div></div>`).join('')}</div>`
-    : empty('尚无已核定账户余额', '先登记余额来源并完成账户核对。');
+    : empty('尚无已核定账户余额', '先登记账户期间余额并完成账户核对。');
 
   html += `<div class="columns">${panel('待处理工作', taskbody, '', more('查看全部', 'tasks'))}${panel('账户余额', balances, '', more('查看账户', 'finance', 'finance.账户核对表'))}</div>`;
   const act = d.activity.length
@@ -861,10 +1033,13 @@ function chooseObject(objects) {
   );
 }
 function objectControls(all, current) {
-  return `<select id="object-filter" class="object-select" aria-label="选择主录">${all.map((o) => `<option value="${esc(o.schema + '.' + o.name)}" ${current.schema + '.' + current.name === o.schema + '.' + o.name ? 'selected' : ''}>${esc(o.label || o.name)}</option>`).join('')}</select>`;
+  return window.easyerpObjectMenu.render(all, current);
 }
 async function explorer() {
   const all = deptObjects();
+  const query = new URLSearchParams(location.hash.split('?')[1] || '');
+  const linked = query.has('reference') && meta.objects.find((o) => o.schema + '.' + o.name === exploreObject && o.schema === state.department);
+  if (linked && !all.includes(linked)) all.push(linked);
   let current = all.find((o) => o.schema + '.' + o.name === exploreObject);
   // Dashboard scopes target the common business list even after browsing records.
   if (
@@ -880,6 +1055,7 @@ async function explorer() {
   const controls = objectControls(all, current);
   const businessRoute = departmentForRoute[route] ? route : state.department;
   if (
+    !linked &&
     (route === 'data' || departmentForRoute[route]) &&
     businessLists[businessRoute] &&
     exploreObject === defaults[businessRoute]
@@ -915,7 +1091,9 @@ async function explorer() {
       '单位ID',
     ],
   };
-  const columns = unifiedColumns[exploreObject]?.map((key) => [key, key]);
+  const columns = unifiedColumns[exploreObject]?.map((key) => key === '供应商'
+    ? [key, key, undefined, '供应商ID']
+    : [key, key]);
   return {
     html: `<div class="panel table-edit-panel" data-edit-source="${esc(exploreObject)}"><div class="table-toolbar">${controls}<span class="count">${total} 条</span>${editToggle(exploreObject)}</div>${table(d.rows, columns, { object: exploreObject, editObject: exploreObject })}${total ? pagination(total) : ''}</div>`,
     time: d.queried_at,
@@ -924,12 +1102,13 @@ async function explorer() {
 
 async function render() {
   const token = ++sequence;
+  renderedNavigationHash = location.hash;
   route = location.hash.replace(/^#\//, '').split('?')[0] || 'blank';
   if (!navs.some((x) => x[0] === route) && route !== 'blank') route = 'blank';
   if (route === 'tasks') route = 'workflow';
   readWorkspaceSelection();
   renderWorkspaceSelection();
-  const blank = !state.dashboard && (route === 'blank' || !state.department);
+  const blank = !state.dashboard && (route === 'blank' || (!state.department && route !== 'audit'));
   $('#main').classList.toggle('is-blank', blank);
   $('#title').textContent = state.dashboard
     ? '仪表盘'
@@ -961,18 +1140,31 @@ async function render() {
   try {
     if (!meta) meta = await api('meta');
     updateAccess(meta);
-    const result = state.dashboard
-      ? state.search
-        ? await searchResults()
-        : await overview()
-      : [...workspacePages, 'audit'].includes(route)
-        ? await window.easyerpWorkspace.render(route)
-        : await explorer();
+    const query = new URLSearchParams(location.hash.split('?')[1] || '');
+    const referenced = !state.dashboard && query.has('reference') && meta.objects.find(
+      (o) => o.schema + '.' + o.name === exploreObject
+    );
+    if (referenced) {
+      $('#export').hidden = false;
+      $('#export').disabled = false;
+      $('#entry-open').hidden = referenced.retired;
+    }
+    const result = referenced
+      ? await explorer()
+      : state.dashboard
+        ? state.search
+          ? await searchResults()
+          : await overview()
+        : [...workspacePages, 'audit'].includes(route)
+          ? await window.easyerpWorkspace.render(route)
+          : await explorer();
     if (token !== sequence) return;
     $('#content').innerHTML = result.html;
     $('#connection').textContent = state.mode === 'demo' ? '演示数据' : '本机数据库';
     bindFilters();
     window.easyerpTableEdit?.mount();
+    window.easyerpTableTools?.mount();
+    window.easyerpRowDetails?.mount();
     window.easyerpWorkspace?.mounted();
     renderBreadcrumbs();
   } catch (err) {
@@ -1338,7 +1530,7 @@ function closeDrawer() {
 async function exportData() {
   if (!lastList) return;
   try {
-    const r = await fetch('/api/export?' + params(lastList));
+    const r = await fetch('/api/export?' + params(window.easyerpTableTools?.augmentParams('export', lastList) || lastList));
     if (!r.ok) {
       const d = await r.json();
       throw new Error(d.error);
@@ -1433,6 +1625,13 @@ async function changeMode(mode) {
   $('#content').innerHTML = '<div class="loading">正在读取业务数据…</div>';
   try {
     meta = await api('meta');
+    const navigation = { ...history.state };
+    delete navigation.easyerpReference;
+    const currentUrl = new URL(location.href);
+    const query = new URLSearchParams(currentUrl.hash.split('?')[1] || '');
+    query.delete('reference');
+    currentUrl.hash = '#/' + route + '?' + query;
+    history.replaceState(navigation, '', currentUrl);
     await render();
   } catch (err) {
     state.mode = previousMode;
@@ -1453,10 +1652,15 @@ window.addEventListener('hashchange', () => {
   const q = new URLSearchParams(location.hash.split('?')[1] || '');
   exploreObject = q.get('object') || '';
   state.scope = q.get('scope') || '';
-  state.offset = 0;
+  state.offset = history.state?.easyerpView?.offset || 0;
   render();
 });
+window.addEventListener('popstate', () => {
+  restoreNavigationState();
+  if (location.hash === renderedNavigationHash) render();
+});
 (async () => {
+  restoreNavigationState();
   const q = new URLSearchParams(location.hash.split('?')[1] || '');
   exploreObject = q.get('object') || '';
   state.scope = q.get('scope') || '';
@@ -1565,7 +1769,7 @@ document.addEventListener('keydown', (event) => {
     closeSourceMenu(true);
   } else if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
     event.preventDefault();
-    const items = [...menu.querySelectorAll('[data-source-value]')];
+    const items = [...menu.querySelectorAll('[data-source-value],#database-manager-open')];
     let index = items.indexOf(document.activeElement);
     index =
       event.key === 'Home'

@@ -1,0 +1,39 @@
+{
+  "passed": 19,
+  "checks": [
+    "legacy supplier structure restored",
+    "unknown dependency refuses migration",
+    "failed migration rolls back all added columns",
+    "generic migrate applies the reviewed upgrade",
+    "upgrade preserves existing names contacts and linked orders",
+    "retired nonempty path archived exactly",
+    "new field order is exact",
+    "migration is idempotent",
+    "startup recognizes upgraded build",
+    "supplier account is plain text without company-account foreign key",
+    "manual create retains all six fields and leading zeroes",
+    "manual update preserves account text",
+    "CSV template contains only new ordered fields",
+    "standard CSV parser retains all account and credit-code digits",
+    "standard CSV transaction saves new account fields exactly",
+    "retired CSV header produces explicit re-download error",
+    "retired field cannot be silently saved",
+    "all five inbound references still expose supplier name choices",
+    "live and demo source facts unchanged"
+  ],
+  "source_backup": "D:\\projx\\release\\easyerp-1\\backups\\easyerp_v02_ui_demo-20261115T044410953000Z.dump",
+  "migration": {
+    "database": "easyerp_supplier_test_c8a03110600a",
+    "migration": "009_unit_profile",
+    "status": "PASS",
+    "archived_units": 2,
+    "columns": [
+      "单位ID",
+      "单位名称",
+      "备注"
+    ],
+    "backup": "D:\\projx\\release\\easyerp-1\\backups\\easyerp_supplier_test_c8a03110600a-20261115T044416590165Z.dump",
+    "business_facts_preserved": true,
+    "references_preserved": true
+  }
+}

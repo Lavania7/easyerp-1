@@ -148,9 +148,9 @@
         col.name === '币种' && context.operation === 'create'
           ? window.ERPDefaults.currency
           : values[col.name];
-    const required = col.required && !col.default && !col.automatic && !isPK;
+    const required = col.required && !col.allow_empty_selection && !col.default && !col.automatic && !isPK;
     const id = 'ef-' + owner.uid + '-' + obj.columns.indexOf(col);
-    const attr = `id="${id}" data-entry-value data-owner="${h(owner.uid)}" data-field="${h(col.name)}" ${required ? 'required' : ''} ${disabled ? 'disabled' : ''}`;
+    const attr = `id="${id}" data-entry-value data-owner="${h(owner.uid)}" data-field="${h(col.name)}" ${col.reference ? `aria-describedby="${id}-source"` : ''} ${required ? 'required' : ''} ${disabled ? 'disabled' : ''}`;
     let control = '',
       hint = '',
       wide = false;
@@ -158,10 +158,11 @@
       control = `<input ${attr} type="text" value="${h(value ?? '')}" readonly maxlength="3">`;
       hint = context.operation === 'create' ? '人民币（CNY）' : '保留原记录币种';
     } else if (col.reference) {
-      control = `<div class="entry-ref"><input type="search" data-ref-search="${id}" placeholder="搜索名称" aria-label="搜索${h(col.name.replace(/ID$/, ''))}的关联记录" autocomplete="off"><select ${attr} data-ref-object="${h(owner.object)}" data-selected="${h(value ?? '')}"><option value="">请选择关联记录</option>${value ? `<option value="${h(value)}" selected>正在读取关联名称…</option>` : ''}</select><button type="button" data-entry-new-ref="${id}" aria-label="新建${h(object(col.reference.target)?.name)}">新建</button></div>`;
-      hint = object(col.reference.target)?.name || '';
-    } else if (col.options.length) {
-      control = `<select ${attr}><option value="">请选择</option>${col.options.map((v) => `<option value="${h(v)}" ${value === v ? 'selected' : ''}>${h(v)}</option>`).join('')}</select>`;
+      control = `<div class="entry-ref"><input type="search" data-ref-search="${id}" placeholder="搜索名称" aria-label="搜索${h(col.name.replace(/ID$/, ''))}的关联记录" autocomplete="off"><select ${attr} data-ref-object="${h(owner.object)}" data-selected="${h(value ?? '')}"><option value="">${col.allow_empty_selection ? 'N/A' : '请选择关联记录'}</option>${value ? `<option value="${h(value)}" selected>正在读取关联名称…</option>` : ''}</select><button type="button" data-entry-new-ref="${id}" aria-label="新建${h(object(col.reference.target)?.name)}">新建</button></div>`;
+      control += referenceSourceHint(col.reference.target, catalog.objects, id + '-source');
+    } else if (col.options.length || col.type === 'boolean') {
+      const choices = col.type === 'boolean' ? ['true', 'false'] : col.options;
+      control = `<select ${attr}><option value="">${col.allow_empty_selection ? 'N/A' : '请选择'}</option>${choices.map((v) => `<option value="${h(v)}" ${String(value) === v ? 'selected' : ''}>${h(v)}</option>`).join('')}</select>`;
     } else if (col.type === 'date')
       control = `<input ${attr} type="date" value="${h(value || '')}">`;
     else if (col.type === 'timestamp with time zone') {
@@ -290,14 +291,14 @@
       if (version !== uiVersion || !select.isConnected || requestNumber !== select._requestNumber)
         return;
       select.innerHTML =
-        '<option value="">请选择关联记录</option>' +
+        `<option value="">${object(select.dataset.refObject).columns.find(col => col.name === select.dataset.field).allow_empty_selection ? 'N/A' : '请选择关联记录'}</option>` +
         data.rows
           .map(
             (r) =>
               `<option value="${h(r.value)}" ${r.value === selected ? 'selected' : ''}>${h(r.label)}</option>`
           )
           .join('');
-      if (!data.rows.length) select.options[0].textContent = '尚无记录，可先点“新建”';
+      if (!data.rows.length && select.options[0].textContent !== 'N/A') select.options[0].textContent = '尚无记录，可先点“新建”';
       select.dataset.loaded = '1';
       const search = select.parentElement.querySelector('input');
       search.placeholder = data.more ? '搜索名称（当前显示前 50 项）' : '搜索名称';
@@ -596,8 +597,10 @@
     }
   });
   document.querySelector('#entry-open').addEventListener('click', () => {
-    if (['plans', 'workflow', 'tasks', 'audit'].includes(route)) window.easyerpWorkspace.create();
-    else open(document.querySelector('#content .table-edit-panel')?.dataset.editSource || null);
+    const source = document.querySelector('#content .table-edit-panel')?.dataset.editSource || null;
+    if (new URLSearchParams(location.hash.split('?')[1] || '').has('reference')) open(source);
+    else if (['plans', 'workflow', 'tasks', 'audit'].includes(route)) window.easyerpWorkspace.create();
+    else open(source);
   });
   window.easyerpManual = {
     open,

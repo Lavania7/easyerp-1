@@ -18,7 +18,7 @@ BEGIN;
 INSERT INTO legal."公司主体档案表" VALUES ('co','测试公司','TEST-0001','测试地址',NULL,NULL,NULL,'有效');
 INSERT INTO legal."公司主体档案表" VALUES ('other','另一主体','TEST-0002','测试地址',NULL,NULL,NULL,'有效');
 INSERT INTO finance."人员档案表" VALUES ('person','测试审核员','财务',NULL,NULL);
-INSERT INTO rd."计量单位表" VALUES ('unit','EA','件','数量');
+INSERT INTO rd."计量单位表"("单位ID","单位名称","备注") VALUES ('unit','件',NULL);
 INSERT INTO rd."项目登记表"("项目ID","项目名称","确认依据") VALUES ('project','测试项目','仅隔离测试');
 INSERT INTO rd."产品主数据表" VALUES ('pid','测试产品','中文规格','unit','成品');
 INSERT INTO rd."产品版本表" VALUES ('pv','project','pid','v1','2026-01-01','测试核定');
@@ -37,7 +37,7 @@ INSERT INTO sales."销售订单登记表"("订单ID","渠道ID","平台订单号
 VALUES ('order','channel','O-001','2026-10-01T10:00:00+02:00','CNY','已确认');
 INSERT INTO sales."销售订单行表"("销售订单行ID","订单ID","行号","原商品信息","产品版本ID","数量","单位ID","单价","折扣金额","商品实付","运费分摊","收货信息","取消数量","状态")
 VALUES ('line','order',1,'产品中文原文','pv',10,'unit',10,0,100,0,'测试地址',0,'待履约');
-INSERT INTO production."供应商档案表" VALUES ('supplier','测试供应商',NULL,NULL);
+INSERT INTO production."供应商档案表"("供应商ID","名称") VALUES ('supplier','测试供应商');
 INSERT INTO production."采购订单表" VALUES ('po',NULL,'supplier','2026-10-01','已下单','CNY');
 INSERT INTO production."采购订单行表"("采购订单行ID","采购单ID","行号","数量","单位ID","单价","取消数量","产品版本ID")
 VALUES ('pol','po',1,10,'unit',5,0,'pv');
@@ -67,7 +67,7 @@ SELECT pg_temp.expect_error('duplicate primary key',
 SELECT pg_temp.expect_error('status enumeration',
  $q$UPDATE sales."销售订单登记表" SET "状态"='随意完成' WHERE "订单ID"='order'$q$,'23514');
 SELECT pg_temp.expect_error('required field',
- $q$INSERT INTO rd."计量单位表" VALUES ('bad',NULL,'错误','数量')$q$,'23502');
+ $q$INSERT INTO rd."计量单位表"("单位ID","单位名称") VALUES ('bad',NULL)$q$,'23502');
 SELECT pg_temp.expect_error('one reference only',
  $q$INSERT INTO finance."发票分摊表" VALUES ('bad','missing',NULL,NULL,1,0)$q$,'23514');
 SELECT pg_temp.expect_error('quantity must be positive',
@@ -753,7 +753,7 @@ LEFT JOIN sales."订单组合明细表" oc USING ("订单组合明细ID")
 LEFT JOIN sales."组合商品明细表" c USING ("组合明细ID")
 WHERE b."产品版本ID" IS DISTINCT FROM coalesce(c."产品版本ID",l."产品版本ID")
  OR (oc."订单组合明细ID" IS NOT NULL AND oc."销售订单行ID"<>l."销售订单行ID"))));
-INSERT INTO rd."计量单位表" VALUES ('box','BOX','箱','数量');
+INSERT INTO rd."计量单位表"("单位ID","单位名称","备注") VALUES ('box','箱',NULL);
 UPDATE production."发货记录表" SET "单位ID"='box' WHERE "发货事件ID"='ship';
 SELECT pg_temp.assert_ok('different units require review',EXISTS(SELECT 1 FROM (SELECT '验收单位待核'::text AS "规则",a."验收ID" AS "记录ID",'验收与到货单位不同，需按适用换算另核对'::text AS "说明"
 FROM production."验收记录表" a JOIN production."到货记录表" r USING ("到货ID") WHERE a."单位ID"<>r."单位ID"

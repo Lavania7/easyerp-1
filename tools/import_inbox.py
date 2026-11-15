@@ -15,6 +15,8 @@ import uuid
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "app"))
 from imports import Imports, ImportError as ServiceError, MAX_FILE
+sys.path.insert(0, str(ROOT / "tools"))
+from easyerp import ERP
 
 
 def sha(path):
@@ -153,7 +155,7 @@ def check(file, mode, recheck=False):
                     batch / "receipts" / (str(state["check"]["id"]) + ".json")
                 ).is_file(),
             }
-    result = Imports().check(path.name, raw, mode)
+    result = Imports(root=ERP(mode=mode).root).check(path.name, raw, mode)
     if result.get("sha256") != file_hash or result.get("mode") != mode:
         raise ValueError("前端检查返回了不匹配的文件或数据来源")
     state = {
@@ -204,9 +206,9 @@ def apply(file, mode, allow_incomplete=None, merge=None):
     # The backup belongs to this project and the selected database. No import SQL is duplicated here.
     from easyerp import ERP
 
-    erp = ERP()
+    erp = ERP(mode=mode)
     erp.verify_files()
-    database = erp.c["database"] + ("_ui_demo" if mode == "demo" else "")
+    database = erp.c["database"]
     actual = Path(erp.sql("SELECT current_setting('data_directory')", db=database).stdout.strip())
     if actual.resolve() != erp.data.resolve():
         raise ValueError("连接的数据库集群不是当前项目")
@@ -219,7 +221,7 @@ def apply(file, mode, allow_incomplete=None, merge=None):
     }
     save(state_path, state)
     try:
-        result = Imports().execute(
+        result = Imports(root=ERP(mode=mode).root).execute(
             checked["id"], path.name, raw, mode, allow_incomplete=allow_incomplete, merge=merge
         )
     except ServiceError:

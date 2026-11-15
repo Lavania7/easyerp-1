@@ -123,11 +123,12 @@ class ManualEntry:
         self.data = Data(params)
         self.mode = self.data.mode
         self.db = self.data.db
+        self.cache_key = (str(self.data.erp.data.resolve()), self.data.erp.c["port"], self.db)
         self.ids = Identifiers(self.data)
 
     def catalog(self):
         with _LOCK:
-            cached = _CACHE.get(self.db)
+            cached = _CACHE.get(self.cache_key)
             if cached and time.monotonic() - cached[0] < 60:
                 return cached[1]
         result = self.data.bundle(
@@ -190,6 +191,11 @@ class ManualEntry:
                         col["options"] = [
                             v.replace("''", "'") for v in re.findall(r"'((?:''|[^'])*)'", match[1])
                         ]
+                col["allow_empty_selection"] = bool(
+                    col["name"] != obj["pk"]
+                    and not col["automatic"]
+                    and (col["reference"] or col["options"] or col["type"] == "boolean")
+                )
             obj["rules"] = self.rules(obj)
             objects[obj["key"]] = obj
         for obj in objects.values():
@@ -199,7 +205,7 @@ class ManualEntry:
                     reference and objects.get(reference["target"], {}).get("retired")
                 )
         with _LOCK:
-            _CACHE[self.db] = (time.monotonic(), objects)
+            _CACHE[self.cache_key] = (time.monotonic(), objects)
         return objects
 
     @staticmethod
@@ -317,7 +323,7 @@ class ManualEntry:
             raise EntryError("该字段没有可选择的关联主录。")
         return self.choices(col["reference"]["target"], search, selected, offset)
 
-    def record(self, key, value):
+    def record(self, key, value, include_children=True):
         obj = self.object(key)
         value = self.ids.resolve(key, value)
         if not isinstance(value, str) or len(value) > 300:
@@ -333,7 +339,7 @@ class ManualEntry:
         if not rows:
             raise EntryError("记录不存在或已被其他操作移除。", 404)
         self.string_numbers(obj, rows[0]["values"])
-        if obj["children"]:
+        if include_children and obj["children"]:
             spec = obj["children"]
             child = self.object(spec["object"])
             ids = self.data.rows(
@@ -355,7 +361,7 @@ class ManualEntry:
     def value(col, raw):
         name, kind = col["name"], col["type"]
         if raw is None or raw == "":
-            if col["required"] and not col["default"] and not col["automatic"]:
+            if col["required"] and not col["default"] and not col["automatic"] and not col.get("allow_empty_selection"):
                 raise EntryError(f"请填写「{name}」。", fields=[name])
             return None
         if col["automatic"]:
@@ -455,10 +461,15 @@ class ManualEntry:
                 0
             ]
         if create:
+            # An omitted selector means unknown; non-selector SQL defaults remain unchanged.
+            for col in obj["columns"]:
+                if col.get("allow_empty_selection"):
+                    values.setdefault(col["name"], None)
             missing = [
                 c["name"]
                 for c in obj["columns"]
                 if c["required"]
+                and not c.get("allow_empty_selection")
                 and not c["automatic"]
                 and not c["default"]
                 and c["name"] not in values
@@ -596,6 +607,22 @@ class ManualEntry:
                 + next(c["type"] for c in target["columns"] if c["name"] == name)
                 for name, raw in vals.items()
             }
+            null_selections = [
+                c["name"] for c in target["columns"]
+                if c.get("allow_empty_selection") and c["name"] in vals and vals[c["name"]] is None
+            ]
+            if null_selections and (
+                any(c["required"] and c["name"] in null_selections for c in target["columns"])
+                or any(set(group) <= set(null_selections) for group in target["one_of"])
+            ):
+                # The existing narrowly scoped nullability helper changes only these fields,
+                # atomically with the record and audit. PKs and nonblank-value checks stay intact.
+                sql.append(
+                    "PERFORM erp_ops.csv_allow_missing_fields("
+                    + L(qualified(target)) + "::regclass,ARRAY["
+                    + ",".join(L(name) for name in null_selections)
+                    + "]::text[]," + L("entry2-" + digest) + ");"
+                )
             if insert:
                 query = (
                     f"INSERT INTO {qualified(target)} AS t ("

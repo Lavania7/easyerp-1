@@ -1,5 +1,6 @@
 // Read-only checks for the shared entry layout and retained business queries.
 'use strict';
+const {objectValues, objectValue, selectObject}=require('./object_menu_helpers.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(process.env.EASYERP_PLAYWRIGHT_MODULE||'playwright');
 const baseURL=process.env.EASYERP_URL||'http://127.0.0.1:8092',passed=[];
@@ -13,7 +14,7 @@ const check=(name,condition=true)=>{assert.ok(condition,name);passed.push(name);
   const meta=await (await page.request.get(baseURL+'/api/meta?mode=demo')).json(),kinds=new Map(meta.objects.map(o=>[o.schema+'.'+o.name,o.kind]));
   const specs={sales:{source:'sales.销售订单行表',kind:'orders',filter:'status-filter',detail:'order'},production:{source:'production.生产工单表',kind:'workorders',filter:'person-filter',detail:'workorder'},finance:{source:'finance.资金流水表',kind:'funds',filter:'subject-filter',detail:'fund'}};
   const waitObject=value=>page.waitForFunction(value=>document.querySelector('#object-filter')?.value===value&&document.querySelector('.table-edit-panel')?.dataset.editSource===value,value);
-  async function verifyKind(kind){const values=await page.locator('#object-filter option').evaluateAll(items=>items.map(o=>o.value));assert.ok(values.length&&values.every(value=>kinds.get(value)===kind));}
+  async function verifyKind(kind){const values=await objectValues(page);assert.ok(values.length&&values.every(value=>kinds.get(value)===kind));}
   async function verifyLayout(){assert.equal(await page.locator('.table-toolbar #object-filter').count(),1);assert.equal(await page.locator('#object-mode-toggle').count(),0);assert.equal(await page.locator('.table-toolbar .source-code').count(),0);assert.ok(!(await page.locator('.table-toolbar').innerText()).includes('来源 ·'));}
   for(const [route,spec] of Object.entries(specs)){
    await page.goto(base+'#/'+route);await waitObject(spec.source);await verifyLayout();await verifyKind('r');
@@ -30,9 +31,9 @@ const check=(name,condition=true)=>{assert.ok(condition,name);passed.push(name);
    }
    const exported=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/export');await page.locator('#export').click();const response=await exported;
    check(route+' export retains its business query',response.status()===200&&new URL(response.url()).searchParams.get('kind')===spec.kind&&Number(response.headers()['x-total-rows'])===Number(expected.total[0].count));
-   const values=await page.locator('#object-filter option').evaluateAll(items=>items.map(o=>o.value));
+   const values=await objectValues(page);
    const selected=values.find(value=>value!==spec.source)||spec.source;
-   await page.locator('#object-filter').selectOption(selected);await waitObject(selected);
+   await selectObject(page,selected);await waitObject(selected);
    await page.locator('#nav a[href="#/'+route+'"]').click();await waitObject(selected);
    check(route+' normal navigation restores the selected master record');
 

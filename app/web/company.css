@@ -228,7 +228,7 @@
 }
 .company-dialog::backdrop {
   background: #0006;
-  backdrop-filter: blur(3px);
+  backdrop-filter: none;
 }
 body:has(#company-details[open]) {
   overflow: hidden;
@@ -444,6 +444,40 @@ body:has(#company-details[open]) {
 :root[data-theme] .breadcrumb-drawer {
   margin: 0 32px 18px 0;
   font-size: 12px;
+}
+:root[data-theme] .breadcrumb .breadcrumb-return {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  max-width: 100%;
+  padding: 3px 8px;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  white-space: normal;
+  text-decoration: none;
+}
+:root[data-theme] .breadcrumb-return > span {
+  color: inherit;
+  overflow-wrap: anywhere;
+}
+:root[data-theme] .breadcrumb .breadcrumb-jump {
+  color: var(--accent-text);
+  font-size: 18px;
+}
+:root[data-theme] a.reference-link {
+  color: var(--accent-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+:root[data-theme] a.reference-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-theme] a.reference-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 @media (max-width: 700px) {
   :root[data-theme] .topbar-identity {

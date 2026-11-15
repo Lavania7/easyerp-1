@@ -1,0 +1,38 @@
+[
+  {
+    "database": "easyerp_v02",
+    "migration": "008_supplier_profile",
+    "status": "PASS",
+    "retired_paths": 0,
+    "columns": [
+      "供应商ID",
+      "名称",
+      "联系方式",
+      "统一社会信用代码",
+      "户名",
+      "账户ID",
+      "开户行"
+    ],
+    "backup": "D:\\projx\\release\\easyerp-1\\backups\\easyerp_v02-20261115T041212901392Z.dump",
+    "business_facts_preserved": true,
+    "references_preserved": true
+  },
+  {
+    "database": "easyerp_v02_ui_demo",
+    "migration": "008_supplier_profile",
+    "status": "PASS",
+    "retired_paths": 0,
+    "columns": [
+      "供应商ID",
+      "名称",
+      "联系方式",
+      "统一社会信用代码",
+      "户名",
+      "账户ID",
+      "开户行"
+    ],
+    "backup": "D:\\projx\\release\\easyerp-1\\backups\\easyerp_v02_ui_demo-20261115T041213937627Z.dump",
+    "business_facts_preserved": true,
+    "references_preserved": true
+  }
+]

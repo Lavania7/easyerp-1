@@ -39,11 +39,26 @@ def write_json(path, value):
 
 
 class ERP:
-    def __init__(self):
-        self.c = json.loads(CONFIG.read_text(encoding="utf-8-sig"))
+    def __init__(self, *, mode="live", config=None, runtime_root=None):
+        if mode not in ("live", "demo"):
+            raise ValueError("无效数据来源")
+        base = dict(config) if config is not None else json.loads(CONFIG.read_text(encoding="utf-8-sig"))
+        sources = base.get("database_sources", {})
+        source = sources.get(mode, {})
+        self.c = {**base, **source}
+        if mode == "demo" and "database" not in source:
+            self.c["database"] = base["database"] + "_ui_demo"
+        port = self.c["port"]
+        if type(port) is not int or not 1024 <= port <= 65535:
+            raise ValueError("本机数据库端口无效")
+        if self.c.get("host", "127.0.0.1") not in ("127.0.0.1", "localhost"):
+            raise ValueError("只支持本机数据库")
+        self.root = Path(runtime_root or self.c.get("runtime_root", ROOT)).resolve()
+        self.data = Path(self.c.get("data_directory", self.root / "var/pgdata"))
+        self.private = Path(self.c.get("private_directory", self.root / ".secrets"))
+        if not self.data.is_absolute() or not self.private.is_absolute():
+            raise ValueError("数据库及凭据目录必须为绝对路径")
         self.pg = Path(os.environ.get("EASYERP_PG_BIN", self.c["postgres_bin"]))
-        self.data = ROOT / "var" / "pgdata"
-        self.private = ROOT / ".secrets"
         self.env = {k: v for k, v in os.environ.items() if not k.startswith("PG")}
         self.env.update(
             PGCLIENTENCODING="UTF8",
@@ -55,6 +70,15 @@ class ERP:
             raise RuntimeError(
                 "找不到 PostgreSQL，请设置 EASYERP_PG_BIN 或 config.json 中 postgres_bin"
             )
+
+    def workspace_root(self, mode="live"):
+        if mode not in ("live", "demo"):
+            raise ValueError("无效数据来源")
+        source = self.c.get("database_sources", {}).get(mode, {})
+        path = Path(source.get("workspace_directory", self.c.get("workspace_directory", ROOT / "var/workspace")))
+        if not path.is_absolute():
+            raise ValueError("工作空间目录必须为绝对路径")
+        return path
 
     def run(self, exe, args, *, text=None, ok=True, timeout=120):
         # On Windows, a daemon may inherit pg_ctl's pipe handles. File handles
@@ -69,6 +93,7 @@ class ERP:
                 errors="replace",
                 env=self.env,
                 timeout=timeout,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             )
             out.seek(0)
             err.seek(0)
@@ -119,7 +144,7 @@ class ERP:
             if p.returncode:
                 raise RuntimeError(f"无法限制目录访问权限：{path}")
 
-    def init(self):
+    def init(self, *, ensure_database=True):
         self.private_dir(self.private)
         credential_file = self.private / "credentials.json"
         if not credential_file.exists():
@@ -180,7 +205,8 @@ class ERP:
                     f"CREATE ROLE {ident(role)} LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT PASSWORD {literal(creds[role])};",
                     db="postgres",
                 )
-        self.ensure_database(self.c["database"])
+        if ensure_database:
+            self.ensure_database(self.c["database"])
 
     def start_server(self):
         status = self.run("pg_ctl", ["-D", self.data, "status"], ok=False)
@@ -190,7 +216,7 @@ class ERP:
         with socket.socket() as sock:
             if sock.connect_ex(("127.0.0.1", self.c["port"])) == 0:
                 raise RuntimeError("指定端口已有其他实例，拒绝连接或改动；请调整 config.json")
-        logs = ROOT / "var" / "log"
+        logs = self.root / "var" / "log"
         self.private_dir(logs)
         self.run(
             "pg_ctl", ["-D", self.data, "-l", logs / (stamp() + ".log"), "-w", "-t", "45", "start"]
@@ -302,6 +328,24 @@ class ERP:
         ).stdout.strip()
         if self.version_matches(old, m, digest):
             return {"database": db, "migration": "already applied"}
+        if m.get("finance_profile_upgrade_from"):
+            from migrate_finance_profiles import migrate as migrate_finance, prior_versions
+
+            if old not in prior_versions(m):
+                raise RuntimeError("现有库需要先按已审核的旧版规范顺序升级，再执行010财务字段迁移；拒绝跳版标记")
+            return migrate_finance(self, db, apply=True)
+        if m.get("unit_profile_upgrade_from"):
+            from migrate_unit_profile import migrate as migrate_unit, prior_versions
+
+            if old not in prior_versions(m):
+                from migrate_supplier_profile import migrate as migrate_supplier
+
+                migrate_supplier(self, db, apply=True)
+            return migrate_unit(self, db, apply=True)
+        if m.get("supplier_profile_upgrade_from"):
+            from migrate_supplier_profile import migrate as migrate_supplier
+
+            return migrate_supplier(self, db, apply=True)
         previous = m["migration_from"]
         expected = previous["source_sha256"] + "|" + previous["build_sha256"]
         if old != expected:
@@ -343,7 +387,7 @@ class ERP:
             "business_issue_count": rows,
             "business_issues": issues,
         }
-        write_json(ROOT / "reports" / "check-latest.json", result)
+        write_json(self.root / "reports" / "check-latest.json", result)
         return result
 
     def test(self):
@@ -385,7 +429,7 @@ class ERP:
             # Only generated ephemeral databases may be removed by the test runner.
             if db.startswith("easyerp_v02_test_"):
                 self.sql(f"DROP DATABASE IF EXISTS {ident(db)} WITH (FORCE);", db="postgres")
-            write_json(ROOT / "reports" / "test-latest.json", report)
+            write_json(self.root / "reports" / "test-latest.json", report)
         return report
 
     def data_signature(self, db):
@@ -405,7 +449,7 @@ class ERP:
 
     def backup(self, db=None, verify_data=False):
         db = db or self.c["database"]
-        folder = ROOT / "backups"
+        folder = self.root / "backups"
         self.private_dir(folder)
         out = folder / (db + "-" + stamp() + ".dump")
         self.run(
@@ -486,7 +530,7 @@ class ERP:
             result["passed"] = True
         finally:
             self.sql(f"DROP DATABASE IF EXISTS {ident(db)} WITH (FORCE);", db="postgres")
-            write_json(ROOT / "reports" / "restore-latest.json", result)
+            write_json(self.root / "reports" / "restore-latest.json", result)
         return result
 
     def startup(self, remove=False):
@@ -520,8 +564,8 @@ class ERP:
 
     def export(self):
         # Repeatable-read export freezes actual values in files; references alone do not freeze rows.
-        self.private_dir(ROOT / "exports")
-        folder = ROOT / "exports" / stamp()
+        self.private_dir(self.root / "exports")
+        folder = self.root / "exports" / stamp()
         self.private_dir(folder)
         incomplete = folder / "INCOMPLETE.txt"
         incomplete.write_text(
@@ -581,6 +625,8 @@ def main():
             "remove-startup",
             "export",
             "query",
+            "databases",
+            "migration-preview",
             "import-sql",
         ],
     )
@@ -596,13 +642,27 @@ def main():
         a.value = base64.b64decode(a.value).decode("utf-8")
     e = ERP()
     if a.command in ("init", "start"):
-        e.init()
+        if e.c.get("database_sources"):
+            seen = set()
+            for mode in ("live", "demo"):
+                source = ERP(mode=mode)
+                key = (str(source.data.resolve()), source.c["database"])
+                if key not in seen:
+                    source.init()
+                    seen.add(key)
+        else:
+            e.init()
         result = {
             "database": e.c["database"],
             "host": "127.0.0.1",
             "port": e.c["port"],
             "status": "READY",
         }
+    elif a.command in ("databases", "migration-preview"):
+        sys.path.insert(0, str(ROOT / "app"))
+        from database_manager import DatabaseManager
+        manager = DatabaseManager()
+        result = manager.listing() if a.command == "databases" else manager.migration_preview()
     elif a.command == "stop":
         e.run("pg_ctl", ["-D", e.data, "-w", "-t", "45", "stop", "-m", "fast"])
         result = {"status": "STOPPED"}

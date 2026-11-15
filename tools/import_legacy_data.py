@@ -335,7 +335,6 @@ class Plan:
                 "平台": platform,
                 "币种": None if kind == "bank-history" else "CNY",
                 "账户性质": nature,
-                "余额来源": str(self.source / "finance"),
             },
         )
         dates = []

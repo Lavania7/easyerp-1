@@ -103,6 +103,18 @@ def build():
         "sql_files": files,
         "blocks": entries,
         "compatible_sources": compatible,
+        **({"supplier_profile_upgrade_from": previous["supplier_profile_upgrade_from"]}
+           if "supplier_profile_upgrade_from" in previous else {}),
+        **({"unit_profile_upgrade_from": previous["unit_profile_upgrade_from"]}
+           if "unit_profile_upgrade_from" in previous else {}),
+        "finance_profile_upgrade_from": previous.get(
+            "finance_profile_upgrade_from",
+            {
+                "source_sha256s": sorted({previous["source_sha256"],
+                    *(pair["source_sha256"] for pair in previous.get("compatible_sources", []))}),
+                "sql_files": previous["sql_files"],
+            },
+        ),
         "migration_from": previous.get(
             "migration_from",
             {

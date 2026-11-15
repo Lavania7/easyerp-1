@@ -23,6 +23,9 @@ from entry import ManualEntry, EntryError, PREFERRED
 from imports import Imports, ImportError as FormatError, MAX_FILE
 from standard_templates import StandardTemplates
 from workspace import Workspace
+from database_manager import DatabaseManager
+from table_tools import TableData, BulkEntry
+from easyerp import ERP
 from identifiers import Identifiers, RULES
 
 WEB = Path(__file__).resolve().parent / "web"
@@ -30,16 +33,18 @@ CATALOG = {}
 LOCK = threading.Lock()
 WRITE_TOKEN = secrets.token_urlsafe(32)
 MAX_BODY = 1024 * 1024
-IMPORTS = None
+IMPORTS = {}
 IMPORT_LOCK = threading.Lock()
+DATABASES = DatabaseManager()
 
 
-def import_service():
-    global IMPORTS
+def import_service(mode="live"):
+    erp = ERP(mode=mode)
+    key = str(erp.root.resolve())
     with IMPORT_LOCK:
-        if IMPORTS is None:
-            IMPORTS = Imports()
-        return IMPORTS
+        if key not in IMPORTS:
+            IMPORTS[key] = Imports(root=erp.root)
+        return IMPORTS[key]
 
 
 def strict_object(pairs):
@@ -86,9 +91,13 @@ class Handler(BaseHTTPRequestHandler):
         )
         for k, v in (extra or {}).items():
             self.send_header(k, v)
-        self.end_headers()
-        if self.command != "HEAD":
-            self.wfile.write(body)
+        try:
+            self.end_headers()
+            if self.command != "HEAD":
+                self.wfile.write(body)
+        except (BrokenPipeError, ConnectionAbortedError, ConnectionResetError):
+            # Closing an inline panel cancels its read; disconnected clients need no error reply.
+            return
 
     def local_request(self):
         allowed = {f"127.0.0.1:{self.server.server_port}", f"localhost:{self.server.server_port}"}
@@ -114,6 +123,10 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path not in (
             "/api/workspace/save",
             "/api/entry/save",
+            "/api/entry/bulk",
+            "/api/databases/folder",
+            "/api/databases/preview",
+            "/api/databases/create",
             "/api/import/check",
             "/api/import/settings",
             "/api/import/execute",
@@ -162,7 +175,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(400, encode({"error": "请求内容不完整，请重试。"}))
         if is_file:
             try:
-                service = import_service()
+                service = import_service(params.get("mode", "live"))
                 if parsed.path == "/api/import/execute":
                     result = service.execute(
                         params.get("check_id", ""),
@@ -192,10 +205,17 @@ class Handler(BaseHTTPRequestHandler):
         except (ValueError, UnicodeError, RecursionError):
             return self.send(400, encode({"error": "保存内容不是有效 JSON"}))
         try:
+            if parsed.path.startswith("/api/databases/"):
+                action = {"/api/databases/folder": DATABASES.select_folder,
+                          "/api/databases/preview": DATABASES.preview,
+                          "/api/databases/create": DATABASES.create}[parsed.path]
+                return self.send(200, encode(action(payload)))
+            if parsed.path == "/api/entry/bulk":
+                return self.send(200, encode(BulkEntry(params).save(payload)))
             if parsed.path == "/api/workspace/save":
-                return self.send(200, encode(Workspace(params.get("mode", "live")).save(payload)))
+                return self.send(200, encode(Workspace(params.get("mode", "live"), root=ERP(mode=params.get("mode", "live")).workspace_root(params.get("mode", "live"))).save(payload)))
             if parsed.path == "/api/import/settings":
-                result = import_service().configure(payload, params.get("mode", "live"))
+                result = import_service(params.get("mode", "live")).configure(payload, params.get("mode", "live"))
                 result["token"] = WRITE_TOKEN
                 return self.send(200, encode(result))
             result = ManualEntry(params).save(payload)
@@ -241,6 +261,8 @@ class Handler(BaseHTTPRequestHandler):
                 "/manual.css": "manual.css",
                 "/table-edit.js": "table-edit.js",
                 "/table-edit.css": "table-edit.css",
+                "/row-details.js": "row-details.js",
+                "/row-details.css": "row-details.css",
                 "/company.js": "company.js",
                 "/company.css": "company.css",
                 "/workspace.js": "workspace.js",
@@ -256,6 +278,22 @@ class Handler(BaseHTTPRequestHandler):
                 "/i18n.js": "i18n.js",
                 "/fonts/SourceHanSansCN-VF.ttf.woff2": "fonts/SourceHanSansCN-VF.ttf.woff2",
             }
+            files.update({
+                "/database-manager.js": "database-manager.js",
+                "/database-manager.css": "database-manager.css",
+                "/table-tools.js": "table-tools.js",
+                "/table-tools.css": "table-tools.css",
+                "/calculator.js": "calculator.js",
+                "/calculator.css": "calculator.css",
+                "/object-menu.js": "object-menu.js",
+                "/object-menu.css": "object-menu.css",
+                "/plan-visual.js": "plan-visual.js",
+                "/plan-visual.css": "plan-visual.css",
+                "/vendor/katex/katex.min.js": "vendor/katex/katex.min.js",
+                "/vendor/katex/katex.min.css": "vendor/katex/katex.min.css",
+            })
+            for font in (WEB / "vendor/katex/fonts").glob("KaTeX_*.woff2"):
+                files["/vendor/katex/fonts/" + font.name] = "vendor/katex/fonts/" + font.name
             if path not in files:
                 return self.send(404, encode({"error": "页面不存在"}))
             file = WEB / files[path]
@@ -266,12 +304,16 @@ class Handler(BaseHTTPRequestHandler):
             )
         params = {k: v[-1] for k, v in parse_qs(parsed.query, keep_blank_values=True).items()}
         try:
+            if path == "/api/databases":
+                return self.send(200, encode({**DATABASES.listing(), "token": WRITE_TOKEN}))
+            if path == "/api/databases/migration-preview":
+                return self.send(200, encode(DATABASES.migration_preview()))
             if path == "/api/workspace":
                 return self.send(
                     200,
                     encode(
                         {
-                            **Workspace(params.get("mode", "live")).listing(params),
+                            **Workspace(params.get("mode", "live"), root=ERP(mode=params.get("mode", "live")).workspace_root(params.get("mode", "live"))).listing(params),
                             "token": WRITE_TOKEN,
                         }
                     ),
@@ -285,7 +327,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send(200, body, "text/csv; charset=utf-8", headers)
                 return self.send(404, encode({"error": "模板接口不存在"}))
             if path.startswith("/api/import/"):
-                service = import_service()
+                service = import_service(params.get("mode", "live"))
                 if path == "/api/import/meta":
                     return self.send(
                         200,
@@ -303,23 +345,23 @@ class Handler(BaseHTTPRequestHandler):
                 if path == "/api/import/events":
                     return self.send(200, encode(service.events()))
                 return self.send(404, encode({"error": "导入接口不存在；业务数据导入尚未开放。"}))
-            data = Data(params)
+            data = TableData(params)
             if path == "/api/identity":
                 key = params.get("object", "")
                 value = params.get("id", "")
                 if len(value) > 300:
                     return self.send(400, encode({"error": "编号过长"}))
                 if key.startswith("workspace."):
-                    result = Workspace(data.mode).identity(value, key.split(".", 1)[1])
+                    result = Workspace(data.mode, root=data.erp.workspace_root(data.mode)).identity(value, key.split(".", 1)[1])
                 else:
                     if key and key not in RULES:
                         return self.send(400, encode({"error": "未知主录"}))
                     result = Identifiers(data).identity(key, value)
                     if not key:
-                        result += Workspace(data.mode).identity(value)
+                        result += Workspace(data.mode, root=data.erp.workspace_root(data.mode)).identity(value)
                 return self.send(200, encode({"records": result, "mode": data.mode}))
             if path == "/api/health":
-                status = data.rows("SELECT current_database() AS database,current_user AS role")
+                status = data.rows("SELECT current_database() AS database,current_user AS role,inet_server_port() AS port")
                 return self.send(
                     200,
                     encode(
@@ -375,7 +417,10 @@ class Handler(BaseHTTPRequestHandler):
                     )
                 if path == "/api/entry/record":
                     return self.send(
-                        200, encode(entry.record(params.get("object", ""), params.get("id", "")))
+                        200, encode(entry.record(
+                            params.get("object", ""), params.get("id", ""),
+                            include_children=params.get("include_children", "1") != "0",
+                        ))
                     )
                 return self.send(404, encode({"error": "录入接口不存在"}))
             with LOCK:
@@ -414,6 +459,8 @@ class Handler(BaseHTTPRequestHandler):
                 )
                 rows = result["rows"]
                 fields = list(dict.fromkeys(k for row in rows for k in row))
+                if not fields and result.get("_table_tools"):
+                    fields = [column["name"] for column in result["_table_tools"]["columns"]]
                 if not fields and params.get("object"):
                     fields = [c["name"] for c in data.object(params["object"], catalog)["columns"]]
                 if not fields:

@@ -15,7 +15,7 @@
 }
 .template-dialog::backdrop {
   background: #3636364a;
-  backdrop-filter: blur(2px);
+  backdrop-filter: none;
 }
 .template-head {
   display: flex;

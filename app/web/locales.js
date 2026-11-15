@@ -657,6 +657,8 @@ window.ERP_MESSAGES = {
   '确认日期': ['Confirmation date', 'Bestätigungsdatum'],
   '未知原因': ['Reason unknown', 'Grund unbekannt'],
   '账户ID': ['Account ID', 'Konto-ID'],
+  '户名': ['Account holder', 'Kontoinhaber'],
+  '开户行': ['Bank branch', 'Kontoführende Bank'],
   '账户名': ['Account name', 'Kontoname'],
   '主体ID': ['Entity ID', 'Unternehmens-ID'],
   '平台': ['Platform', 'Plattform'],
@@ -1451,4 +1453,10 @@ Object.assign(window.ERP_MESSAGES, {
 Object.assign(window.ERP_MESSAGES, {
   '分级导航': ['Breadcrumb navigation', 'Pfadnavigation'],
   '详情分级导航': ['Record breadcrumb navigation', 'Pfadnavigation des Datensatzes'],
+});
+
+Object.assign(window.ERP_MESSAGES, {
+  '基准工资': ['Base salary', 'Grundgehalt'],
+  '工资账户开户行': ['Payroll bank', 'Gehaltsbank'],
+  '工资账户ID': ['Payroll account ID', 'Gehaltskonto-ID'],
 });

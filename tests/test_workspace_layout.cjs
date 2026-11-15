@@ -1,4 +1,5 @@
 'use strict';
+const {objectValues, objectValue, selectObject}=require('./object_menu_helpers.cjs');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
@@ -51,7 +52,7 @@ const check=(name,condition)=>{assert.ok(condition,name);checks.push(name);conso
     await clickDepartment('sales');await page.locator('#object-filter').waitFor();
     check('only one department is selected at a time',await page.locator('[data-department][aria-pressed="true"]').count()===1);
     await clickModule('archive');await page.locator('#object-filter').waitFor();
-    const object=await page.locator('#object-filter').inputValue();
+    const object=await objectValue(page);
     await page.screenshot({path:path.join(output,'easyerp-department-layout.png')});
     await toggleDashboard();
     check('dashboard preserves both underlying selections',await module('archive').getAttribute('aria-pressed')==='true'&&await department('sales').getAttribute('aria-pressed')==='true');
@@ -60,7 +61,7 @@ const check=(name,condition)=>{assert.ok(condition,name);checks.push(name);conso
     await page.reload();await contentReady();
     check('dashboard overlay and prior selections survive refresh',await page.locator('.metrics').isVisible()&&await module('archive').getAttribute('aria-pressed')==='true'&&await department('sales').getAttribute('aria-pressed')==='true');
     await toggleDashboard();await page.locator('#object-filter').waitFor();
-    check('turning dashboard off restores the same master table',await page.locator('#object-filter').inputValue()===object);
+    check('turning dashboard off restores the same master table',await objectValue(page)===object);
     await clickModule('archive');
     check('clicking selected content deselects it and keeps department',await isBlank()&&await page.locator('.sidebar-modules [aria-pressed="true"]').count()===0&&await department('sales').getAttribute('aria-pressed')==='true');
     await toggleDashboard();await toggleDashboard();
@@ -73,9 +74,9 @@ const check=(name,condition)=>{assert.ok(condition,name);checks.push(name);conso
       for(const key of ['finance','legal','production','rd','sales','analysis']){
         for(const area of ['data','archive']){
           await open(area+'?department='+key,mode);await page.locator('#object-filter').waitFor();
-          const values=await page.locator('#object-filter option').evaluateAll(items=>items.map(item=>item.value));
+          const values=await objectValues(page);
           const expected=meta.objects.filter(o=>o.kind==='r'&&o.standalone&&!o.retired&&o.schema===key&&o.area===area).map(o=>o.schema+'.'+o.name);
-          check(mode+' '+key+' '+area+' filters all master tables by department',values.length>0&&JSON.stringify(values)===JSON.stringify(expected));
+          check(mode+' '+key+' '+area+' filters all master tables by department',values.length>0&&JSON.stringify([...values].sort())===JSON.stringify([...expected].sort()));
         }
       }
     }
@@ -112,9 +113,9 @@ const check=(name,condition)=>{assert.ok(condition,name);checks.push(name);conso
     await open('archive?department=legal&object='+encodeURIComponent('legal.公司主体档案表'),'demo');await page.locator('#object-filter').waitFor();
     const record=page.locator('#content [data-record="legal.公司主体档案表"]').first();
     if(await record.count()){
-      await record.click();await page.locator('#drawer .drawer-header h2').waitFor();
-      check('record details retain the new department breadcrumb',await page.locator('[data-drawer-breadcrumbs]').textContent().then(t=>t.includes('归档')&&t.includes('法务')&&t.includes('公司主体档案表')));
-      await page.locator('#drawer [data-breadcrumb-page="archive"][data-breadcrumb-object=""]').first().click();await page.locator('#drawer').waitFor({state:'hidden'});await contentReady();
+      await record.click();await page.locator('.record-inline-panel .record-inline-fields').first().waitFor();
+      check('record details retain the new department breadcrumb',await page.locator('#breadcrumb-list').textContent().then(t=>t.includes('归档')&&t.includes('法务')&&t.includes('公司主体档案表'))&&await page.locator('.record-inline-panel').textContent().then(t=>t.includes('公司主体档案表'))&&!await page.locator('#drawer').isVisible());
+      await page.locator('[data-row-details-close]').click();await page.locator('.record-inline-panel').waitFor({state:'detached'});await contentReady();
       check('returning from details preserves the selected department',await department('legal').getAttribute('aria-pressed')==='true');
     }
     await open('archive?department=rd','demo');await page.locator('#object-filter').waitFor();
@@ -127,7 +128,7 @@ const check=(name,condition)=>{assert.ok(condition,name);checks.push(name);conso
     check('German department bar and workspace fit a narrow screen',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
     await page.locator('#language-toggle').click();await page.waitForFunction(()=>document.documentElement.lang==='zh-CN');
     await page.screenshot({path:path.join(output,'easyerp-mobile.png')});
-    await page.locator('#menu').click();await module('archive').click();await contentReady();
+    await page.locator('#menu').click();await clickModule('archive');
     check('mobile navigation can deselect to a whiteboard',await isBlank());
     while(await page.locator('html').getAttribute('data-theme')!=='dark')await page.locator('#theme-toggle').click();
     check('dark whiteboard uses the existing theme surface',await page.locator('.workspace-blank').evaluate(el=>{const s=getComputedStyle(el);return s.color!=='rgb(255, 255, 255)';}));

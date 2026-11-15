@@ -35,10 +35,23 @@ window.easyerpWorkspace = (() => {
       ['production', '生产执行'],
     ],
     audit: [
-      ['items', '月度审计报告'],
+      ['items', '审计报告'],
+      ['monthly', '月度审计'],
+      ['quarterly', '季度审计'],
+      ['yearly', '年度审计'],
       ['records', '核定记录'],
     ],
   };
+  const reportTypes = { monthly: '月度审计', quarterly: '季度审计', yearly: '年度审计' };
+  const reportType = (item) => item.values.type || '月度审计';
+  function reportPeriod(item) {
+    const month = item.values.month || '';
+    if (!month) return '—';
+    if (reportType(item) === '年度审计') return month.slice(0, 4);
+    if (reportType(item) === '季度审计') return month.slice(0, 4) + ' Q' + Math.ceil(Number(month.slice(5)) / 3);
+    return month;
+  }
+  const auditTabs = () => tabs(pageTabs.audit.filter(([key]) => key !== 'records' || state.department));
   const descriptions = {
     sales: '订单、发货与售后',
     inventory: '采购订单、到货与库存盘点',
@@ -83,6 +96,7 @@ window.easyerpWorkspace = (() => {
     const requestedView = new URLSearchParams(location.hash.split('?')[1] || '').get('view');
     view = pageTabs[page]?.some(([key]) => key === requestedView) ? requestedView : 'items';
     if (page === 'workflow' && state.department !== 'production') view = 'items';
+    if (page === 'audit' && !state.department && view === 'records') view = 'items';
     lastPage = page;
     if (page === 'data') {
       $('#export').hidden = false;
@@ -97,7 +111,7 @@ window.easyerpWorkspace = (() => {
     if (page === 'audit' && view === 'records') {
       $('#export').hidden = false;
       $('#export').disabled = false;
-      return { html: tabs(pageTabs.audit) + (await explorer()).html };
+      return { html: auditTabs() + (await explorer()).html };
     }
     if (page === 'workflow' && state.scope === 'pending' && state.department === 'production')
       view = 'production';
@@ -115,15 +129,15 @@ window.easyerpWorkspace = (() => {
       };
     }
     const kind = page === 'plans' ? 'plan' : page === 'audit' ? 'report' : 'workflow';
-    const d = await request(kind);
+    const d = await request(kind, kind === 'report' ? { department: state.department } : {});
     const rows =
       kind === 'report'
-        ? d.rows
+        ? d.rows.filter((item) => (!state.department || matchesDepartment(item.values.department)) && (!reportTypes[view] || reportType(item) === reportTypes[view]))
         : d.rows.filter((item) => matchesDepartment(item.values.department));
     const counts = rows.reduce((a, r) => ((a[r.status] = (a[r.status] || 0) + 1), a), {});
     let prefix =
       page === 'audit'
-        ? tabs(pageTabs.audit)
+        ? auditTabs()
         : ['workflow', 'tasks'].includes(page) && state.department === 'production'
           ? tabs(pageTabs.workflow)
           : '';
@@ -131,10 +145,10 @@ window.easyerpWorkspace = (() => {
       kind === 'plan'
         ? '企业目标与生产计划集中登记，发布后可发起执行事项。'
         : kind === 'report'
-          ? '每月集中记录审计范围、结论和未核事项。发布前由复核人明确确认，报告按版本保留。'
+          ? '按月度、季度或年度记录审计范围、结论和未核事项。选择部门后仅显示该部门的报告；取消部门选择可查看全部报告。'
           : '一个事项串联采纳、执行、整改和复核；处理过程与证据保留在同一条记录。';
-    const heading = kind === 'plan' ? '计划清单' : kind === 'report' ? '月报清单' : '事项清单';
-    const body = `<div class="table-wrap"><table><thead><tr><th>标题</th><th>责任部门 / 负责人</th><th>${kind === 'report' ? '审计月份' : '截止日期'}</th><th>状态</th><th>操作</th></tr></thead><tbody>${rows.map((item) => `<tr><td><button class="table-button" data-ws-open="${esc(item.id)}" data-i18n-ignore>${esc(item.values.title)}</button><span class="secondary" data-i18n-ignore>${esc(item.values.type || '')} ${esc(item.values.plan_id || '')}</span></td><td data-i18n-ignore>${esc(item.values.department || '—')} / ${esc(item.values.owner || '待指定')}</td><td>${esc(kind === 'report' ? item.values.month : item.values.due || '未设期限')}</td><td>${badge(item.status)}</td><td><button class="button small" data-ws-open="${esc(item.id)}">${frozen(item) ? '查看' : '办理'}</button>${kind === 'plan' && item.status === '已发布' ? ` <button class="button small" data-ws-start="${esc(item.id)}">发起执行</button>` : ''}${kind === 'report' && item.status === '已发布' ? ` <button class="button small" data-ws-revise="${esc(item.id)}">新建修订版</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="5">${empty(kind === 'report' ? '尚无审计月报' : kind === 'plan' ? '尚无企业计划' : '尚无办理事项')}</td></tr>`}</tbody></table></div>`;
+    const heading = kind === 'plan' ? '计划清单' : kind === 'report' ? '审计报告清单' : '事项清单';
+    const body = `<div class="table-wrap"><table><thead><tr><th>标题</th><th>责任部门 / 负责人</th><th>${kind === 'report' ? '审计期间' : '截止日期'}</th><th>状态</th><th>操作</th></tr></thead><tbody>${rows.map((item) => `<tr><td><button class="table-button" data-ws-open="${esc(item.id)}" data-i18n-ignore>${esc(item.values.title)}</button><span class="secondary"><span ${kind === 'report' ? 'data-ui-label' : 'data-i18n-ignore'}>${esc(kind === 'report' ? reportType(item) : item.values.type || '')}</span> <span data-i18n-ignore>${esc(item.values.plan_id || '')}</span></span></td><td data-i18n-ignore>${esc(item.values.department || '—')} / ${esc(item.values.owner || '待指定')}</td><td>${esc(kind === 'report' ? reportPeriod(item) : item.values.due || '未设期限')}</td><td>${badge(item.status)}</td><td><button class="button small" data-ws-open="${esc(item.id)}">${frozen(item) ? '查看' : '办理'}</button>${kind === 'plan' && item.status === '已发布' ? ` <button class="button small" data-ws-start="${esc(item.id)}">发起执行</button>` : ''}${kind === 'report' && item.status === '已发布' ? ` <button class="button small" data-ws-revise="${esc(item.id)}">新建修订版</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="5">${empty(kind === 'report' ? '尚无审计报告' : kind === 'plan' ? '尚无企业计划' : '尚无办理事项')}</td></tr>`}</tbody></table></div>`;
     current = { kind, rows, mode: state.mode };
     return {
       html:
@@ -143,7 +157,7 @@ window.easyerpWorkspace = (() => {
           .map(([label, n]) => `<span>${esc(label)} <strong>${n}</strong></span>`)
           .join(
             ''
-          )}</div><section class="panel"><div class="panel-head"><h2>${heading}</h2><button class="button primary" data-ws-new>＋ 新建${kind === 'report' ? '月报' : kind === 'plan' ? '计划' : '事项'}</button></div>${body}</section>`,
+          )}</div><section class="panel"><div class="panel-head"><h2>${heading}</h2><button class="button primary" data-ws-new>＋ 新建${kind === 'report' ? '报告' : kind === 'plan' ? '计划' : '事项'}</button></div>${body}</section>`,
     };
   }
   function matchesDepartment(value) {
@@ -183,6 +197,11 @@ window.easyerpWorkspace = (() => {
   };
   function positionPanel() {
     if (!dialog.open) return;
+    if (dialog.classList.contains('plan-dialog')) {
+      dialog.style.removeProperty('left');
+      dialog.style.removeProperty('top');
+      return;
+    }
     const anchor = returnFocus?.isConnected ? returnFocus.getBoundingClientRect() : null;
     const topbar = document.querySelector('.topbar')?.getBoundingClientRect();
     const left = anchor && anchor.width ? anchor.left : (innerWidth - dialog.offsetWidth) / 2;
@@ -213,9 +232,10 @@ window.easyerpWorkspace = (() => {
       };
     const kind = kindOverride || item?.kind || kindFor(),
       values = { ...(item?.values || {}), ...defaults };
+    if (kind === 'report') values.type ||= reportTypes[view] || '月度审计';
     const keys =
       kind === 'report'
-        ? ['title', 'month', 'owner', 'scope', 'conclusion', 'unresolved', 'evidence', 'links']
+        ? ['title', 'type', 'department', 'month', 'owner', 'scope', 'conclusion', 'unresolved', 'evidence', 'links']
         : kind === 'plan'
           ? ['title', 'department', 'owner', 'start', 'due', 'description', 'links']
           : [
@@ -243,8 +263,19 @@ window.easyerpWorkspace = (() => {
           : kind === 'workflow'
             ? ['待采纳', '待执行']
             : ['草稿'];
-    dialog.innerHTML = `<div class="entry-head"><div><span class="entry-mode">${state.mode === 'demo' ? '演示数据' : '正式数据'}</span><h2 id="workspace-dialog-title">${item ? '查看与办理' : '新建'}${kind === 'plan' ? '企业计划' : kind === 'report' ? '审计月报' : '工作流事项'}</h2></div><button type="button" class="icon-button" data-ws-close aria-label="关闭">×</button></div><form id="workspace-form"><div class="entry-content workspace-body"><p class="entry-error" role="alert" hidden></p><div class="entry-grid">${keys
+    dialog.classList.toggle('plan-dialog', kind === 'plan');
+    dialog.setAttribute('aria-modal', String(kind === 'plan'));
+    dialog.innerHTML = `<div class="entry-head"><div><span class="entry-mode">${state.mode === 'demo' ? '演示数据' : '正式数据'}</span><h2 id="workspace-dialog-title">${item ? '查看与办理' : '新建'}${kind === 'plan' ? '企业计划' : kind === 'report' ? '审计报告' : '工作流事项'}</h2></div><button type="button" class="icon-button" data-ws-close aria-label="关闭">×</button></div><form id="workspace-form"><div class="entry-content workspace-body"><p class="entry-error" role="alert" hidden></p><div class="entry-grid">${keys
       .map((key) => {
+        if (kind === 'report' && key === 'type')
+          return `<label class="entry-field"><span>报告类型</span><select name="type" ${locked ? 'disabled' : ''}>${Object.values(reportTypes).map((type) => `<option value="${esc(type)}" ${values.type === type ? 'selected' : ''}>${esc(type)}</option>`).join('')}</select></label>`;
+        if (kind === 'report' && key === 'department') {
+          const labels = departments.map(([, label]) => label);
+          const selected = values.department || '';
+          return `<label class="entry-field"><span>责任部门</span><select name="department" ${locked ? 'disabled' : ''}><option value="">未指定部门</option>${[...labels, ...(selected && !labels.includes(selected) ? [selected] : [])].map((label) => `<option value="${esc(label)}" ${selected === label ? 'selected' : ''}>${esc(label)}</option>`).join('')}</select></label>`;
+        }
+        if (kind === 'report' && key === 'month')
+          return `<label class="entry-field wide"><span>审计期间 *</span><input name="month" type="month" value="${esc(values.month || '')}" required ${locked ? 'disabled' : ''} data-i18n-ignore><small>月度报告使用所选月份；季度报告覆盖该月份所在季度；年度报告覆盖该月份所在年度。</small></label>`;
         if (['links', 'plan_id'].includes(key))
           return `<label class="entry-field wide"><span>${fields[key]}</span><div data-ws-reference="${key}">正在读取关联名称…</div></label>`;
         const multiline = [
@@ -263,13 +294,16 @@ window.easyerpWorkspace = (() => {
       .join(
         ''
       )}<label class="entry-field"><span>当前状态</span><select name="status" ${locked ? 'disabled' : ''}>${statuses.map((s) => `<option ${status === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select></label><label class="entry-field wide"><span>本次处理说明</span><textarea name="note" rows="2" ${locked ? 'disabled' : ''}></textarea></label></div>${item ? `<details class="workspace-history"><summary>处理历史 · ${item.history.length} 次</summary>${item.history.map((event) => `<div class="file-card"><strong>${esc(event.from || '新建')} → ${esc(event.to)}</strong><time>${dateText(event.at)}</time><p data-i18n-ignore>${esc(event.note || '')}</p><details><summary>当次记录</summary><pre data-i18n-ignore>${esc(JSON.stringify(event.after, null, 2))}</pre></details></div>`).join('')}</details>` : ''}</div><div class="entry-footer"><button type="button" class="button" data-ws-close>关闭</button>${locked ? '' : '<button class="button primary" type="submit" data-ws-save disabled>保存</button>'}</div></form>`;
+    if (kind === 'plan' && (state.department === 'production' || ['production', '生产', '生产部', 'PRD'].includes(values.department)))
+      window.easyerpPlanVisual.mount(dialog);
     if (item?.legacy) {
       const box = document.createElement('details');
       box.className = 'workspace-history';
       box.innerHTML = `<summary>历史来源快照</summary><pre data-i18n-ignore>${esc(JSON.stringify(item.legacy, null, 2))}</pre>`;
       dialog.querySelector('.workspace-body').append(box);
     }
-    dialog.show();
+    if (kind === 'plan') dialog.showModal();
+    else dialog.show();
     positionPanel();
     (
       dialog.querySelector('input:not([type=hidden]):enabled') || dialog.querySelector('button')
@@ -315,7 +349,7 @@ window.easyerpWorkspace = (() => {
     if (planBox) {
       const result = await api('workspace', { kind: 'plan' });
       if (pending !== session) return;
-      planBox.innerHTML = `<select name="plan_id" ${locked ? 'disabled' : ''}><option value="">请选择关联计划</option>${result.rows.map((row) => `<option value="${esc(row.id)}" ${row.id === values.plan_id ? 'selected' : ''} data-i18n-ignore>${esc(title(row.values.title))}</option>`).join('')}</select>`;
+      planBox.innerHTML = `<select name="plan_id" aria-describedby="workspace-plan-source" ${locked ? 'disabled' : ''}><option value="">请选择关联计划</option>${result.rows.map((row) => `<option value="${esc(row.id)}" ${row.id === values.plan_id ? 'selected' : ''} data-i18n-ignore>${esc(title(row.values.title))}</option>`).join('')}</select>${referenceSourceHint('workspace.plan', [], 'workspace-plan-source')}`;
     }
     const box = dialog.querySelector('[data-ws-reference="links"]');
     if (!box) return;
@@ -346,7 +380,7 @@ window.easyerpWorkspace = (() => {
       box.querySelector('[data-ws-linked]').innerHTML = links
         .map(
           (l, i) =>
-            `<li><span data-i18n-ignore>${esc(l.label)}</span>${locked ? '' : ` <button type="button" data-ws-unlink="${i}">移除</button>`}</li>`
+            `<li><span data-i18n-ignore>${esc(l.label)}</span>${referenceSourceHint(l.object || l.raw.slice(0, l.raw.indexOf(':')), objects)}${locked ? '' : ` <button type="button" data-ws-unlink="${i}">移除</button>`}</li>`
         )
         .join('');
     };
@@ -358,6 +392,12 @@ window.easyerpWorkspace = (() => {
       search = box.querySelector('[data-ws-link-search]');
     const load = async () => {
       const token = ++serial;
+      box.querySelector('[data-ws-source]')?.remove();
+      const source = document.createElement('div');
+      source.dataset.wsSource = '';
+      source.innerHTML = referenceSourceHint(object.value, objects, 'workspace-link-source');
+      box.append(source);
+      select.setAttribute('aria-describedby', 'workspace-link-source');
       select.disabled = true;
       try {
         const result = await api('entry/choices', { object: object.value, q: search.value });
@@ -516,6 +556,28 @@ window.easyerpWorkspace = (() => {
 })();
 
 Object.assign(window.ERP_MESSAGES, {
+  '来源位置': ['Source location', 'Quellpfad'],
+  '审计报告': ['Audit reports', 'Prüfberichte'],
+  '月度审计': ['Monthly audit', 'Monatliche Prüfung'],
+  '季度审计': ['Quarterly audit', 'Quartalsprüfung'],
+  '年度审计': ['Annual audit', 'Jahresprüfung'],
+  '审计期间': ['Audit period', 'Prüfzeitraum'],
+  '审计期间 *': ['Audit period *', 'Prüfzeitraum *'],
+  '报告类型': ['Report type', 'Berichtsart'],
+  '未指定部门': ['Department unspecified', 'Abteilung nicht angegeben'],
+  '审计报告清单': ['Audit report list', 'Liste der Prüfberichte'],
+  '尚无审计报告': ['No audit reports yet', 'Noch keine Prüfberichte'],
+  '＋ 新建报告': ['＋ New report', '＋ Neuer Bericht'],
+  '新建审计报告': ['New audit report', 'Neuer Prüfbericht'],
+  '查看与办理审计报告': ['Review audit report', 'Prüfbericht ansehen'],
+  '月度报告使用所选月份；季度报告覆盖该月份所在季度；年度报告覆盖该月份所在年度。': [
+    'Monthly reports use the selected month; quarterly reports cover its quarter; annual reports cover its year.',
+    'Monatsberichte gelten für den gewählten Monat, Quartalsberichte für dessen Quartal und Jahresberichte für dessen Jahr.',
+  ],
+  '按月度、季度或年度记录审计范围、结论和未核事项。选择部门后仅显示该部门的报告；取消部门选择可查看全部报告。': [
+    'Record monthly, quarterly or annual audit scope, conclusions and unresolved matters. Select a department to filter its reports; deselect it to view all reports.',
+    'Prüfumfang, Ergebnisse und offene Punkte monatlich, quartalsweise oder jährlich erfassen. Eine Abteilung wählen, um deren Berichte zu filtern; abwählen, um alle Berichte zu sehen.',
+  ],
   '企业计划': ['Company plans', 'Unternehmenspläne'],
   '工作流': ['Workflows', 'Arbeitsabläufe'],
   '数据中心': ['Data center', 'Datenzentrum'],
