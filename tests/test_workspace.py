@@ -41,7 +41,7 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaises(WorkspaceError):self.save(kind='workflow',values={'title':'执行','plan_id':'not-a-plan'})
         event=self.save(kind='workflow',values={'title':'执行','plan_id':plan['id'],'links':'production.采购订单表:原始ID'})
         self.assertEqual(event['values']['plan_id'],plan['id'])
-        report=self.save(kind='report',values={'title':'十一月审计','month':'2026-11'})
+        report=self.save(kind='report',values={'title':'十一月审计','start':'2026-11-01','due':'2026-11-30'})
         with self.assertRaises(WorkspaceError):self.save(id=report['id'],version=report['version'],status='已发布')
         report=self.save(id=report['id'],version=report['version'],status='已发布',values={'owner':'复核人','scope':'明确范围','conclusion':'仍有未核事项'})
         with self.assertRaises(WorkspaceError):self.save(id=report['id'],version=report['version'],values={'conclusion':'覆盖报告'})

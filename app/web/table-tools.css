@@ -1,13 +1,14 @@
 .table-tools-query {
-  margin: 0 14px 12px;
-  padding: 8px 10px;
-  border: 1px solid var(--border, #dbe3ea);
-  border-radius: 6px;
-  background: var(--surface, #fff);
-  color: var(--text, #17212b);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--ink);
 }
-.table-tools-query summary { cursor: pointer; font-size: 12px; font-weight: 600; }
-.table-tools-query p, .table-tools-batch p { margin: 8px 0; font-size: 12px; }
+.table-tools-query p, .table-tools-batch p { margin: 8px 0; font-size: calc(12px + var(--ui-font-step, 1px)); }
 .table-tools-filter, .table-tools-query-actions, .table-tools-batch-actions {
   display: flex;
   align-items: center;
@@ -15,7 +16,7 @@
   gap: 8px;
   margin-top: 8px;
 }
-.table-tools-query label, .table-tools-batch label { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+.table-tools-query label, .table-tools-batch label { display: flex; gap: 6px; align-items: center; font-size: calc(12px + var(--ui-font-step, 1px)); }
 .table-tools-query select, .table-tools-query input, .table-tools-batch select, .table-tools-batch input, .table-tools-batch textarea {
   max-width: 100%;
   min-width: 0;
@@ -30,7 +31,7 @@
 .table-tools-filter input { flex: 1 1 130px; }
 .table-tools-bulk-bar { display: none; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 14px; }
 .table-edit-panel.is-editing .table-tools-bulk-bar { display: flex; }
-.table-tools-bulk-bar small { flex-basis: 100%; font-size: 11px; }
+.table-tools-bulk-bar small { flex-basis: 100%; font-size: calc(11px + var(--ui-font-step, 1px)); }
 .table-edit-panel .table-tools-select { display: none; width: 38px; min-width: 38px; text-align: center; }
 .table-edit-panel.is-editing .table-tools-select { display: table-cell; }
 .table-tools-select input { width: 16px; height: 16px; accent-color: #0879d9; cursor: pointer; }
@@ -42,7 +43,7 @@
 .table-tools-batch-fields > div label { align-items: stretch; flex-direction: column; }
 .table-tools-batch textarea { width: 100%; resize: vertical; box-sizing: border-box; }
 .table-tools-batch-actions { justify-content: flex-end; }
-[data-tool-batch-error]:not([hidden]) { padding: 8px; margin-bottom: 10px; border: 1px solid #c85045; color: #a62c25; font-size: 12px; }
+[data-tool-batch-error]:not([hidden]) { padding: 8px; margin-bottom: 10px; border: 1px solid #c85045; color: #a62c25; font-size: calc(12px + var(--ui-font-step, 1px)); }
 :root[data-theme='dark'] .table-tools-query, :root[data-theme='dark'] .table-tools-batch { background: #192128; color: #e5eaf0; border-color: #455667; }
 :root[data-theme='dark'] .table-tools-query select, :root[data-theme='dark'] .table-tools-query input, :root[data-theme='dark'] .table-tools-batch select, :root[data-theme='dark'] .table-tools-batch input, :root[data-theme='dark'] .table-tools-batch textarea { background: #151c23; border-color: #455667; color: #e5eaf0; }
 :root[data-theme='dark'] [data-tool-batch-error]:not([hidden]) { color: #ffa59c; }
@@ -53,4 +54,91 @@
   .table-tools-query-actions > label select { flex: 1; width: 0; }
   .table-tools-batch-fields > label { flex: 1 1 100%; min-width: 0; }
   .table-tools-batch-fields > label select { flex: 1; width: 0; }
+}
+
+.table-query-tools { flex: 0 0 auto; min-width: 0; }
+.table-query-tools:empty { display: none; }
+.table-tools-query-summary { display: block; overflow-wrap: anywhere; color: var(--muted); font-size: calc(12px + var(--ui-font-step, 1px)); --ui-en-size: 12px; }
+:root[data-theme] .table-query-tools .table-tools-query { margin: 0; padding: 0; border: 0; background: transparent; color: var(--ink); }
+:root[data-theme] .table-tools-query :is(input,select) { background: var(--paper); border-color: var(--line); color: var(--ink); }
+
+:root[data-theme] #main .query-toolbar {
+  column-gap: 8px;
+}
+:root[data-theme] #main .query-toolbar .date-filter {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+}
+:root[data-theme] #main .date-range-trigger {
+  padding-inline: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+:root[data-theme] #main .query-toolbar .search-tools {
+  flex: 1 1 130px;
+  min-width: 100px;
+}
+:root[data-theme] #main .query-toolbar .search {
+  flex-basis: auto;
+  width: auto;
+  margin-left: 0;
+}
+:root[data-theme] #main .query-toolbar .heading-actions {
+  flex-wrap: wrap;
+  margin-left: 0;
+}
+.query-popover {
+  position: fixed;
+  inset: auto;
+  box-sizing: border-box;
+  width: 620px;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100dvh - 16px);
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.query-popover::backdrop { background: transparent; backdrop-filter: none; }
+.query-popover-heading, .query-popover-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.query-popover-heading { margin-bottom: 12px; }
+.query-popover-actions { justify-content: flex-end; margin-top: 16px; }
+.date-range-popover { width: 390px; }
+.date-range-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.date-range-fields label { display: grid; min-width: 0; gap: 8px; }
+:root[data-theme] #main .date-range-fields input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+.table-tools-query .query-popover-heading { width: 100%; }
+.table-tools-query .query-popover { font-size: calc(12px + var(--ui-font-step, 1px)); }
+.table-tools-query [data-tool-query-toggle].active { border-color: var(--accent); color: var(--accent-text); }
+@media (max-width: 600px) {
+  :root[data-theme] #main .query-toolbar .table-tools-query { margin: 0; padding: 0; }
+  .query-popover { padding: 12px; }
+  .table-tools-query-actions .button { flex: 1 1 auto; }
 }

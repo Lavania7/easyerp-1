@@ -81,13 +81,13 @@
           }
         : {};
     const url = '/api/import/' + path + '?' + new URLSearchParams({ mode, ...query });
-    let response = await fetch(url, options);
+    let response = await window.easyerpFetch(url, options);
     if (response.status === 403 && options.method) {
-      const refreshed = await fetch('/api/import/meta?' + new URLSearchParams({ mode }));
+      const refreshed = await window.easyerpFetch('/api/import/meta?' + new URLSearchParams({ mode }));
       if (refreshed.ok) {
         meta = await refreshed.json();
         options.headers['X-EasyERP-Token'] = meta.token;
-        response = await fetch(url, options);
+        response = await window.easyerpFetch(url, options);
       }
     }
     let body;

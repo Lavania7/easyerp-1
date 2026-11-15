@@ -338,7 +338,7 @@
   border-radius: 6px;
   background: var(--paper);
   color: var(--accent);
-  font-size: 11px;
+  font-size: calc(11px + var(--ui-font-step, 1px));
   line-height: 1.2;
   font-weight: 600;
   white-space: nowrap;
@@ -358,7 +358,7 @@
   vertical-align: middle;
 }
 :root[data-theme] #main .table-edit-panel:not(.is-editing) .table-edit-column {
-  visibility: hidden;
+  visibility: visible;
   pointer-events: none;
 }
 :root[data-theme] #main .table-edit-panel .table-row-edit {
@@ -376,6 +376,145 @@
   vertical-align: middle;
 }
 :root[data-theme] #main .table-edit-panel:not(.is-editing) .table-tools-select {
-  visibility: hidden;
+  visibility: visible;
   pointer-events: none;
+}
+:root[data-theme] #main .table-edit-panel:not(.is-editing) :is(.table-edit-column,.table-tools-select) > * {
+  visibility: hidden;
+}
+
+:root[data-theme] #main .table-edit-panel:not(.is-editing) th:is(.table-edit-column,.table-tools-select) {
+  visibility: visible;
+  color: transparent;
+  background: var(--light);
+}
+:root[data-theme] #main .table-edit-panel:not(.is-editing) th:is(.table-edit-column,.table-tools-select) > * {
+  visibility: hidden;
+}
+
+:root[data-theme] #main .table-wrap:has(.table-edit-form,.record-inline-panel) {
+  container-type: inline-size;
+}
+:root[data-theme] #main :is(.table-row-editor,.table-record-details) > td {
+  padding: 0;
+  background: var(--accent-soft);
+}
+:root[data-theme] #main :is(.table-edit-form,.record-inline-panel) {
+  position: sticky;
+  left: 13px;
+  width: calc(100vw - 310px);
+  max-width: none;
+  margin: 13px;
+  padding: 21px;
+  border: 1px solid var(--accent-line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+}
+@supports (width: 1cqi) {
+  :root[data-theme] #main :is(.table-edit-form,.record-inline-panel) {
+    width: calc(100cqi - 26px);
+  }
+}
+:root[data-theme] #main .table-edit-heading {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) max-content;
+  align-items: center;
+  gap: 8px 13px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+:root[data-theme] #main .table-edit-heading strong {
+  font-size: calc(15px + var(--ui-font-step,1px));
+  --ui-en-size: 15px;
+}
+:root[data-theme] #main .table-edit-heading > span:first-of-type {
+  justify-self: end;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+:root[data-theme] #main .table-edit-heading > span:last-of-type {
+  grid-column: 1/-1;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+:root[data-theme] #main .table-edit-form .table-edit-note {
+  max-width: 65ch;
+  margin: 13px 0 21px;
+}
+:root[data-theme] #main .table-edit-form .table-edit-fields {
+  grid-template-columns: minmax(0,1.618fr) minmax(0,1fr);
+  gap: 21px;
+  align-items: start;
+}
+:root[data-theme] #main .table-edit-field {
+  gap: 8px;
+}
+:root[data-theme] #main .table-edit-field > span {
+  color: var(--muted);
+}
+:root[data-theme] #main .table-edit-field :is(input,select,textarea) {
+  padding: 8px 13px;
+  border-color: var(--line);
+  border-radius: 5px;
+  background: var(--bg);
+}
+:root[data-theme] #main .table-edit-field textarea {
+  min-height: 89px;
+}
+:root[data-theme] #main .table-edit-field :is(input,select,textarea):disabled {
+  background: var(--light);
+  color: var(--muted);
+}
+:root[data-theme] #main .table-edit-field.invalid :is(input,select,textarea) {
+  border-color: #c65353;
+}
+:root[data-theme] #main .table-edit-ref {
+  display: grid;
+  grid-template-columns: minmax(0,.618fr) minmax(0,1fr);
+  gap: 8px;
+}
+:root[data-theme] #main .table-edit-field .reference-source {
+  margin: 0;
+}
+:root[data-theme] #main .table-edit-actions {
+  gap: 8px;
+  margin-top: 21px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+:root[data-theme] #main .table-edit-form .table-edit-actions .button {
+  min-width: 89px;
+}
+@container (max-width: 680px) {
+  :root[data-theme] #main .table-edit-form .table-edit-fields {
+    grid-template-columns: minmax(0,1fr);
+    gap: 13px;
+  }
+}
+@container (max-width: 420px) {
+  :root[data-theme] #main :is(.table-edit-form,.record-inline-panel) {
+    padding: 13px;
+  }
+  :root[data-theme] #main .table-edit-heading {
+    grid-template-columns: minmax(0,1fr);
+  }
+  :root[data-theme] #main .table-edit-heading > span:first-of-type {
+    justify-self: start;
+  }
+  :root[data-theme] #main .table-edit-ref {
+    grid-template-columns: minmax(0,1fr);
+  }
+}
+@media (max-width:700px) {
+  @supports not (width: 1cqi) {
+    :root[data-theme] #main :is(.table-edit-form,.record-inline-panel) {
+      width: calc(100vw - 56px);
+      padding: 13px;
+    }
+  }
 }

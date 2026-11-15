@@ -142,7 +142,7 @@
     shell();
     if (!dialog.open) dialog.showModal();
     try {
-      const response = await fetch('/api/templates/meta?' + new URLSearchParams({ mode }));
+      const response = await window.easyerpFetch('/api/templates/meta?' + new URLSearchParams({ mode }));
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || '暂时无法读取主录表字段。');
       if (request !== job || !dialog.open) return;
@@ -167,7 +167,7 @@
     button.textContent = '正在准备…';
     notice('');
     try {
-      const response = await fetch(
+      const response = await window.easyerpFetch(
         '/api/templates/download?' + new URLSearchParams({ mode, object: obj.key })
       );
       if (!response.ok) {

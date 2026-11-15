@@ -16,7 +16,7 @@ import time
 import uuid
 
 from data import ROOT, InvalidRequest
-from easyerp import ERP, SCHEMAS, ident, literal
+from easyerp import ERP, SCHEMAS, DATABASE_CONTEXT, ident, literal
 
 LOCK = threading.RLock()
 PICKER_LOCK = threading.Lock()
@@ -187,9 +187,77 @@ class DatabaseManager:
                                  backup_sha256=record["backup_sha256"], source_retained=True)
         known = {node["id"] for node in nodes}
         nodes += [node for node in self.read()["nodes"] if node["id"] not in known]
-        return {"nodes": nodes, "creation": "empty-schema", "activation_available": False,
+        for node in nodes:
+            node["switchable"] = node.get("kind") in ("live", "demo", "retained-source") or (
+                node.get("kind") == "database" and node.get("status") == "ready")
+        return {"nodes": nodes, "creation": "empty-schema", "activation_available": True,
                 "migration": "cutover" if record else "preview-only",
                 "source_retained": bool(source)}
+
+    def connection(self, node_id):
+        if node_id in ("active-live", "active-demo"):
+            mode = node_id.removeprefix("active-")
+            erp = self.erp_factory(mode=mode)
+            config = {key: value for key, value in erp.c.items() if key != "database_sources"}
+            config.update(runtime_root=str(erp.root), data_directory=str(erp.data),
+                          private_directory=str(erp.private), workspace_directory=str(erp.workspace_root(mode)))
+            config["database_sources"] = {mode: {"database": erp.c["database"]}}
+            return {"id": node_id, "mode": mode, "config": config,
+                    "label": "当前正式数据库" if mode == "live" else "项目演示数据库"}
+        record = self.migration_record()
+        if record and node_id == self.retained_source(record)["id"]:
+            original = record["source_config"]
+            config = {**original, **original.get("database_sources", {}).get("live", {})}
+            config.pop("database_sources", None)
+            config.setdefault("runtime_root", str(self.root))
+            return {"id": node_id, "mode": "live", "config": config, "label": "保留的旧正式库"}
+        node = next((item for item in self.read()["nodes"] if item["id"] == node_id), None)
+        if not node or node.get("kind") != "database" or node.get("status") != "ready":
+            raise DatabaseError("该版本不能切换，请选择已就绪的数据库。", 409)
+        target = Path(node["directory"])
+        instance = json.loads((target / "instance.json").read_text(encoding="utf-8"))
+        config = instance["config"]
+        if (instance.get("id") != node_id or config.get("database") != node["database"]
+                or config.get("port") != node["port"]
+                or Path(config.get("data_directory", "")).resolve() != (target / "pgdata").resolve()
+                or Path(config.get("runtime_root", "")).resolve() != target.resolve()
+                or Path(config.get("private_directory", "")).resolve() != (target / ".secrets").resolve()
+                or Path(config.get("workspace_directory", "")).resolve() != (target / "workspace").resolve()):
+            raise DatabaseError("数据库实例与注册信息不一致，请检查本机配置。", 409)
+        return {"id": node_id, "mode": "live", "config": config, "label": node["label"]}
+
+    @contextmanager
+    def request_scope(self, node_id, mode):
+        connection = self.connection(node_id)
+        if connection["mode"] != mode:
+            raise DatabaseError("数据库与数据来源不一致，请刷新后重试。", 409)
+        token = DATABASE_CONTEXT.set(connection)
+        try:
+            yield
+        finally:
+            DATABASE_CONTEXT.reset(token)
+
+    def activate(self, payload):
+        if (not isinstance(payload, dict) or set(payload) != {"id"}
+                or not isinstance(payload["id"], str)):
+            raise DatabaseError("请选择已登记的数据库。")
+        with self.locked():
+            connection = self.connection(payload["id"])
+            erp = self.erp_factory(mode=connection["mode"], config=connection["config"])
+            if not (erp.data / "PG_VERSION").is_file():
+                raise DatabaseError("数据库集群不存在，无法切换。", 409)
+            erp.start_server()
+            result = json.loads(erp.sql(
+                "BEGIN READ ONLY; SELECT json_build_object('directory',current_setting('data_directory'),"
+                "'database',current_database(),'port',inet_server_port()); COMMIT;",
+                db=erp.c["database"], role="easyerp_admin").stdout)
+            if (Path(result["directory"]).resolve() != erp.data.resolve()
+                    or result["database"] != erp.c["database"] or result["port"] != erp.c["port"]):
+                raise DatabaseError("实际连接与所选数据库不一致，已取消切换。", 409)
+            erp.sql("BEGIN READ ONLY; SELECT 1 FROM finance.\"人员档案表\" LIMIT 0; COMMIT;",
+                    db=erp.c["database"], role="easyerp_read")
+            return {"id": connection["id"], "label": connection["label"], "mode": connection["mode"],
+                    "reload": True}
 
     def select_folder(self, payload):
         if payload != {}:

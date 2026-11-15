@@ -38,7 +38,7 @@ body:has(#manual-entry[open]) {
   justify-content: space-between;
 }
 .entry-head h2 {
-  font-size: 23px;
+  font-size: calc(23px + var(--ui-font-step, 1px));
   --ui-en-size: 23px;
   margin: 10px 0;
   color: var(--accent);
@@ -47,7 +47,7 @@ body:has(#manual-entry[open]) {
 .entry-head p {
   margin: 0;
   color: #7e7e7e;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   line-height: 1.7;
   --ui-leading: 1.7;
@@ -60,7 +60,7 @@ body:has(#manual-entry[open]) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   letter-spacing: 0.5px;
   border-radius: 4px;
@@ -87,7 +87,7 @@ body:has(#manual-entry[open]) {
   padding: 9px 12px;
   background: #ffffff;
   color: #7d7d7d;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
 }
 .entry-tabs button.active {
@@ -108,7 +108,7 @@ body:has(#manual-entry[open]) {
   border: 1px solid #e1e1e1;
   border-radius: 7px;
   padding: 11px 13px;
-  font-size: calc(13px + var(--body-font-increase));
+  font-size: calc(calc(13px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(13px + 0px);
   background: #ffffff;
 }
@@ -136,13 +136,13 @@ body:has(#manual-entry[open]) {
 }
 .entry-card strong {
   display: block;
-  font-size: calc(14px + var(--body-font-increase));
+  font-size: calc(calc(14px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(14px + 0px);
   font-weight: 550;
   margin: 0 0 10px;
 }
 .entry-card small {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #9b9b9b;
   line-height: 1.8;
@@ -154,7 +154,7 @@ body:has(#manual-entry[open]) {
   color: #a0a0a0;
 }
 .entry-list-note {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #929292;
   line-height: 1.8;
@@ -172,7 +172,7 @@ body:has(#manual-entry[open]) {
   padding: 22px;
 }
 .entry-section h3 {
-  font-size: 14px;
+  font-size: calc(14px + var(--ui-font-step, 1px));
   --ui-en-size: 14px;
   color: #4c4c4c;
   margin: 0 0 17px;
@@ -182,7 +182,7 @@ body:has(#manual-entry[open]) {
   gap: 12px;
 }
 .entry-section .entry-row-remove {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #727272;
   background: none;
@@ -204,7 +204,7 @@ body:has(#manual-entry[open]) {
 }
 .entry-field .entry-label {
   display: block;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   color: #616161;
   margin-bottom: 8px;
@@ -224,7 +224,7 @@ body:has(#manual-entry[open]) {
   background: #ffffff;
   padding: 10px 11px;
   font: inherit;
-  font-size: calc(13px + var(--body-font-increase));
+  font-size: calc(calc(13px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(13px + 0px);
   color: #434343;
   min-height: 40px;
@@ -233,7 +233,7 @@ body:has(#manual-entry[open]) {
 .entry-field input[type='date'],
 .entry-field input[type='datetime-local'] {
   font-family: inherit;
-  font-size: calc(13px + var(--body-font-increase));
+  font-size: calc(calc(13px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(13px + 0px);
 }
 .entry-field input:focus,
@@ -255,7 +255,7 @@ body:has(#manual-entry[open]) {
 }
 .entry-field small {
   display: block;
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   line-height: 1.6;
   --ui-leading: 1.6;
@@ -281,20 +281,20 @@ body:has(#manual-entry[open]) {
   grid-column: 1/-1;
   min-height: 33px;
   padding: 7px 10px;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   background: #fbfbfb;
 }
 .entry-ref select {
   min-width: 0;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
 }
 .entry-ref button {
   border: 1px solid #e1e1e1;
   background: #f6f6f6;
   border-radius: 5px;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #676767;
   padding: 8px;
@@ -305,7 +305,7 @@ body:has(#manual-entry[open]) {
   padding-top: 16px;
 }
 .entry-more summary {
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   color: #8c8c8c;
   cursor: pointer;
@@ -315,7 +315,7 @@ body:has(#manual-entry[open]) {
 }
 .entry-rules {
   margin-top: 18px;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #7b7b7b;
   background: #f6f6f6;
@@ -339,7 +339,7 @@ body:has(#manual-entry[open]) {
   border-radius: 7px;
   color: #666666;
   padding: 13px 16px;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   line-height: 1.8;
   --ui-leading: 1.8;
@@ -355,7 +355,7 @@ body:has(#manual-entry[open]) {
   background: #f6f6f6;
   border-radius: 7px;
   padding: 12px 16px;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   width: 100%;
   margin-bottom: 22px;
@@ -373,7 +373,7 @@ body:has(#manual-entry[open]) {
   padding: 19px 0 8px;
 }
 .entry-footer p {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #939393;
   margin: 0;
@@ -387,7 +387,7 @@ body:has(#manual-entry[open]) {
   flex-shrink: 0;
 }
 .entry-footer .button {
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   padding: 11px 18px;
 }
@@ -397,7 +397,7 @@ body:has(#manual-entry[open]) {
 }
 .entry-drawer-edit {
   margin: 14px 0 0;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
 }
 .entry-success {
@@ -413,17 +413,17 @@ body:has(#manual-entry[open]) {
   border-radius: 50%;
   background: #e8e8e8;
   color: #666666;
-  font-size: 27px;
+  font-size: calc(27px + var(--ui-font-step, 1px));
   --ui-en-size: 27px;
 }
 .entry-success h3 {
-  font-size: 22px;
+  font-size: calc(22px + var(--ui-font-step, 1px));
   --ui-en-size: 22px;
   color: #4b4b4b;
   margin-bottom: 13px;
 }
 .entry-success p {
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   line-height: 1.9;
   --ui-leading: 1.9;
@@ -431,7 +431,7 @@ body:has(#manual-entry[open]) {
   color: #8d8d8d;
 }
 .entry-success .entry-saved-id {
-  font-size: calc(12px + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + var(--small-font-increase));
   word-break: break-all;
   color: #636363;
@@ -447,7 +447,7 @@ body:has(#manual-entry[open]) {
   padding: 65px 20px;
   text-align: center;
   color: #8d8d8d;
-  font-size: calc(13px + var(--body-font-increase));
+  font-size: calc(calc(13px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(13px + 0px);
 }
 @media (max-width: 700px) {
@@ -460,11 +460,11 @@ body:has(#manual-entry[open]) {
     padding: 19px 17px 16px;
   }
   .entry-head h2 {
-    font-size: 20px;
+    font-size: calc(20px + var(--ui-font-step, 1px));
     --ui-en-size: 20px;
   }
   .entry-head p {
-    font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+    font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
     --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   }
   .entry-content {
@@ -478,7 +478,7 @@ body:has(#manual-entry[open]) {
     min-height: 105px;
   }
   .entry-card strong {
-    font-size: calc(13px + var(--body-font-increase));
+    font-size: calc(calc(13px + var(--body-font-increase)) + var(--ui-font-step, 1px));
     --ui-en-size: calc(13px + 0px);
   }
   .entry-grid {
@@ -500,7 +500,7 @@ body:has(#manual-entry[open]) {
     gap: 6px;
   }
   .entry-tabs button {
-    font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+    font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
     --ui-en-size: calc(11px + 0px + var(--small-font-increase));
     padding: 8px 10px;
   }

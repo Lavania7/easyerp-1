@@ -25,10 +25,13 @@ const icon = (k) =>
 
 const navs = [
   ['overview', '仪表盘'],
-  ['plans', '计划'],
+  ['mapping', '矩阵关系图'],
+  ['calculations', '量化计算'],
+  ['plans', '历史计划'],
   ['workflow', '工作流'],
-  ['data', '数据库'],
-  ['archive', '归档'],
+  ['data', '活动数据'],
+  ['archive', '静态数据'],
+  ['delivery', '部门交付'],
   ['audit', '审计'],
   ['tasks', '工作流'],
   ['sales', '销售'],
@@ -90,7 +93,7 @@ const departmentForRoute = {
   legal: 'legal',
   analysis: 'analysis',
 };
-const workspacePages = ['plans', 'workflow', 'data', 'archive'];
+const workspacePages = ['calculations', 'workflow', 'data', 'archive', 'delivery'];
 function activeWorkspacePage() {
   return departmentForRoute[route] ? 'data' : route;
 }
@@ -103,13 +106,14 @@ function readWorkspaceSelection() {
     .departments.some(([key]) => key === (requested ?? inferred))
     ? (requested ?? inferred)
     : '';
+  if (route === 'calculations') state.department = '';
   state.dashboard = query.get('dashboard') === '1' || route === 'overview';
   if (route === 'overview') route = 'blank';
 }
 function renderWorkspaceSelection() {
   const selected = activeWorkspacePage();
   const item = (key, label, extra = '') =>
-    `<button type="button" class="nav-option ${key === selected ? 'active' : ''} ${extra}" data-workspace-page="${key}" aria-pressed="${key === selected}">${icon({ plans: 'production', workflow: 'tasks', data: 'overview', archive: 'inventory', audit: 'legal' }[key] || key)}<span>${label}</span></button>`;
+    `<button type="button" class="nav-option ${key === selected ? 'active' : ''} ${extra}" data-workspace-page="${key}" aria-pressed="${key === selected}">${icon({ calculations: 'analysis', plans: 'production', workflow: 'tasks', data: 'overview', archive: 'inventory', audit: 'legal' }[key] || key)}<span>${label}</span></button>`;
   $('#nav').innerHTML =
     `<button type="button" class="nav-option nav-dashboard ${state.dashboard ? 'active' : ''}" data-dashboard-toggle aria-pressed="${state.dashboard}">${icon('overview')}<span>仪表盘</span></button><div class="sidebar-modules" role="group" aria-label="选择审阅内容">${navs
       .filter(([key]) => workspacePages.includes(key))
@@ -132,7 +136,9 @@ document.addEventListener('click', (event) => {
   );
   if (!button) return;
   if (button.hasAttribute('data-dashboard-toggle')) {
-    move(route, exploreObject, { dashboard: !state.dashboard });
+    if (state.dashboard) move('mapping');
+    else if (route === 'mapping') move('blank');
+    else move(route, exploreObject, { dashboard: true });
     return;
   }
   state.scope = '';
@@ -146,7 +152,8 @@ document.addEventListener('click', (event) => {
     return;
   }
   move(
-    activeWorkspacePage() === button.dataset.workspacePage ? 'blank' : button.dataset.workspacePage
+    activeWorkspacePage() === button.dataset.workspacePage ? 'blank' : button.dataset.workspacePage, '',
+    button.dataset.workspacePage === 'mapping' ? { dashboard: false } : {}
   );
 });
 
@@ -254,10 +261,10 @@ function refFor(key, object) {
 function referenceDestination(object) {
   const definition = meta?.objects.find((o) => o.schema + '.' + o.name === object);
   if (!definition) return null;
-  const page = ['archive', 'audit', 'workflow', 'plans'].includes(definition.area)
+  const page = ['archive', 'audit', 'workflow', 'plans', 'delivery'].includes(definition.area)
     ? definition.area
     : 'data';
-  const hash = navigationHash(page, object, page === 'audit' ? 'records' : '', definition.schema);
+  const hash = navigationHash(page, object, '', definition.schema);
   return hash + '&reference=1';
 }
 
@@ -313,6 +320,7 @@ const hiddenIdentityField = (key) => /^(sha[-_]?256|long_id|longid|长ID|长编�
 function table(rows, columns = null, options = {}) {
   const origin = options.editObject && editOrigin(options.editObject),
     key = origin && origin.schema + '.' + origin.name;
+  const hiddenColumns = new Set(options.hiddenColumns || []);
   rows = rows || [];
   const object = meta?.objects.find(
     (o) => o.schema + '.' + o.name === (options.object || options.editObject)
@@ -331,7 +339,7 @@ function table(rows, columns = null, options = {}) {
     fields
       .filter((k) => !k.startsWith('_') && !hiddenIdentityField(k))
       .map((k) => [k, k])
-  ).filter((c) => !hiddenIdentityField(c[0]));
+  ).filter((c) => !hiddenIdentityField(c[0]) && !hiddenColumns.has(c[0]));
   if (!cols.length)
     return empty(options.emptyTitle || 'N/A', options.emptySub || '当前查询范围内没有记录。');
   const editable = !!(origin || options.editRecord);
@@ -350,51 +358,6 @@ function table(rows, columns = null, options = {}) {
     .join('')}</tbody></table></div>`;
 }
 
-let tableDrag = null;
-let tableDragClick = null;
-document.addEventListener('pointerdown', (event) => {
-  const wrap = event.target.closest('[data-table-scroll]');
-  if (!wrap || event.pointerType !== 'mouse' || event.button !== 0 ||
-      wrap.scrollWidth <= wrap.clientWidth ||
-      event.target.closest('button,a,input,select,textarea,label,[contenteditable]')) return;
-  tableDrag = { wrap, id: event.pointerId, x: event.clientX, y: event.clientY,
-    left: wrap.scrollLeft, active: false };
-});
-document.addEventListener('pointermove', (event) => {
-  const drag = tableDrag;
-  if (!drag || drag.id !== event.pointerId) return;
-  const dx = event.clientX - drag.x;
-  if (!drag.active) {
-    if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(event.clientY - drag.y)) return;
-    drag.active = true;
-    drag.wrap.setPointerCapture(event.pointerId);
-    drag.wrap.classList.add('is-table-dragging');
-    window.getSelection()?.removeAllRanges();
-  }
-  event.preventDefault();
-  drag.wrap.scrollLeft = drag.left - dx;
-});
-const endTableDrag = (event) => {
-  const drag = tableDrag;
-  if (!drag || drag.id !== event.pointerId) return;
-  if (drag.active) {
-    tableDragClick = { wrap: drag.wrap, until: performance.now() + 300 };
-    drag.wrap.classList.remove('is-table-dragging');
-    if (drag.wrap.hasPointerCapture(event.pointerId)) drag.wrap.releasePointerCapture(event.pointerId);
-  }
-  tableDrag = null;
-};
-document.addEventListener('pointerup', endTableDrag);
-document.addEventListener('pointercancel', endTableDrag);
-document.addEventListener('click', (event) => {
-  const drag = tableDragClick;
-  tableDragClick = null;
-  if (drag && performance.now() < drag.until && drag.wrap.contains(event.target)) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
-}, true);
-
 function params(extra = {}) {
   return new URLSearchParams({
     ...state,
@@ -405,7 +368,7 @@ function params(extra = {}) {
 }
 
 async function api(path, extra = {}) {
-  const r = await fetch('/api/' + path + '?' + params(window.easyerpTableTools?.augmentParams(path, extra) || extra));
+  const r = await window.easyerpFetch('/api/' + path + '?' + params(window.easyerpTableTools?.augmentParams(path, extra) || extra));
   let body;
   try {
     body = await r.json();
@@ -432,7 +395,7 @@ const DATE_PRESETS = {
   q4: ['10-01', '12-31'],
 };
 function datePresetYear() {
-  const date = [$('#start').value, $('#end').value, today].find(
+  const date = [state.start, state.end, today].find(
     (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) && Number(value.slice(0, 4)) > 0
   );
   return date.slice(0, 4);
@@ -445,7 +408,7 @@ function syncDatePresets() {
   document.querySelectorAll('[data-date-preset]').forEach((button) => {
     const range = DATE_PRESETS[button.dataset.datePreset];
     const active =
-      $('#start').value === `${year}-${range[0]}` && $('#end').value === `${year}-${range[1]}`;
+      state.start === `${year}-${range[0]}` && state.end === `${year}-${range[1]}`;
     button.disabled = disabled;
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
@@ -460,16 +423,13 @@ $('#date-presets').addEventListener('click', (event) => {
   const range = DATE_PRESETS[button.dataset.datePreset];
   if (!range) return;
   const year = datePresetYear();
-  $('#start').value = `${year}-${range[0]}`;
-  $('#end').value = `${year}-${range[1]}`;
-  $('#apply').click();
+  applyQuery(`${year}-${range[0]}`, `${year}-${range[1]}`);
 });
-for (const id of ['start', 'end']) $('#' + id).addEventListener('input', syncDatePresets);
 
 function sync() {
   window.easyerpCompany?.syncSource();
   for (const id of ['start', 'end', 'search']) $('#' + id).value = state[id];
-  $('#connection').textContent = state.mode === 'demo' ? '演示数据' : '本机数据库';
+  $('#connection').textContent = window.easyerpDatabaseSource.label;
   syncSourceMenu();
   $('#source-toggle').classList.toggle('demo', state.mode === 'demo');
   $('#source-toggle').title = '选择数据源';
@@ -549,7 +509,7 @@ function move(page, object = '', extra = {}) {
   exploreObject = object;
   state.offset = 0;
   if (!Object.hasOwn(extra, 'dashboard')) state.status = '';
-  const department = extra.department ?? departmentForRoute[page] ?? state.department;
+  const department = page === 'calculations' ? '' : extra.department ?? departmentForRoute[page] ?? state.department;
   const query = new URLSearchParams({ department });
   if (object) query.set('object', object);
   if (state.scope) query.set('scope', state.scope);
@@ -564,7 +524,7 @@ function move(page, object = '', extra = {}) {
 }
 
 function navigationHash(page, object = '', view = '', department = state.department) {
-  const query = new URLSearchParams({ department: departmentForRoute[page] || department });
+  const query = new URLSearchParams({ department: page === 'calculations' ? '' : departmentForRoute[page] || department });
   if (object) query.set('object', object);
   if (view && view !== 'items') query.set('view', view);
   return '#/' + page + '?' + query;
@@ -572,9 +532,10 @@ function navigationHash(page, object = '', view = '', department = state.departm
 function navigationTree() {
   const menu = window.easyerpWorkspace.navigation();
   const children = navs
-    .filter(([key]) => [...workspacePages, 'audit'].includes(key))
+    .filter(([key]) => [...workspacePages, 'plans', 'audit'].includes(key))
     .map(([page, label]) => {
       const node = { key: page, page, label, department: page === 'audit' ? '' : state.department, href: navigationHash(page, '', '', page === 'audit' ? '' : state.department), children: [] };
+      if (page === 'calculations') { node.department = ''; node.href = navigationHash(page, '', '', ''); return node; }
       node.children = menu.departments.map(([department, name]) => {
         const child = {
           key: page + ':' + department,
@@ -596,11 +557,6 @@ function navigationTree() {
           }));
         return child;
       });
-      if (page === 'audit')
-        node.children.unshift(...menu.tabs.audit.filter(([view]) => view !== 'records').map(([view, label]) => ({
-          key: page + ':' + view, page, department: '', view, label,
-          href: navigationHash(page, '', view, ''), children: [],
-        })));
       return node;
     });
   return {
@@ -623,14 +579,14 @@ function navigationPath(tree, key, parents = []) {
 function referenceSourceHint(key, objects = meta?.objects || [], id = '') {
   const tree = navigationTree();
   let path;
-  if (key === 'workspace.plan') path = navigationPath(tree, 'plans')?.slice(1);
+  if (key === 'workspace.plan') path = [{ label: '历史来源' }, { label: '历史计划' }];
   else {
     const obj = objects.find((o) => (o.key || o.schema + '.' + o.name) === key);
     if (!obj) return '';
     const parent = objects.find((o) => o.children?.object === key);
     const owner = parent || obj;
-    const area = ['archive', 'audit', 'workflow', 'plans'].includes(owner.area) ? owner.area : 'data';
-    path = navigationPath(tree, area + ':' + owner.schema + (area === 'audit' ? ':records' : ''))?.slice(1) || [];
+    const area = ['archive', 'audit', 'workflow', 'plans', 'delivery'].includes(owner.area) ? owner.area : 'data';
+    path = navigationPath(tree, area + ':' + owner.schema + '')?.slice(1) || [];
     path.push({ label: owner.label || owner.name });
     if (parent) path.push({ label: obj.label || obj.name });
   }
@@ -640,19 +596,20 @@ function referenceSourceHint(key, objects = meta?.objects || [], id = '') {
 function currentNavigationPath() {
   const tree = navigationTree(),
     menu = window.easyerpWorkspace.navigation();
+  if (route === 'mapping' && !state.dashboard) return [tree, { key: 'mapping', label: '矩阵关系图', page: 'mapping' }];
   if (state.dashboard) return [tree, { key: 'overview', label: '仪表盘', page: 'overview' }];
   if (route === 'blank') return [tree];
+  if (route === 'calculations') return navigationPath(tree, 'calculations') || [tree];
   const query = new URLSearchParams(location.hash.split('?')[1] || '');
   const target = query.has('reference') && meta?.objects.find((o) => o.schema + '.' + o.name === query.get('object'));
   if (target) {
-    const path = navigationPath(tree, activeWorkspacePage() + ':' + target.schema + (route === 'audit' ? ':records' : '')) || [tree];
+    const path = navigationPath(tree, activeWorkspacePage() + ':' + target.schema + '') || [tree];
     return [...path, { label: target.label || target.name, page: route, object: query.get('object') }];
   }
-  let view = menu.tabs[route]
+  let view = menu.tabs[route]?.length
     ? new URLSearchParams(location.hash.split('?')[1] || '').get('view') || 'items'
     : '';
-  if (menu.tabs[route] && !menu.tabs[route].some(([key]) => key === view)) view = 'items';
-  if (route === 'audit' && !state.department && view === 'records') view = 'items';
+  if (menu.tabs[route]?.length && !menu.tabs[route].some(([key]) => key === view)) view = 'items';
   if (route === 'workflow')
     view =
       state.department === 'production' && (state.scope === 'pending' || view === 'production')
@@ -997,10 +954,12 @@ async function searchResults() {
 }
 function deptObjects() {
   const schema = departmentForRoute[route] || state.department;
-  const area = route === 'archive' ? 'archive' : route === 'audit' ? 'audit' : 'data';
-  return meta.objects.filter(
+  const area = route === 'archive' ? 'archive' : route === 'audit' ? 'audit' : route === 'delivery' ? 'delivery' : 'data';
+  const objects = meta.objects.filter(
     (o) => o.kind === 'r' && o.standalone && !o.retired && o.schema === schema && o.area === area
   );
+  if (route === 'audit') objects.push({ schema: 'workspace', name: 'report', label: '审计记录', kind: 'r' });
+  return objects;
 }
 
 function objectPreference(key) {
@@ -1033,7 +992,7 @@ function chooseObject(objects) {
   );
 }
 function objectControls(all, current) {
-  return window.easyerpObjectMenu.render(all, current);
+  return window.easyerpObjectMenu.render(all, current, { flat: route === 'delivery' });
 }
 async function explorer() {
   const all = deptObjects();
@@ -1068,6 +1027,7 @@ async function explorer() {
   lastList = { object: exploreObject, date_filter: route === 'archive' ? '0' : '1' };
   const total = d.total[0].count;
   const unifiedColumns = {
+    'production.供应商档案表': ['供应商ID', '名称', '联系方式', '统一社会信用代码', '户名', '账户ID', '开户行'],
     'production.采购订单表': [
       '采购单ID',
       '供应商',
@@ -1094,8 +1054,11 @@ async function explorer() {
   const columns = unifiedColumns[exploreObject]?.map((key) => key === '供应商'
     ? [key, key, undefined, '供应商ID']
     : [key, key]);
+  const supplierItems = exploreObject === 'production.供应商档案表'
+    ? '<button type="button" class="button" data-supplier-items>供应的物品</button>'
+    : '';
   return {
-    html: `<div class="panel table-edit-panel" data-edit-source="${esc(exploreObject)}"><div class="table-toolbar">${controls}<span class="count">${total} 条</span>${editToggle(exploreObject)}</div>${table(d.rows, columns, { object: exploreObject, editObject: exploreObject })}${total ? pagination(total) : ''}</div>`,
+    html: `<div class="panel table-edit-panel" data-edit-source="${esc(exploreObject)}"><div class="table-toolbar">${controls}${supplierItems}<span class="count">${total} 条</span>${editToggle(exploreObject)}</div>${table(d.rows, columns, { object: exploreObject, editObject: exploreObject, hiddenColumns: supplierItems ? ['供应的物品'] : [] })}${total ? pagination(total) : ''}</div>`,
     time: d.queried_at,
   };
 }
@@ -1106,9 +1069,17 @@ async function render() {
   route = location.hash.replace(/^#\//, '').split('?')[0] || 'blank';
   if (!navs.some((x) => x[0] === route) && route !== 'blank') route = 'blank';
   if (route === 'tasks') route = 'workflow';
+  if (route === 'plans' && !new URLSearchParams(location.hash.split('?')[1] || '').has('reference')) {
+    route = 'calculations';
+    history.replaceState(null, '', location.pathname + location.search + '#/calculations');
+  }
+  window.easyerpMappingView?.destroy?.();
+  window.easyerpCalculations?.close(true);
   readWorkspaceSelection();
   renderWorkspaceSelection();
-  const blank = !state.dashboard && (route === 'blank' || (!state.department && route !== 'audit'));
+  const blank = !state.dashboard && route !== 'mapping' && (route === 'blank' || (!state.department && !['audit', 'calculations'].includes(route)));
+  document.body.classList.toggle('calculations-active', route === 'calculations' && !state.dashboard);
+  document.body.classList.toggle('mapping-active', route === 'mapping' && !state.dashboard);
   $('#main').classList.toggle('is-blank', blank);
   $('#title').textContent = state.dashboard
     ? '仪表盘'
@@ -1116,14 +1087,15 @@ async function render() {
   $('#sidebar').classList.remove('open');
   sync();
   if (meta) updateAccess(meta);
-  $('.page-heading').hidden = blank;
-  $('.filters').hidden = blank;
-  $('#demo-notice').hidden = blank || state.mode !== 'demo';
+  $('.page-heading').hidden = blank || (route === 'mapping' && !state.dashboard);
+  $('.filters').hidden = blank || (route === 'mapping' && !state.dashboard);
+  $('#demo-notice').hidden = blank || (route === 'mapping' && !state.dashboard) || state.mode !== 'demo';
   $('#export').disabled = true;
   $('#export').hidden = true;
   $('#import-open').hidden = state.dashboard;
   $('#entry-open').hidden = state.dashboard;
   lastList = null;
+  window.easyerpTableTools?.clearQuery?.();
   $('#search').placeholder = '搜索编号、产品或客户';
   for (const id of ['start', 'end']) {
     $('#' + id).disabled = false;
@@ -1132,6 +1104,10 @@ async function render() {
   $('.date-filter').hidden = false;
   $('#date-presets').hidden = false;
   syncDatePresets();
+  if (route === 'calculations' && !state.dashboard) {
+    $('.date-filter').hidden = true; $('#date-presets').hidden = true;
+    $('#import-open').hidden = true; $('#search').placeholder = window.ERPUI.t('搜索ID或备注');
+  }
   $('#content').innerHTML = blank
     ? blankWorkspace()
     : '<div class="loading">正在读取业务数据…</div>';
@@ -1149,23 +1125,28 @@ async function render() {
       $('#export').disabled = false;
       $('#entry-open').hidden = referenced.retired;
     }
-    const result = referenced
+    const result = route === 'mapping' && !state.dashboard
+      ? await window.easyerpMappingView.render()
+      : referenced
       ? await explorer()
       : state.dashboard
         ? state.search
           ? await searchResults()
           : await overview()
-        : [...workspacePages, 'audit'].includes(route)
+        : route === 'calculations'
+          ? await window.easyerpCalculations.render()
+        : [...workspacePages, 'plans', 'audit'].includes(route)
           ? await window.easyerpWorkspace.render(route)
           : await explorer();
     if (token !== sequence) return;
     $('#content').innerHTML = result.html;
-    $('#connection').textContent = state.mode === 'demo' ? '演示数据' : '本机数据库';
+    $('#connection').textContent = window.easyerpDatabaseSource.label;
     bindFilters();
     window.easyerpTableEdit?.mount();
     window.easyerpTableTools?.mount();
     window.easyerpRowDetails?.mount();
     window.easyerpWorkspace?.mounted();
+    if (route === 'mapping' && !state.dashboard) window.easyerpMappingView?.mounted();
     renderBreadcrumbs();
   } catch (err) {
     if (token !== sequence) return;
@@ -1530,7 +1511,7 @@ function closeDrawer() {
 async function exportData() {
   if (!lastList) return;
   try {
-    const r = await fetch('/api/export?' + params(window.easyerpTableTools?.augmentParams('export', lastList) || lastList));
+    const r = await window.easyerpFetch('/api/export?' + params(window.easyerpTableTools?.augmentParams('export', lastList) || lastList));
     if (!r.ok) {
       const d = await r.json();
       throw new Error(d.error);
@@ -1588,16 +1569,24 @@ document.addEventListener('click', async (e) => {
   } else if (el.hasAttribute('data-retry')) render();
 });
 
-$('#apply').onclick = () => {
-  for (const k of ['start', 'end', 'search']) state[k] = $('#' + k).value;
-  if (!state.start || !state.end) return toast('请选择有效的起止日期');
-  if (state.start > state.end) return toast('请选择有效的起止日期');
+function applyQuery(start = state.start, end = state.end) {
+  if (!start || !end || start > end) return toast('请选择有效的起止日期');
+  state.start = start;
+  state.end = end;
+  state.search = $('#search').value;
   state.offset = 0;
+  dateRangePopover.close();
   render();
+}
+$('#search').onkeydown = (event) => {
+  if (event.key === 'Enter' && !event.isComposing) {
+    event.preventDefault();
+    applyQuery();
+  }
 };
-$('#search').onkeydown = (e) => {
-  if (e.key === 'Enter') $('#apply').click();
-};
+$('#search').addEventListener('input', () => {
+  if (!$('#search').value && state.search) applyQuery();
+});
 $('#refresh').onclick = () => render();
 $('#export').onclick = exportData;
 $('#drawer-backdrop').onclick = closeDrawer;
@@ -1613,31 +1602,11 @@ document.addEventListener('keydown', (e) => {
 $('#menu').onclick = () => $('#sidebar').classList.toggle('open');
 async function changeMode(mode) {
   if (changeMode.busy) return;
-  const previousMode = state.mode,
-    previousMeta = meta;
   changeMode.busy = true;
   $('#source-toggle').disabled = true;
-  closeDrawer();
-  state.mode = mode;
-  state.offset = 0;
-  meta = null;
-  sync();
-  $('#content').innerHTML = '<div class="loading">正在读取业务数据…</div>';
   try {
-    meta = await api('meta');
-    const navigation = { ...history.state };
-    delete navigation.easyerpReference;
-    const currentUrl = new URL(location.href);
-    const query = new URLSearchParams(currentUrl.hash.split('?')[1] || '');
-    query.delete('reference');
-    currentUrl.hash = '#/' + route + '?' + query;
-    history.replaceState(navigation, '', currentUrl);
-    await render();
+    await window.easyerpDatabaseSource.switch('active-' + mode);
   } catch (err) {
-    state.mode = previousMode;
-    meta = previousMeta;
-    sync();
-    await render();
     toast(err.message);
   } finally {
     changeMode.busy = false;
@@ -1691,34 +1660,42 @@ function accessLabel(capabilities) {
 function updateAccess(capabilities) {
   $('#access-level').textContent = accessLabel(capabilities);
 }
-function openQueryDate(input) {
-  if (input.disabled || input.hidden) return;
-  if (typeof input.showPicker === 'function') {
-    try {
-      input.showPicker();
-    } catch {
-      input.focus();
-    }
+const dateRangePopover = window.easyerpQueryPopover.bind(
+  $('#date-range-popover'), $('#date-range-trigger'), () => {
+    for (const id of ['start', 'end']) $('#' + id).value = state[id];
+    validateDateRange();
   }
+);
+function validateDateRange() {
+  const start = $('#start'), end = $('#end');
+  end.setCustomValidity(start.value && end.value && start.value > end.value
+    ? (window.ERPUI?.t('请选择有效的起止日期') || '请选择有效的起止日期') : '');
+  $('#date-range-apply').disabled = !start.value || !end.value || !start.validity.valid || !end.validity.valid;
 }
 for (const id of ['start', 'end']) {
-  const input = $('#' + id),
-    trigger = $('#' + id + '-trigger');
-  trigger.addEventListener('click', () => openQueryDate(input));
-  input.addEventListener('change', syncQueryDates);
+  $('#' + id).addEventListener('input', validateDateRange);
+  $('#' + id).addEventListener('change', validateDateRange);
 }
+$('#date-range-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  validateDateRange();
+  if (!$('#date-range-form').reportValidity()) return;
+  dateRangePopover.close(true);
+  applyQuery($('#start').value, $('#end').value);
+});
+document.querySelectorAll('[data-date-cancel]').forEach(button => {
+  button.addEventListener('click', () => dateRangePopover.close(true));
+});
 function syncQueryDates() {
-  for (const id of ['start', 'end']) {
-    const input = $('#' + id),
-      trigger = $('#' + id + '-trigger');
-    trigger.textContent = input.value ? input.value.replaceAll('-', '/') : 'YYYY/MM/DD';
-    trigger.disabled = input.disabled;
-    trigger.parentElement.hidden = input.hidden;
-  }
+  $('#date-range-text').textContent = `${state.start.replaceAll('-', ':')} -> ${state.end.replaceAll('-', ':')}`;
+  $('#date-range-trigger').disabled = $('#start').disabled || $('#end').disabled;
 }
+document.addEventListener('easyerp:database-label', () => {
+  $('#connection').textContent = window.easyerpDatabaseSource.label;
+});
 function syncSourceMenu() {
   document.querySelectorAll('[data-source-value]').forEach((button) => {
-    const selected = button.dataset.sourceValue === state.mode;
+    const selected = 'active-' + button.dataset.sourceValue === window.easyerpDatabaseSource.id;
     button.setAttribute('aria-checked', String(selected));
     button.tabIndex = selected ? 0 : -1;
   });
@@ -1749,14 +1726,14 @@ function toggleSourceMenu() {
         : Math.min(anchor.bottom + 8, window.innerHeight - height - 8)
     ) + 'px';
   trigger.setAttribute('aria-expanded', 'true');
-  menu.querySelector('[aria-checked="true"]').focus({ preventScroll: true });
+  (menu.querySelector('[aria-checked="true"]') || $('#database-manager-open')).focus({ preventScroll: true });
 }
 $('#source-menu').addEventListener('click', (event) => {
   const button = event.target.closest('[data-source-value]');
   if (!button) return;
   const mode = button.dataset.sourceValue;
   closeSourceMenu(true);
-  if (mode !== state.mode) changeMode(mode);
+  if ('active-' + mode !== window.easyerpDatabaseSource.id) changeMode(mode);
 });
 document.addEventListener('click', (event) => {
   if (!event.target.closest('#source-menu,#source-toggle')) closeSourceMenu();
@@ -1789,3 +1766,9 @@ $('#source-toggle').addEventListener('keydown', (event) => {
 window.addEventListener('resize', () => closeSourceMenu());
 
 window.renderWorkspacePage = render;
+
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('[data-supplier-items]')) return;
+  move('archive', 'production.供应物品明细表', { department: 'production' });
+});

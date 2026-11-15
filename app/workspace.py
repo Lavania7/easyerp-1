@@ -46,7 +46,6 @@ FIELDS = {
     "evidence",
     "links",
     "plan_id",
-    "month",
     "scope",
     "conclusion",
     "unresolved",
@@ -60,18 +59,43 @@ DEPARTMENT_ALIASES = {
     "sales": {"sales", "销售", "销售部", "sal"},
     "analysis": {"analysis", "分析", "分析部", "数据分析", "分析报告", "ana"},
 }
-REPORT_TYPES = {"月度审计": 1, "季度审计": 3, "年度审计": 12}
+def legacy_report_values(values):
+    converted = copy.deepcopy(values)
+    if not converted.get("start") or not converted.get("due"):
+        import calendar
+
+        month = converted.get("month", "")
+        if not re.fullmatch(r"[0-9]{4}-(0[1-9]|1[0-2])", month) or month.startswith("0000"):
+            converted.pop("type", None)
+            converted.pop("month", None)
+            return converted
+        span = {"月度审计": 1, "季度审计": 3, "年度审计": 12}.get(converted.get("type") or "月度审计")
+        if span is None:
+            converted.pop("type", None)
+            converted.pop("month", None)
+            return converted
+        first = (int(month[5:]) - 1) // span * span + 1
+        last = first + span - 1
+        converted["start"] = f"{month[:4]}-{first:02d}-01"
+        converted["due"] = f"{month[:4]}-{last:02d}-{calendar.monthrange(int(month[:4]), last)[1]:02d}"
+    converted.pop("type", None)
+    converted.pop("month", None)
+    return converted
 
 
 def report_period(values):
-    month = values.get("month", "")
-    if not re.fullmatch(r"[0-9]{4}-(0[1-9]|1[0-2])", month) or month.startswith("0000"):
-        raise WorkspaceError("请填写有效的审计期间")
-    span = REPORT_TYPES.get(values.get("type") or "月度审计")
-    if span is None:
-        raise WorkspaceError("请选择月度、季度或年度审计")
-    first = (int(month[5:]) - 1) // span * span + 1
-    return f"{month[:4]}-{first:02d}", f"{month[:4]}-{first + span - 1:02d}"
+    converted = legacy_report_values(values)
+    first, last = converted.get("start", ""), converted.get("due", "")
+    try:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", first) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", last):
+            raise ValueError()
+        date.fromisoformat(first)
+        date.fromisoformat(last)
+        if first > last:
+            raise ValueError()
+    except ValueError:
+        raise WorkspaceError("请填写有效的审计起止日期")
+    return first, last
 
 
 class WorkspaceError(InvalidRequest):
@@ -130,6 +154,11 @@ class Workspace:
     @staticmethod
     def public_item(item):
         value = copy.deepcopy(item)
+        if value.get("kind") == "report":
+            original = value["values"]
+            value["values"] = legacy_report_values(original)
+            if "type" in original or "month" in original:
+                value.setdefault("legacy", {})["retired_report_fields"] = original
         for key in ("long_id", "sha256", "issued_on"):
             value.pop(key, None)
         return value
@@ -189,23 +218,27 @@ class Workspace:
             # Undated plans/tasks remain visible rather than acquiring invented dates.
             day = item["values"].get("start") or item["values"].get("due")
             if kind == "report":
-                first, last = report_period(item["values"])
-                if params.get("start") and last < params["start"][:7]:
+                try:
+                    first, last = report_period(item["values"])
+                except WorkspaceError:
+                    rows.append(item)
                     continue
-                if params.get("end") and first > params["end"][:7]:
+                if params.get("start") and last < params["start"]:
+                    continue
+                if params.get("end") and first > params["end"]:
                     continue
                 rows.append(item)
                 continue
             if (
                 day
                 and params.get("start")
-                and day < (params["start"][:7] if kind == "report" else params["start"])
+                and day < params["start"]
             ):
                 continue
             if (
                 day
                 and params.get("end")
-                and day > (params["end"][:7] if kind == "report" else params["end"])
+                and day > params["end"]
             ):
                 continue
             rows.append(item)
@@ -262,7 +295,10 @@ class Workspace:
                 not isinstance(v, str) or len(v) > 20000 or "\x00" in v for v in incoming.values()
             ):
                 raise WorkspaceError("事项字段必须是有效文本")
-            values = {**(old["values"] if old else {}), **incoming}
+            if kind == "report" and {"type", "month"}.intersection(incoming):
+                raise WorkspaceError("审计使用起止日期，不再接受旧分类或月份字段")
+            base = legacy_report_values(old["values"]) if old and kind == "report" else old["values"] if old else {}
+            values = {**base, **incoming}
             if not values.get("title", "").strip():
                 raise WorkspaceError("请填写标题")
             if len(values["title"]) > 200:
@@ -278,7 +314,7 @@ class Workspace:
             if values.get("start") and values.get("due") and values["start"] > values["due"]:
                 raise WorkspaceError("截止日期不能早于开始日期")
             if kind == "report":
-                values["month"], _ = report_period(values)
+                values["start"], values["due"] = report_period(values)
             if values.get("plan_id"):
                 values["plan_id"] = data.get("id_aliases", {}).get(
                     values["plan_id"], values["plan_id"]
@@ -353,6 +389,10 @@ class Workspace:
                     if k != "short_id"
                 }
             )
+            if old and old.get("legacy"):
+                item["legacy"] = copy.deepcopy(old["legacy"])
+            if old and kind == "report" and {"type", "month"}.intersection(old["values"]):
+                item.setdefault("legacy", {})["retired_report_fields"] = copy.deepcopy(old["values"])
             item.update(identity)
             note = payload.get("note", "")
             if not isinstance(note, str) or len(note) > 20000:

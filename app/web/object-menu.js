@@ -5,7 +5,7 @@ window.easyerpObjectMenu = (() => {
   const families = [
     ['交付', /^交付/], ['BOM', /^BOM/], ['产品', /^产品/], ['物料', /^物料/],
     ['生产', /^(生产|工单)/], ['库存', /^库存/], ['采购', /^采购/],
-    ['仓储', /^(仓库|仓储|库位|保管方)/], ['供应商', /^供应商/],
+    ['仓储', /^(仓库|仓储|库位|保管方)/], ['供应商', /^(供应商|供应物品)/],
     ['销售订单', /^销售订单/], ['销售', /^(销售|合同订单)/],
     ['客户', /^客户/], ['商品', /^(商品|组合商品|订单组合)/],
     ['平台与渠道', /^(平台|渠道|订单导出)/], ['售后', /^售后/],
@@ -21,7 +21,13 @@ window.easyerpObjectMenu = (() => {
     const name = object.label || object.name;
     return families.find(([, pattern]) => pattern.test(object.name))?.[0] || name.replace(/(登记表|记录表|档案表|明细表|对应表|表)$/, '');
   }
-  function render(objects, current) {
+  function pathLabel(object) {
+    const group = groupName(object), label = object.label || object.name;
+    return group === label
+      ? escape(label)
+      : `<span>${escape(group)}</span><span class="object-path-separator" aria-hidden="true"> / </span><span>${escape(label)}</span>`;
+  }
+  function render(objects, current, { flat = false } = {}) {
     const groups = new Map();
     for (const object of objects) {
       const group = groupName(object);
@@ -29,7 +35,14 @@ window.easyerpObjectMenu = (() => {
       groups.get(group).push(object);
     }
     const selected = current.schema + '.' + current.name;
-    return `<div class="object-picker"><button id="object-filter" type="button" class="object-select object-picker-trigger" value="${escape(selected)}" aria-label="选择主录" aria-haspopup="menu" aria-expanded="false" aria-controls="object-picker-menu"><span>${escape(current.label || current.name)}</span><span class="object-chevron" aria-hidden="true">▾</span></button><div id="object-picker-menu" class="object-picker-menu" role="menu" aria-label="业务分类" hidden><div class="object-group-list" role="none">${[...groups].map(([label, members], index) => `<button type="button" role="menuitem" class="object-group ${members.includes(current) ? 'is-current' : ''}" data-object-group="${index}" aria-haspopup="menu" aria-expanded="false" aria-controls="object-submenu-${index}"><span>${escape(label)}</span><span aria-hidden="true">▸</span></button>`).join('')}</div>${[...groups].map(([label, members], index) => `<div id="object-submenu-${index}" class="object-submenu" role="menu" aria-label="${escape(label)}" data-object-submenu="${index}" hidden>${members.map((object) => { const value = object.schema + '.' + object.name; return `<button type="button" role="menuitemradio" aria-checked="${value === selected}" data-object-value="${escape(value)}"><span>${escape(object.label || object.name)}</span><span class="object-menu-check" aria-hidden="true">${value === selected ? '✓' : ''}</span></button>`; }).join('')}</div>`).join('')}</div></div>`;
+    const leaf = (object) => {
+      const value = object.schema + '.' + object.name;
+      return `<button type="button" role="menuitemradio" aria-checked="${value === selected}" data-object-value="${escape(value)}"><span>${flat ? escape(object.label || object.name) : pathLabel(object)}</span><span class="object-menu-check" aria-hidden="true">${value === selected ? '✓' : ''}</span></button>`;
+    };
+    const menu = flat
+      ? `<div class="object-flat-list" role="none">${objects.map(leaf).join('')}</div>`
+      : `<div class="object-group-list" role="none">${[...groups].map(([label, members], index) => `<button type="button" role="menuitem" class="object-group ${members.includes(current) ? 'is-current' : ''}" data-object-group="${index}" aria-haspopup="menu" aria-expanded="false" aria-controls="object-submenu-${index}"><span>${escape(label)}</span><span aria-hidden="true">▸</span></button>`).join('')}</div>${[...groups].map(([label, members], index) => `<div id="object-submenu-${index}" class="object-submenu" role="menu" aria-label="${escape(label)}" data-object-submenu="${index}" hidden>${members.map(leaf).join('')}</div>`).join('')}`;
+    return `<div class="object-picker"><button id="object-filter" type="button" class="object-select object-picker-trigger" value="${escape(selected)}" aria-label="选择主录" aria-haspopup="menu" aria-expanded="false" aria-controls="object-picker-menu"><span>${flat ? escape(current.label || current.name) : pathLabel(current)}</span><span class="object-chevron" aria-hidden="true">▾</span></button><div id="object-picker-menu" class="object-picker-menu${flat ? ' is-flat' : ''}" role="menu" aria-label="业务分类" hidden>${menu}</div></div>`;
   }
   let active = null, anchor = null;
   function close(focus = false) {
@@ -59,8 +72,8 @@ window.easyerpObjectMenu = (() => {
     const trigger = picker.querySelector('.object-picker-trigger'), menu = picker.querySelector('.object-picker-menu');
     menu.hidden = false;
     trigger.setAttribute('aria-expanded', 'true');
-    const current = picker.querySelector('.object-group.is-current') || picker.querySelector('.object-group');
-    showGroup(current);
+    const current = picker.querySelector('.object-group.is-current') || picker.querySelector('.object-group') || picker.querySelector('[data-object-value][aria-checked="true"]') || picker.querySelector('[data-object-value]');
+    if (current?.matches('[data-object-group]')) showGroup(current);
     const rect = trigger.getBoundingClientRect();
     anchor = { left: rect.left, top: rect.top };
     // Both columns share one floating surface, so the pointer never crosses a gap.
@@ -108,7 +121,7 @@ window.easyerpObjectMenu = (() => {
     if (event.key === 'Escape' && active === picker) { event.preventDefault(); close(true); return; }
     if (event.key === 'Tab') { close(); return; }
     if (event.target === trigger && ['ArrowDown', 'ArrowUp', 'ArrowRight'].includes(event.key)) {
-      event.preventDefault(); open(picker); (picker.querySelector('.object-group.is-current') || picker.querySelector('.object-group')).focus(); return;
+      event.preventDefault(); open(picker); (picker.querySelector('.object-group.is-current') || picker.querySelector('.object-group') || picker.querySelector('[data-object-value][aria-checked="true"]') || picker.querySelector('[data-object-value]'))?.focus(); return;
     }
     if (!active) return;
     const group = event.target.closest('[data-object-group]');

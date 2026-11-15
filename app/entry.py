@@ -15,6 +15,7 @@ from identifiers import Identifiers, RULES, valid as valid_id
 
 SCHEMAS = ("sales", "production", "finance", "rd", "legal", "analysis")
 CHILDREN = {
+    "production.供应商档案表": ("production.供应物品明细表", "供应商ID", "供应的物品", 0),
     "sales.销售订单登记表": ("sales.销售订单行表", "订单ID", "商品明细", 1),
     "production.采购订单表": ("production.采购订单行表", "采购单ID", "采购明细", 0),
     "production.仓库档案表": ("production.库位档案表", "仓库ID", "地点标识", 0),

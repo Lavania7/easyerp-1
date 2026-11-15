@@ -34,24 +34,9 @@ window.easyerpWorkspace = (() => {
       ['items', '办理事项'],
       ['production', '生产执行'],
     ],
-    audit: [
-      ['items', '审计报告'],
-      ['monthly', '月度审计'],
-      ['quarterly', '季度审计'],
-      ['yearly', '年度审计'],
-      ['records', '核定记录'],
-    ],
+    audit: [],
   };
-  const reportTypes = { monthly: '月度审计', quarterly: '季度审计', yearly: '年度审计' };
-  const reportType = (item) => item.values.type || '月度审计';
-  function reportPeriod(item) {
-    const month = item.values.month || '';
-    if (!month) return '—';
-    if (reportType(item) === '年度审计') return month.slice(0, 4);
-    if (reportType(item) === '季度审计') return month.slice(0, 4) + ' Q' + Math.ceil(Number(month.slice(5)) / 3);
-    return month;
-  }
-  const auditTabs = () => tabs(pageTabs.audit.filter(([key]) => key !== 'records' || state.department));
+  const reportPeriod = (item) => (item.values.start || '—') + ' – ' + (item.values.due || '—');
   const descriptions = {
     sales: '订单、发货与售后',
     inventory: '采购订单、到货与库存盘点',
@@ -78,7 +63,7 @@ window.easyerpWorkspace = (() => {
     ['已完成', '已取消', '历史归档'].includes(item.status) ||
     (item.kind === 'report' && item.status === '已发布');
   async function request(kind, extra = {}) {
-    const response = await fetch('/api/workspace?' + params({ kind, ...extra }));
+    const response = await window.easyerpFetch('/api/workspace?' + params({ kind, ...extra }));
     const data = await response.json();
     if (!response.ok) throw new Error(data.error);
     token = data.token;
@@ -96,22 +81,26 @@ window.easyerpWorkspace = (() => {
     const requestedView = new URLSearchParams(location.hash.split('?')[1] || '').get('view');
     view = pageTabs[page]?.some(([key]) => key === requestedView) ? requestedView : 'items';
     if (page === 'workflow' && state.department !== 'production') view = 'items';
-    if (page === 'audit' && !state.department && view === 'records') view = 'items';
     lastPage = page;
     if (page === 'data') {
       $('#export').hidden = false;
       $('#export').disabled = false;
       return explorer();
     }
-    if (page === 'archive') {
+    if (page === 'archive' || page === 'delivery') {
       $('#export').hidden = false;
       $('#export').disabled = false;
       return explorer();
     }
-    if (page === 'audit' && view === 'records') {
-      $('#export').hidden = false;
-      $('#export').disabled = false;
-      return { html: auditTabs() + (await explorer()).html };
+    if (page === 'audit' && state.department) {
+      const objects = deptObjects();
+      const selected = objects.find((o) => o.schema + '.' + o.name === exploreObject) || chooseObject(objects);
+      if (selected && selected.schema !== 'workspace') {
+        $('#export').hidden = false;
+        $('#export').disabled = false;
+        return explorer();
+      }
+      exploreObject = 'workspace.report';
     }
     if (page === 'workflow' && state.scope === 'pending' && state.department === 'production')
       view = 'production';
@@ -132,32 +121,26 @@ window.easyerpWorkspace = (() => {
     const d = await request(kind, kind === 'report' ? { department: state.department } : {});
     const rows =
       kind === 'report'
-        ? d.rows.filter((item) => (!state.department || matchesDepartment(item.values.department)) && (!reportTypes[view] || reportType(item) === reportTypes[view]))
+        ? d.rows.filter((item) => (!state.department || matchesDepartment(item.values.department)))
         : d.rows.filter((item) => matchesDepartment(item.values.department));
     const counts = rows.reduce((a, r) => ((a[r.status] = (a[r.status] || 0) + 1), a), {});
     let prefix =
       page === 'audit'
-        ? auditTabs()
+        ? (state.department ? '<div class="table-toolbar">' + objectControls(deptObjects(), deptObjects().find((o) => o.schema === 'workspace')) + '</div>' : '')
         : ['workflow', 'tasks'].includes(page) && state.department === 'production'
           ? tabs(pageTabs.workflow)
           : '';
-    const hint =
-      kind === 'plan'
-        ? '企业目标与生产计划集中登记，发布后可发起执行事项。'
-        : kind === 'report'
-          ? '按月度、季度或年度记录审计范围、结论和未核事项。选择部门后仅显示该部门的报告；取消部门选择可查看全部报告。'
-          : '一个事项串联采纳、执行、整改和复核；处理过程与证据保留在同一条记录。';
-    const heading = kind === 'plan' ? '计划清单' : kind === 'report' ? '审计报告清单' : '事项清单';
-    const body = `<div class="table-wrap"><table><thead><tr><th>标题</th><th>责任部门 / 负责人</th><th>${kind === 'report' ? '审计期间' : '截止日期'}</th><th>状态</th><th>操作</th></tr></thead><tbody>${rows.map((item) => `<tr><td><button class="table-button" data-ws-open="${esc(item.id)}" data-i18n-ignore>${esc(item.values.title)}</button><span class="secondary"><span ${kind === 'report' ? 'data-ui-label' : 'data-i18n-ignore'}>${esc(kind === 'report' ? reportType(item) : item.values.type || '')}</span> <span data-i18n-ignore>${esc(item.values.plan_id || '')}</span></span></td><td data-i18n-ignore>${esc(item.values.department || '—')} / ${esc(item.values.owner || '待指定')}</td><td>${esc(kind === 'report' ? reportPeriod(item) : item.values.due || '未设期限')}</td><td>${badge(item.status)}</td><td><button class="button small" data-ws-open="${esc(item.id)}">${frozen(item) ? '查看' : '办理'}</button>${kind === 'plan' && item.status === '已发布' ? ` <button class="button small" data-ws-start="${esc(item.id)}">发起执行</button>` : ''}${kind === 'report' && item.status === '已发布' ? ` <button class="button small" data-ws-revise="${esc(item.id)}">新建修订版</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="5">${empty(kind === 'report' ? '尚无审计报告' : kind === 'plan' ? '尚无企业计划' : '尚无办理事项')}</td></tr>`}</tbody></table></div>`;
+    const heading = kind === 'plan' ? '计划清单' : kind === 'report' ? '审计记录' : '事项清单';
+    const body = `<div class="table-wrap"><table><thead><tr><th>标题</th><th>责任部门 / 负责人</th><th>${kind === 'report' ? '审计期间' : '截止日期'}</th><th>状态</th><th>操作</th></tr></thead><tbody>${rows.map((item) => `<tr><td><button class="table-button" data-ws-open="${esc(item.id)}" data-i18n-ignore>${esc(item.values.title)}</button><span class="secondary"><span ${kind === 'report' ? 'data-ui-label' : 'data-i18n-ignore'}>${esc(kind === 'report' ? '' : item.values.type || '')}</span> <span data-i18n-ignore>${esc(item.values.plan_id || '')}</span></span></td><td data-i18n-ignore>${esc(item.values.department || '—')} / ${esc(item.values.owner || '待指定')}</td><td>${esc(kind === 'report' ? reportPeriod(item) : item.values.due || '未设期限')}</td><td>${badge(item.status)}</td><td><button class="button small" data-ws-open="${esc(item.id)}">${frozen(item) ? '查看' : '办理'}</button>${kind === 'plan' && item.status === '已发布' ? ` <button class="button small" data-ws-start="${esc(item.id)}">发起执行</button>` : ''}${kind === 'report' && item.status === '已发布' ? ` <button class="button small" data-ws-revise="${esc(item.id)}">新建修订版</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="5">${empty(kind === 'report' ? '尚无审计报告' : kind === 'plan' ? '尚无企业计划' : '尚无办理事项')}</td></tr>`}</tbody></table></div>`;
     current = { kind, rows, mode: state.mode };
     return {
       html:
         prefix +
-        `<p class="workspace-intro">${hint}</p><div class="workspace-stats">${Object.entries(counts)
+        `<div class="workspace-stats">${Object.entries(counts)
           .map(([label, n]) => `<span>${esc(label)} <strong>${n}</strong></span>`)
           .join(
             ''
-          )}</div><section class="panel"><div class="panel-head"><h2>${heading}</h2><button class="button primary" data-ws-new>＋ 新建${kind === 'report' ? '报告' : kind === 'plan' ? '计划' : '事项'}</button></div>${body}</section>`,
+          )}</div><section class="panel"><div class="panel-head"><h2>${heading}</h2><button class="button primary" data-ws-new>＋ 新建${kind === 'report' ? '记录' : kind === 'plan' ? '计划' : '事项'}</button></div>${body}</section>`,
     };
   }
   function matchesDepartment(value) {
@@ -190,7 +173,6 @@ window.easyerpWorkspace = (() => {
     evidence: '证据路径或说明',
     links: '关联记录',
     plan_id: '关联计划',
-    month: '审计月份',
     scope: '审计范围',
     conclusion: '审计结论',
     unresolved: '未核事项',
@@ -232,10 +214,9 @@ window.easyerpWorkspace = (() => {
       };
     const kind = kindOverride || item?.kind || kindFor(),
       values = { ...(item?.values || {}), ...defaults };
-    if (kind === 'report') values.type ||= reportTypes[view] || '月度审计';
     const keys =
       kind === 'report'
-        ? ['title', 'type', 'department', 'month', 'owner', 'scope', 'conclusion', 'unresolved', 'evidence', 'links']
+        ? ['title', 'department', 'start', 'due', 'owner', 'scope', 'conclusion', 'unresolved', 'evidence', 'links']
         : kind === 'plan'
           ? ['title', 'department', 'owner', 'start', 'due', 'description', 'links']
           : [
@@ -267,15 +248,11 @@ window.easyerpWorkspace = (() => {
     dialog.setAttribute('aria-modal', String(kind === 'plan'));
     dialog.innerHTML = `<div class="entry-head"><div><span class="entry-mode">${state.mode === 'demo' ? '演示数据' : '正式数据'}</span><h2 id="workspace-dialog-title">${item ? '查看与办理' : '新建'}${kind === 'plan' ? '企业计划' : kind === 'report' ? '审计报告' : '工作流事项'}</h2></div><button type="button" class="icon-button" data-ws-close aria-label="关闭">×</button></div><form id="workspace-form"><div class="entry-content workspace-body"><p class="entry-error" role="alert" hidden></p><div class="entry-grid">${keys
       .map((key) => {
-        if (kind === 'report' && key === 'type')
-          return `<label class="entry-field"><span>报告类型</span><select name="type" ${locked ? 'disabled' : ''}>${Object.values(reportTypes).map((type) => `<option value="${esc(type)}" ${values.type === type ? 'selected' : ''}>${esc(type)}</option>`).join('')}</select></label>`;
         if (kind === 'report' && key === 'department') {
           const labels = departments.map(([, label]) => label);
           const selected = values.department || '';
           return `<label class="entry-field"><span>责任部门</span><select name="department" ${locked ? 'disabled' : ''}><option value="">未指定部门</option>${[...labels, ...(selected && !labels.includes(selected) ? [selected] : [])].map((label) => `<option value="${esc(label)}" ${selected === label ? 'selected' : ''}>${esc(label)}</option>`).join('')}</select></label>`;
         }
-        if (kind === 'report' && key === 'month')
-          return `<label class="entry-field wide"><span>审计期间 *</span><input name="month" type="month" value="${esc(values.month || '')}" required ${locked ? 'disabled' : ''} data-i18n-ignore><small>月度报告使用所选月份；季度报告覆盖该月份所在季度；年度报告覆盖该月份所在年度。</small></label>`;
         if (['links', 'plan_id'].includes(key))
           return `<label class="entry-field wide"><span>${fields[key]}</span><div data-ws-reference="${key}">正在读取关联名称…</div></label>`;
         const multiline = [
@@ -288,8 +265,8 @@ window.easyerpWorkspace = (() => {
           'unresolved',
           'links',
         ].includes(key);
-        const label = kind === 'report' && key === 'owner' ? '复核人' : fields[key];
-        return `<label class="entry-field ${multiline || key === 'title' ? 'wide' : ''}"><span>${label}${key === 'title' || (kind === 'report' && key === 'month') ? ' *' : ''}</span>${multiline ? `<textarea name="${key}" rows="3" data-i18n-ignore ${locked ? 'disabled' : ''}>${esc(values[key] || '')}</textarea>` : `<input name="${key}" type="${key === 'month' ? 'month' : ['start', 'due'].includes(key) ? 'date' : 'text'}" value="${esc(values[key] || '')}" ${key === 'title' || key === 'month' ? 'required' : ''} ${locked ? 'disabled' : ''} data-i18n-ignore>`}</label>`;
+        const label = kind === 'report' && key === 'owner' ? '复核人' : kind === 'report' && key === 'start' ? '起始日期' : kind === 'report' && key === 'due' ? '截止日期' : fields[key];
+        return `<label class="entry-field ${multiline || key === 'title' ? 'wide' : ''}"><span>${label}${key === 'title' || (kind === 'report' && ['start', 'due'].includes(key)) ? ' *' : ''}</span>${multiline ? `<textarea name="${key}" rows="3" data-i18n-ignore ${locked ? 'disabled' : ''}>${esc(values[key] || '')}</textarea>` : `<input name="${key}" type="${['start', 'due'].includes(key) ? 'date' : 'text'}" value="${esc(values[key] || '')}" ${key === 'title' || (kind === 'report' && ['start', 'due'].includes(key)) ? 'required' : ''} ${locked ? 'disabled' : ''} data-i18n-ignore>`}</label>`;
       })
       .join(
         ''
@@ -330,7 +307,7 @@ window.easyerpWorkspace = (() => {
   async function prepareNamedReferences(values, locked) {
     const session = pending;
     const fetchJSON = async (path) => {
-      const response = await fetch(path);
+      const response = await window.easyerpFetch(path);
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || '无法读取关联名称');
       return data;
@@ -459,12 +436,12 @@ window.easyerpWorkspace = (() => {
     if (session.item)
       Object.assign(payload, { id: session.item.id, version: session.item.version });
     try {
-      const fetchToken = await fetch(
+      const fetchToken = await window.easyerpFetch(
         '/api/workspace?' + new URLSearchParams({ kind: session.kind, mode: session.mode })
       );
       const meta = await fetchToken.json();
       if (!fetchToken.ok) throw new Error(meta.error);
-      const response = await fetch(
+      const response = await window.easyerpFetch(
         '/api/workspace/save?' + new URLSearchParams({ mode: session.mode }),
         {
           method: 'POST',
@@ -548,7 +525,7 @@ window.easyerpWorkspace = (() => {
   return {
     navigation: () => ({ groups, departments, tabs: pageTabs, view, page: lastPage }),
     render,
-    create: () => (route === 'audit' && view === 'records' ? window.easyerpManual.open() : edit()),
+    create: () => route === 'calculations' ? window.easyerpCalculations.create() : (['data', 'archive', 'delivery'].includes(route) || (route === 'audit' && exploreObject !== 'workspace.report' && state.department) ? window.easyerpManual.open() : edit()),
     openItem,
     mounted() {},
     edit,
@@ -556,16 +533,17 @@ window.easyerpWorkspace = (() => {
 })();
 
 Object.assign(window.ERP_MESSAGES, {
+  '活动数据': ['Active data', 'Aktive Daten'],
+  '静态数据': ['Static data', 'Statische Daten'],
+  '部门交付': ['Department deliveries', 'Abteilungslieferungen'],
+  '矩阵关系图': ['Relationship matrix', 'Beziehungsmatrix'],
+  '审计记录': ['Audit records', 'Prüfaufzeichnungen'],
   '来源位置': ['Source location', 'Quellpfad'],
   '审计报告': ['Audit reports', 'Prüfberichte'],
-  '月度审计': ['Monthly audit', 'Monatliche Prüfung'],
-  '季度审计': ['Quarterly audit', 'Quartalsprüfung'],
-  '年度审计': ['Annual audit', 'Jahresprüfung'],
   '审计期间': ['Audit period', 'Prüfzeitraum'],
   '审计期间 *': ['Audit period *', 'Prüfzeitraum *'],
-  '报告类型': ['Report type', 'Berichtsart'],
   '未指定部门': ['Department unspecified', 'Abteilung nicht angegeben'],
-  '审计报告清单': ['Audit report list', 'Liste der Prüfberichte'],
+  '审计记录': ['Audit report list', 'Liste der Prüfberichte'],
   '尚无审计报告': ['No audit reports yet', 'Noch keine Prüfberichte'],
   '＋ 新建报告': ['＋ New report', '＋ Neuer Bericht'],
   '新建审计报告': ['New audit report', 'Neuer Prüfbericht'],
@@ -574,7 +552,7 @@ Object.assign(window.ERP_MESSAGES, {
     'Monthly reports use the selected month; quarterly reports cover its quarter; annual reports cover its year.',
     'Monatsberichte gelten für den gewählten Monat, Quartalsberichte für dessen Quartal und Jahresberichte für dessen Jahr.',
   ],
-  '按月度、季度或年度记录审计范围、结论和未核事项。选择部门后仅显示该部门的报告；取消部门选择可查看全部报告。': [
+  '按起止日期登记审计范围、结论和未核事项。全年、季度和自定义日期使用上方统一筛选；部门选择仅显示该部门的记录。': [
     'Record monthly, quarterly or annual audit scope, conclusions and unresolved matters. Select a department to filter its reports; deselect it to view all reports.',
     'Prüfumfang, Ergebnisse und offene Punkte monatlich, quartalsweise oder jährlich erfassen. Eine Abteilung wählen, um deren Berichte zu filtern; abwählen, um alle Berichte zu sehen.',
   ],
@@ -586,7 +564,6 @@ Object.assign(window.ERP_MESSAGES, {
   '生产实绩': ['Production records', 'Produktionsdaten'],
   '生产执行': ['Production execution', 'Produktionsausführung'],
   '月度审计报告': ['Monthly audit reports', 'Monatliche Prüfberichte'],
-  '核定记录': ['Review records', 'Prüfunterlagen'],
   '办理事项': ['Workflow items', 'Vorgänge'],
   '计划清单': ['Plans', 'Pläne'],
   '月报清单': ['Monthly reports', 'Monatsberichte'],

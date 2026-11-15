@@ -16,19 +16,23 @@
     <link rel="stylesheet" href="/row-details.css" />
     <link rel="stylesheet" href="/company.css" />
     <link rel="stylesheet" href="/workspace.css" />
+    <link rel="stylesheet" href="/mapping-view.css" />
     <link rel="stylesheet" href="/object-menu.css" />
     <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
     <link rel="stylesheet" href="/plan-visual.css" />
     <link rel="stylesheet" href="/table-tools.css" />
     <link rel="stylesheet" href="/calculator.css" />
+    <link rel="stylesheet" href="/calculations.css" />
     <link rel="stylesheet" href="/database-manager.css" />
     <script src="/locales.js" defer></script>
+    <script src="/database-source.js" defer></script>
     <script src="/table-tools.js" defer></script>
     <script src="/database-manager.js" defer></script>
     <script src="/i18n.js" defer></script>
     <script src="/import.js" defer></script>
     <script src="/object-menu.js" defer></script>
-    <script src="/plan-visual.js" defer></script>
+    
+    <script src="/mapping-view.js" defer></script>
     <script src="/workspace.js" defer></script>
     <script src="/app.js" defer></script>
     <script src="/manual.js" defer></script>
@@ -37,6 +41,7 @@
     <script src="/templates.js" defer></script>
     <script src="/company.js" defer></script>
     <script src="/calculator.js" defer></script>
+    <script src="/calculations.js" defer></script>
   </head>
   <body>
     <div class="shell">
@@ -122,50 +127,33 @@
         <div class="department-bar" role="group" aria-label="选择部门" id="department-bar"></div>
         <main id="main">
           <section class="page-heading">
-            <h1 id="title">仪表盘</h1>
-            <div class="heading-actions">
-              <button class="button" id="refresh">↻ 刷新</button
-              ><button class="button" id="export">↓ 导出明细</button
-              ><button class="button" id="import-open">↑ 导入</button
-              ><button class="button primary" id="entry-open">＋ 新建</button>
-            </div>
+            <h1 id="title" class="visually-hidden">仪表盘</h1>
           </section>
           <div class="demo-notice" id="demo-notice" hidden>
             测试数据 · 独立演示库<button id="back-live">返回正式数据</button>
           </div>
-          <section class="filters" aria-label="查询筛选">
+          <section class="filters query-toolbar" aria-label="查询筛选与操作">
             <div class="date-filter">
-              <span class="query-date-label">起始日期</span
-              ><span class="query-date" data-date-control="start"
-                ><button
-                  type="button"
-                  id="start-trigger"
-                  class="query-date-trigger"
-                  aria-label="起始日期"
-                >
-                  YYYY/MM/DD</button
-                ><input
-                  id="start"
-                  class="query-date-native"
-                  type="date"
-                  tabindex="-1"
-                  aria-hidden="true" /></span
-              ><span class="query-date-label">截止日期</span
-              ><span class="query-date" data-date-control="end"
-                ><button
-                  type="button"
-                  id="end-trigger"
-                  class="query-date-trigger"
-                  aria-label="截止日期"
-                >
-                  YYYY/MM/DD</button
-                ><input
-                  id="end"
-                  class="query-date-native"
-                  type="date"
-                  tabindex="-1"
-                  aria-hidden="true"
-              /></span>
+              <button type="button" id="date-range-trigger" class="button date-range-trigger"
+                aria-label="日期范围" aria-haspopup="dialog" aria-controls="date-range-popover"
+                aria-expanded="false"><span id="date-range-text" data-i18n-ignore></span></button>
+              <div id="date-range-popover" class="query-popover date-range-popover" popover="auto"
+                role="dialog" aria-labelledby="date-range-heading">
+                <form id="date-range-form">
+                  <div class="query-popover-heading">
+                    <strong id="date-range-heading">日期范围</strong>
+                    <button type="button" class="icon-button" data-date-cancel aria-label="关闭">×</button>
+                  </div>
+                  <div class="date-range-fields">
+                    <label><span class="query-date-label">起始日期</span><input id="start" type="date" required /></label>
+                    <label><span class="query-date-label">截止日期</span><input id="end" type="date" required /></label>
+                  </div>
+                  <div class="query-popover-actions">
+                    <button type="button" class="button" data-date-cancel>取消</button>
+                    <button type="submit" class="button primary" id="date-range-apply">应用</button>
+                  </div>
+                </form>
+              </div>
             </div>
             <div id="date-presets" class="date-presets" role="group" aria-label="日期快捷选择">
               <button
@@ -193,7 +181,14 @@
                   type="search"
                   placeholder="搜索编号、产品或客户"
                   aria-label="搜索" /></label
-              ><button id="apply" class="button primary small">查询</button>
+              >
+            </div>
+            <div id="table-query-tools" class="table-query-tools"></div>
+            <div class="heading-actions">
+              <button class="button" id="refresh">↻ 刷新</button
+              ><button class="button" id="export">↓ 导出</button
+              ><button class="button" id="import-open">↑ 导入</button
+              ><button class="button primary" id="entry-open">＋ 新建</button>
             </div>
           </section>
           <div id="content" aria-live="polite"><div class="loading">正在读取业务数据…</div></div>
@@ -230,7 +225,8 @@
           <path d="m5 12 4 4 10-10" />
         </svg>
       </button>
-      <button type="button" id="database-manager-open" role="menuitem" tabindex="-1">数据库管理</button>
+      <div class="source-menu-divider" role="separator"></div>
+      <button type="button" id="database-manager-open" class="source-management-action" role="menuitem" tabindex="-1"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 4v6m-3 7h16m-5-3v6" /></svg><span>数据库管理</span><span class="source-management-arrow" aria-hidden="true">↗</span></button>
     </div>
   </body>
 </html>

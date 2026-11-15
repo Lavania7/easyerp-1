@@ -47,11 +47,11 @@
     openSequence = 0;
   const object = (key) => catalog.objects.find((o) => o.key === key);
   const identifier = () => crypto.randomUUID();
-  const modeLabel = (mode) => (mode === 'demo' ? '演示数据' : '正式数据');
+  const modeLabel = (mode) => h(window.easyerpDatabaseSource.sourceLabel(mode));
   const query = (extra) => new URLSearchParams({ mode: context?.mode || state.mode, ...extra });
   const name = (key) => labels[key] || object(key)?.label || object(key)?.name || key;
   async function request(path, extra = {}, options = {}) {
-    const response = await fetch('/api/entry/' + path + '?' + query(extra), options);
+    const response = await window.easyerpFetch('/api/entry/' + path + '?' + query(extra), options);
     let body;
     try {
       body = await response.json();
@@ -72,7 +72,7 @@
     dialog.scrollTop = 0;
   }
   async function loadCatalog(mode) {
-    const response = await fetch('/api/entry/meta?' + new URLSearchParams({ mode }));
+    const response = await window.easyerpFetch('/api/entry/meta?' + new URLSearchParams({ mode }));
     const body = await response.json();
     if (!response.ok) throw new Error(body.error || '无法读取新建配置');
     return body;
@@ -239,7 +239,7 @@
     shell(
       (editing ? '修改' : '新建') + name(obj.key),
       '',
-      `<form class="entry-form" novalidate><div class="entry-error" role="alert" tabindex="-1" hidden></div><section class="entry-section"><h3>${editing ? '记录信息' : '基本信息'}</h3>${fields({ object: obj.key, uid: 'parent', values: context.values })}</section>${spec && spec.minimum === 0 ? `<details class="entry-more" ${context.children.length ? 'open' : ''}><summary>${obj.key === 'production.采购订单表' ? '逐项明细（可选）' : '更多地点标识（可选）'}</summary>${childHtml}</details>` : childHtml}<div class="entry-footer"><div><button type="button" class="button" data-entry-close>${stack.length ? '返回上一级' : '取消'}</button><button class="button primary" type="submit" id="entry-submit">保存到${context.mode === 'demo' ? '演示库' : '正式库'}</button></div></div></form>`
+      `<form class="entry-form" novalidate><div class="entry-error" role="alert" tabindex="-1" hidden></div><section class="entry-section"><h3>${editing ? '记录信息' : '基本信息'}</h3>${fields({ object: obj.key, uid: 'parent', values: context.values })}</section>${spec && spec.minimum === 0 ? `<details class="entry-more" ${context.children.length ? 'open' : ''}><summary>${h(spec.label) + '（可选）'}</summary>${childHtml}</details>` : childHtml}<div class="entry-footer"><div><button type="button" class="button" data-entry-close>${stack.length ? '返回上一级' : '取消'}</button><button class="button primary" type="submit" id="entry-submit">保存到${context.mode === 'demo' ? '演示库' : '正式库'}</button></div></div></form>`
     );
     const version = ++uiVersion;
     dialog.querySelector('form').addEventListener('submit', save);
@@ -566,7 +566,7 @@
         context.children.push({
           object: object(context.object).children.object,
           uid: identifier(),
-          values: { '行号': String(context.children.length + 1) },
+          values: object(object(context.object).children.object).columns.some((col) => col.name === '行号') ? { '行号': String(context.children.length + 1) } : {},
         });
         context.requestId = null;
         renderForm();

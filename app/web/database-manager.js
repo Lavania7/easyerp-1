@@ -48,6 +48,17 @@
     '目标目录': ['Target directory', 'Zielverzeichnis'],
     '待单独批准的操作': ['Operations requiring separate approval', 'Separat zu genehmigende Vorgänge'],
     '正在处理…': ['Processing…', 'Wird verarbeitet…'],
+    '查看版本信息，或切换工作台使用的数据库。': ['Inspect a version or switch the database used by this workspace.', 'Version prüfen oder die Datenbank dieses Arbeitsbereichs wechseln.'],
+    '正在使用': ['In use', 'Aktiv'],
+    '当前工作台': ['Current workspace', 'Aktueller Arbeitsbereich'],
+    '数据库': ['Database', 'Datenbank'],
+    '切换到此数据库': ['Switch to this database', 'Zu dieser Datenbank wechseln'],
+    '当前正在使用此数据库': ['This database is currently in use', 'Diese Datenbank ist aktuell aktiv'],
+    '切换后刷新页面，显示所选数据库及其工作空间。': ['The page reloads with the selected database and its workspace.', 'Die Seite lädt die ausgewählte Datenbank und ihren Arbeitsbereich neu.'],
+    '结构模板用于创建空库，不能直接切换。': ['Schema templates create empty databases and cannot be selected directly.', 'Schemavorlagen erstellen leere Datenbanken und können nicht direkt verwendet werden.'],
+    '此数据库尚未就绪，暂时无法切换。': ['This database is not ready to be selected.', 'Diese Datenbank ist noch nicht einsatzbereit.'],
+    '正在连接数据库…': ['Connecting to the database…', 'Verbindung zur Datenbank wird hergestellt…'],
+    '已就绪': ['Ready', 'Bereit'],
   });
   const h = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
   const dialog = document.createElement('dialog');
@@ -56,7 +67,8 @@
   dialog.setAttribute('aria-labelledby', 'database-manager-title');
   document.body.append(dialog);
   let catalog, token = '', folder = null, plan = null, busy = false, lastFocus;
-  const status = value => ({configured:'已配置', retained:'旧源保留', ready:'空库已就绪 · 已停止', creating:'创建中', failed:'创建未完成'}[value] || '');
+  const status = value => ({configured:'已配置', retained:'旧源保留', ready:'已就绪', creating:'创建中', failed:'创建未完成'}[value] || '');
+  const currentId = () => window.easyerpDatabaseSource.id;
 
   async function request(path, payload) {
     const options = payload === undefined ? {} : {method:'POST', headers:{'Content-Type':'application/json', 'X-EasyERP-Token':token}, body:JSON.stringify(payload)};
@@ -82,35 +94,38 @@
     finally {
       busy = false;
       dialog.removeAttribute('aria-busy');
-      dialog.querySelectorAll('button').forEach(button => button.disabled = false);
+      dialog.querySelectorAll('button').forEach(button => button.disabled = button.hasAttribute('data-db-disabled'));
     }
   }
   function renderGraph() {
     const nodes = catalog.nodes;
     const indices = new Map(nodes.map((node, index) => [node.id, index]));
     const lanes = nodes.map(node => node.kind === 'template' ? 0 : node.kind === 'live' ? 1 : node.kind === 'demo' ? 2 : 3);
-    const height = Math.max(nodes.length * 66, 66);
+    const step = 96, center = 44;
+    const height = Math.max(nodes.length * step - 8, 88);
     const lines = nodes.map((node, index) => [node.parent_id, node.logical_parent_id].map((parentId, relation) => {
       if (!parentId || !indices.has(parentId)) return '';
       const parent = indices.get(parentId);
-      return `<path ${relation ? 'stroke-dasharray="3 3"' : ''} d="M${14 + lanes[parent] * 13} ${33 + parent * 66} C${14 + lanes[parent] * 13} ${33 + index * 66},${14 + lanes[index] * 13} ${33 + parent * 66},${14 + lanes[index] * 13} ${33 + index * 66}"/>`;
+      return `<path ${relation ? 'stroke-dasharray="3 3"' : ''} d="M${8 + lanes[parent] * 9} ${center + parent * step} C${8 + lanes[parent] * 9} ${center + index * step},${8 + lanes[index] * 9} ${center + parent * step},${8 + lanes[index] * 9} ${center + index * step}"/>`;
     }).join('')).join('');
-    const circles = nodes.map((node, index) => `<circle cx="${14 + lanes[index] * 13}" cy="${33 + index * 66}" r="4" class="db-lane-${lanes[index]}"/>`).join('');
-    dialog.querySelector('[data-db-graph]').innerHTML = `<div class="db-graph"><svg width="72" height="${height}" viewBox="0 0 72 ${height}" aria-hidden="true">${lines}${circles}</svg><div class="db-graph-rows">${nodes.map(node => `<button type="button" class="db-graph-row" data-db-node="${h(node.id)}"><strong ${node.kind === 'database' ? 'data-i18n-ignore' : ''}>${h(node.label)}</strong><span>${node.relation === 'restored-copy' ? '完整备份恢复' : node.parent_id ? '空白结构派生' : node.kind === 'template' ? '' : '未登记派生关系'}</span><small>${h(status(node.status))}</small></button>`).join('')}</div></div>`;
+    const circles = nodes.map((node, index) => `<circle cx="${8 + lanes[index] * 9}" cy="${center + index * step}" r="4" class="db-lane-${lanes[index]}"/>`).join('');
+    dialog.querySelector('[data-db-graph]').innerHTML = `<div class="db-list-heading"><h3>版本关系</h3><span>${nodes.length}</span></div><div class="db-graph"><svg width="44" height="${height}" viewBox="0 0 44 ${height}" aria-hidden="true">${lines}${circles}</svg><div class="db-graph-rows">${nodes.map(node => `<button type="button" class="db-graph-row" data-db-node="${h(node.id)}" ${node.id === currentId() ? 'aria-current="true"' : ''}><div class="db-row-title"><strong ${node.kind === 'database' ? 'data-i18n-ignore' : ''}>${h(node.label)}</strong>${node.id === currentId() ? '<span class="db-in-use">正在使用</span>' : ''}</div><span>${node.relation === 'restored-copy' ? '完整备份恢复' : node.parent_id ? '空白结构派生' : node.kind === 'template' ? '结构模板' : '未登记派生关系'}</span><small>${h(status(node.status))}</small></button>`).join('')}</div></div>`;
   }
   function showNode(id) {
     const node = catalog.nodes.find(item => item.id === id);
     if (!node) return;
     notice('');
     dialog.querySelectorAll('[data-db-node]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.dbNode === id)));
-    dialog.querySelector('[data-db-detail]').innerHTML = `<h3 data-i18n-ignore>${h(node.label)}</h3><dl>${[
-      ['目录',node.directory], ['端口',node.port], ['工作空间',node.workspace],
+    const active = node.id === currentId();
+    dialog.querySelector('[data-db-detail]').innerHTML = `<div class="db-detail-heading"><h3 ${node.kind === 'database' ? 'data-i18n-ignore' : ''}>${h(node.label)}</h3>${active ? '<span class="db-in-use">正在使用</span>' : ''}</div><dl class="db-detail-facts">${[
+      ['数据库',node.database], ['目录',node.directory], ['端口',node.port], ['工作空间',node.workspace],
       ['模板指纹',node.template_sha256], [node.relation === 'restored-copy' ? '恢复来源' : '结构模板',catalog.nodes.find(item => item.id === node.parent_id)?.label],
       ['逻辑关联',catalog.nodes.find(item => item.id === node.logical_parent_id)?.label],
-    ].filter(([,value]) => value !== undefined).map(([label,value]) => `<dt>${h(label)}</dt><dd data-i18n-ignore>${h(value)}</dd>`).join('')}</dl>`;
+    ].filter(([,value]) => value !== undefined).map(([label,value]) => `<div><dt>${h(label)}</dt><dd data-i18n-ignore>${h(value)}</dd></div>`).join('')}</dl><div class="db-switch-panel">${node.switchable ? `<p>${active ? '当前正在使用此数据库' : '切换后刷新页面，显示所选数据库及其工作空间。'}</p><button type="button" class="button primary" data-db-activate="${h(node.id)}" ${active ? 'disabled data-db-disabled' : ''}>${active ? '正在使用' : '切换到此数据库'}</button>` : `<p>${node.kind === 'template' ? '结构模板用于创建空库，不能直接切换。' : '此数据库尚未就绪，暂时无法切换。'}</p>`}</div>`;
   }
   function newForm() {
     notice('');
+    dialog.querySelectorAll('[data-db-node]').forEach(button => button.setAttribute('aria-pressed', 'false'));
     folder = null;
     plan = null;
     dialog.querySelector('[data-db-detail]').innerHTML = `<h3>新建数据库</h3><form data-db-form><label>数据库名称<input name="label" maxlength="80" required autocomplete="off"></label><label>关联版本（仅逻辑）<select name="parent_id">${catalog.nodes.filter(node => !['failed','creating'].includes(node.status)).map(node => `<option value="${h(node.id)}" ${node.kind === 'database' ? 'data-i18n-ignore' : ''}>${h(node.label)}</option>`).join('')}</select></label><div class="db-folder"><button type="button" class="button" data-db-folder>选择文件夹</button><output data-db-folder-label>未选择文件夹</output></div><p>创建只使用当前结构模板，不复制父版本的业务记录或工作空间。</p><button class="button primary" type="submit">预览新建</button></form><div data-db-preview></div>`;
@@ -125,9 +140,9 @@
   async function open() {
     if (dialog.open) { dialog.focus(); return; }
     lastFocus = document.activeElement;
-    dialog.innerHTML = `<header><div><h2 id="database-manager-title">数据库管理</h2><p>选择版本查看目录与关系；创建新版本将生成空库。</p></div><button type="button" class="icon-button" data-db-close aria-label="关闭">×</button></header><div class="db-notice" data-db-notice role="status" hidden></div><nav><button type="button" class="button primary" data-db-new>新建数据库</button><button type="button" class="button" data-db-migration>迁移预览</button></nav><div class="db-manager-body"><section aria-label="版本关系" data-db-graph></section><section data-db-detail></section></div><footer><span>正式数据迁移尚未执行。</span><button type="button" class="button" data-db-close>关闭</button></footer>`;
+    dialog.innerHTML = `<header><div><h2 id="database-manager-title">数据库管理</h2><p>查看版本信息，或切换工作台使用的数据库。</p></div><button type="button" class="icon-button" data-db-close aria-label="关闭">×</button></header><div class="db-notice" data-db-notice role="status" hidden></div><nav><button type="button" class="button" data-db-new>＋ <span>新建数据库</span></button><button type="button" class="button" data-db-migration>迁移预览</button></nav><div class="db-manager-body"><section aria-label="版本关系" data-db-graph></section><section data-db-detail></section></div><footer><span>正式数据迁移尚未执行。</span><button type="button" class="button" data-db-close>关闭</button></footer>`;
     dialog.showModal();
-    await action(async () => { await load(); showNode('active-live'); });
+    await action(async () => { await load(); showNode(currentId()); });
   }
   dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
   dialog.addEventListener('close', () => { lastFocus?.focus(); });
@@ -154,6 +169,10 @@
     if (button.hasAttribute('data-db-close')) dialog.close();
     else if (button.hasAttribute('data-db-new')) newForm();
     else if (button.dataset.dbNode) showNode(button.dataset.dbNode);
+    else if (button.dataset.dbActivate) action(async () => {
+      notice('正在连接数据库…');
+      await window.easyerpDatabaseSource.switch(button.dataset.dbActivate, token);
+    });
     else if (button.hasAttribute('data-db-folder')) action(async () => {
       const result = await request('/folder', {});
       if (!result.cancelled) {
@@ -171,6 +190,7 @@
       notice('数据库已创建，当前连接保持原配置。');
     });
     else if (button.hasAttribute('data-db-migration')) action(async () => {
+      dialog.querySelectorAll('[data-db-node]').forEach(button => button.setAttribute('aria-pressed', 'false'));
       const result = await request('/migration-preview');
       dialog.querySelector('[data-db-detail]').innerHTML = `<h3>${result.executed ? '迁移记录' : '迁移预览'}</h3><p>${result.executed ? '正式数据已迁移，旧源保留。' : '正式数据迁移尚未执行。'}</p><dl><dt>源目录</dt><dd data-i18n-ignore>${h(result.source.directory)}</dd><dt>目标目录</dt><dd data-i18n-ignore>${h(result.target.data_directory)}</dd></dl>${result.executed ? '' : `<h4>待单独批准的操作</h4><ul>${result.requires_separate_approval.map(text => `<li>${h(text)}</li>`).join('')}</ul>`}<ol>${result.steps.map(text => `<li>${h(text)}</li>`).join('')}</ol>`;
     });

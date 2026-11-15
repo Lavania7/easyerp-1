@@ -33,6 +33,57 @@ const out=process.env.EASYERP_DATABASE_OUTPUT||path.resolve(__dirname,'../report
     check('current live location visible',(await dialog.locator('[data-db-detail]').innerText()).includes('pgdata'));
     check('no blur',await dialog.evaluate(node=>getComputedStyle(node).backdropFilter==='none'));
     check('source menu closed',await page.locator('#source-menu').isHidden());
+    check('current demo marked independently',await dialog.locator('[aria-current="true"]').getAttribute('data-db-node')==='active-demo');
+    check('current database switch disabled',await dialog.locator('[data-db-activate]').isDisabled());
+    await dialog.locator('[data-db-node]').first().click();
+    check('template cannot be activated',await dialog.locator('[data-db-activate]').count()===0);
+    await dialog.locator('[data-db-node="active-live"]').click();
+    await page.route('**/api/databases/activate',route=>route.fulfill({status:503,json:{error:'切换测试：连接不可用'}}));
+    await dialog.locator('[data-db-activate]').click();
+    await page.waitForFunction(()=>document.querySelector('[data-db-notice]')?.textContent.includes('连接不可用'));
+    check('failed switch preserves source',new URL(page.url()).searchParams.get('mode')==='demo');
+    await page.unroute('**/api/databases/activate');
+    const peer=await browser.newPage();
+    await peer.goto(base+'/?mode=demo');
+    await peer.waitForFunction(()=>window.easyerpDatabaseSource);
+    await dialog.locator('[data-db-activate]').click();
+    await page.waitForURL(url=>url.searchParams.get('db')==='active-live');
+    await page.waitForFunction(()=>window.easyerpDatabaseSource?.id==='active-live');
+    let health=await page.evaluate(async()=>await (await window.easyerpFetch('/api/health?mode=live')).json());
+    check('live selection reaches real live database',health.status?.[0]?.port===registry.nodes.find(node=>node.id==='active-live').port);
+    check('other window stays on demo',await peer.evaluate(async()=>{
+      const health=await (await window.easyerpFetch('/api/health?mode=demo')).json();
+      return window.easyerpDatabaseSource.id==='active-demo'&&health.mode==='demo';
+    }));
+    if(migrated){
+      const old=registry.nodes.find(node=>node.kind==='retained-source');
+      await page.evaluate(()=>window.easyerpDatabaseManager.open());
+      await dialog.locator(`[data-db-node="${old.id}"]`).click();
+      await dialog.locator('[data-db-activate]').click();
+      await page.waitForURL(url=>url.searchParams.get('db')===old.id);
+      await page.waitForFunction(id=>window.easyerpDatabaseSource?.id===id,old.id);
+      health=await page.evaluate(async()=>await (await window.easyerpFetch('/api/health?mode=live')).json());
+      check('retained version reaches original cluster',health.status?.[0]?.port===old.port&&health.status[0].database===old.database);
+      await page.locator('#connection').filter({hasText:old.label}).waitFor();
+      await page.reload();
+      await page.waitForFunction(id=>window.easyerpDatabaseSource?.id===id,old.id);
+      check('selection survives refresh',new URL(page.url()).searchParams.get('db')===old.id);
+    }
+    await page.locator('#source-toggle').click();
+    await page.locator('[data-source-value="demo"]').click();
+    await page.waitForURL(url=>url.searchParams.get('db')==='active-demo');
+    await page.waitForFunction(()=>window.easyerpDatabaseManager);
+    await peer.close();
+    await page.locator('#source-toggle').click();
+    check('management action separated from source choices',await page.locator('#database-manager-open').evaluate(node=>{
+      const divider=node.previousElementSibling;
+      const choice=document.querySelector('[data-source-value]');
+      return divider.getAttribute('role')==='separator'&&getComputedStyle(node).fontSize!==getComputedStyle(choice).fontSize&&!!node.querySelector('svg');
+    }));
+    await page.locator('#database-manager-open').click();
+    await dialog.locator('[data-db-node]').first().waitFor();
+    await dialog.locator('[data-db-node="active-live"]').click();
+    await page.screenshot({path:path.join(out,'switching-desktop.png'),fullPage:true});
     await dialog.locator('[data-db-new]').click();
     await dialog.locator('input[name=label]').fill('新空白版本');
     await dialog.locator('form').evaluate(form=>form.requestSubmit());
@@ -64,19 +115,45 @@ const out=process.env.EASYERP_DATABASE_OUTPUT||path.resolve(__dirname,'../report
     check('German translated',await dialog.locator('#database-manager-title').textContent()==='Datenbankverwaltung');
     await dialog.locator('[data-db-close]').last().click();
     await page.locator('#language-toggle').click();
+    const expanded={...registry,nodes:[...registry.nodes,...Array.from({length:20},(_,index)=>({
+      id:'scroll-fixture-'+index,label:'用于验证滚动的独立数据库 '+index,kind:'database',status:'ready',
+      directory:'D:\\test-only\\database-'+index,workspace:'D:\\test-only\\workspace-'+index,
+      database:'scroll_fixture_'+index,port:55490+index,switchable:true,
+    }))]};
+    await page.route('**/api/databases',route=>route.fulfill({json:expanded}));
+    await page.setViewportSize({width:1024,height:460});
+    await page.evaluate(()=>window.easyerpDatabaseManager.open());
+    const graph=dialog.locator('[data-db-graph]');
+    await dialog.locator('[data-db-node="scroll-fixture-19"]').waitFor({state:'attached'});
+    await graph.hover();
+    await page.mouse.wheel(0,6000);
+    await page.waitForFunction(()=>{const section=document.querySelector('[data-db-graph]');return section.scrollTop>section.clientHeight;});
+    await dialog.locator('[data-db-node="scroll-fixture-19"]').click();
+    check('long list scrolls to and selects final database',await dialog.locator('[data-db-node="scroll-fixture-19"]').getAttribute('aria-pressed')==='true');
+    await dialog.locator('[data-db-activate]').scrollIntoViewIfNeeded();
+    check('short window keeps switch and close accessible',await dialog.locator('footer button').evaluate(node=>node.getBoundingClientRect().bottom<=innerHeight));
+    check('graph markers align with cards',await dialog.evaluate(node=>{
+      const cards=[...node.querySelectorAll('[data-db-node]')];
+      const dots=[...node.querySelectorAll('.db-graph circle')];
+      return cards.every((card,index)=>Math.abs(card.getBoundingClientRect().y+card.getBoundingClientRect().height/2-dots[index].getBoundingClientRect().y-dots[index].getBoundingClientRect().height/2)<2);
+    }));
+    await dialog.locator('[data-db-close]').last().click();
+    await page.unroute('**/api/databases');
     await page.setViewportSize({width:400,height:700});
     await page.evaluate(()=>{document.documentElement.dataset.theme='dark';window.easyerpDatabaseManager.open();});
     await dialog.locator('[data-db-node]').first().waitFor();
     await dialog.locator('[data-db-new]').click();
     const box=await dialog.boundingBox();
     check('narrow dialog in viewport',box.x>=0&&box.y>=0&&box.x+box.width<=400&&box.y+box.height<=700);
+    check('narrow content stays within width',await dialog.evaluate(node=>node.scrollWidth<=node.clientWidth&&[...node.querySelectorAll('section')].every(section=>section.scrollWidth<=section.clientWidth)));
+    check('close remains visible in narrow viewport',await dialog.locator('footer button').evaluate(node=>{const rect=node.getBoundingClientRect();return rect.bottom<=innerHeight&&rect.top>=0;}));
     check('dark palette inherits',await dialog.evaluate(node=>getComputedStyle(node).backgroundColor!=='rgb(255, 255, 255)'));
     await page.screenshot({path:path.join(out,'narrow-dark.png'),fullPage:true});
     await page.keyboard.press('Escape');
     check('Escape closes',!await dialog.isVisible());
     check('browser errors absent',errors.length===0);
-    check('only mocked folder/preview writes',writes.every(url=>/\/api\/databases\/(folder|preview)$/.test(url)));
-    fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({checks,errors,writes,mocked:['folder','preview'],real_database_writes:0},null,2));
+    check('no business writes',writes.every(url=>/\/api\/databases\/(folder|preview|activate)$/.test(url)));
+    fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({checks,errors,writes,mocked:['folder','preview','one activation failure'],real_database_writes:0},null,2));
     process.stdout.write(JSON.stringify({checks:checks.length,errors:errors.length,real_database_writes:0,out})+'\n');
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

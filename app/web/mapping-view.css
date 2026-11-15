@@ -1,0 +1,63 @@
+.mapping-view { min-width: 0; }
+.mapping-hint { margin: 0 0 10px; font-size: calc(12px + var(--ui-font-step, 1px)); line-height: 18px; color: var(--muted); }
+.mapping-layout { display: grid; grid-template-columns: 130px minmax(0, 1fr); grid-template-rows: 54px minmax(220px, 58vh); border: 1px solid var(--line); overflow: hidden; }
+.mapping-corner { display: grid; place-items: center; background: var(--sidebar, var(--paper)); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.mapping-top { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; background: var(--sidebar, var(--paper)); }
+.mapping-top > div { display: flex; height: 100%; }
+.mapping-top > div > div { flex-shrink: 0; display: grid; place-items: center; border-right: 1px solid var(--line); box-sizing: border-box; }
+.mapping-left { overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; background: var(--sidebar, var(--paper)); }
+.mapping-left > div > div { display: grid; place-items: center; border-bottom: 1px solid var(--line); box-sizing: border-box; }
+.mapping-scroll { overflow: auto; overscroll-behavior: contain; cursor: grab; touch-action: none; }
+.mapping-canvas { position: relative; }
+.mapping-cells { display: grid; grid-template-columns: repeat(6, 220px); }
+.mapping-empty { visibility: hidden; pointer-events: none; }
+.mapping-cell { display: flex; flex-direction: column; justify-content: center; gap: 9px; min-width: 0; padding: 16px; text-align: left; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper); color: var(--ink); box-sizing: border-box; font: inherit; cursor: inherit; }
+.mapping-cell small { display: block; max-height: 36px; overflow: hidden; color: var(--muted); line-height: 18px; font-size: calc(11px + var(--ui-font-step, 1px)); }
+.mapping-cell > * { position: relative; z-index: 2; text-shadow: -1px -1px 0 var(--paper), 1px -1px 0 var(--paper), -1px 1px 0 var(--paper), 1px 1px 0 var(--paper); }
+.has-selection .mapping-cell:not(.is-selected):not(.is-related) > * { opacity: .3; }
+.has-selection .mapping-cell.is-selected > * { text-shadow: -1px -1px 0 var(--accent), 1px -1px 0 var(--accent), -1px 1px 0 var(--accent), 1px 1px 0 var(--accent); }
+.has-selection .mapping-cell.is-related { opacity: 1; outline: 3px solid var(--accent); outline-offset: -3px; }
+.has-selection .mapping-cell.is-selected { opacity: 1; background: var(--accent); color: white; outline: 3px solid var(--accent); outline-offset: -3px; }
+.has-selection .mapping-cell.is-selected small { color: white; }
+.mapping-arrows { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: visible; color: var(--accent-text, var(--accent)); }
+.mapping-arrows > path { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-opacity: .58; stroke-linecap: round; }
+.mapping-arrows marker path { fill: currentColor; fill-opacity: .94; stroke: none; }
+.mapping-arrows.has-emphasis > path { opacity: .14; }
+.mapping-arrows.has-emphasis > path.is-emphasized { opacity: 1; stroke-opacity: .95; stroke-width: 3; }
+.mapping-evidence { max-height: 240px; overflow: auto; font-size: calc(12px + var(--ui-font-step, 1px)); line-height: 19px; }
+.mapping-evidence li { overflow-wrap: anywhere; }
+.mapping-view.is-panning, .mapping-view.is-panning * { cursor: grabbing; user-select: none; }
+@media (max-width: 650px) { .mapping-layout { grid-template-columns: 96px minmax(0, 1fr); grid-template-rows: 54px minmax(220px, 50vh); } }
+
+:root[data-theme] body.mapping-active .shell { height: 100dvh; min-height: 0; align-items: stretch; grid-template-columns: 210px minmax(0,1fr); grid-template-rows: var(--topbar-height,76px) minmax(0,1fr); overflow: hidden; }
+:root[data-theme] body.mapping-active #sidebar { position: static; grid-column: 1; grid-row: 2; height: auto; min-height: 0; width: auto; padding: 0; transform: none; visibility: visible; overflow: hidden; }
+:root[data-theme] body.mapping-active #nav { display: grid; grid-template-rows: 58px minmax(0,1fr); min-height: 0; height: auto; margin: 0; gap: 0; }
+body.mapping-active .sidebar-footer { display: block; flex: 0 0 auto; margin: 0; padding: 8px 13px 18px; }
+:root[data-theme] body.mapping-active .main-shell { grid-column: 2; grid-row: 2; display: grid; grid-template-rows: 58px minmax(0,1fr); min-height: 0; overflow: hidden; }
+:root[data-theme] body.mapping-active #department-bar { position: static; display: block; height: 58px; min-height: 0; padding: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
+.mapping-external-top > div { display: flex; height: 100%; }
+.mapping-external-top button { flex: 0 0 auto; padding: 0 8px; box-sizing: border-box; border: 0; border-right: 1px solid var(--line); background: var(--sidebar, var(--paper)); color: var(--ink); font: inherit; }
+.mapping-navigation { display: flex; align-items: stretch; min-width: 0; border-bottom: 1px solid var(--line); }
+:root[data-theme] body.mapping-active .mapping-navigation .nav-option { width: 100%; margin: 0; min-width: 0; min-height: 0; justify-content: flex-start; padding: 6px 26px; font-size: calc(12px + var(--ui-font-step,1px)); line-height: 18px; }
+.mapping-external-left { min-height: 0; overflow: auto; scrollbar-width: thin; overscroll-behavior: contain; }
+.mapping-external-left button { display: block; width: 100%; padding: 10px; box-sizing: border-box; border: 0; border-bottom: 1px solid var(--line); text-align: center; background: var(--sidebar, var(--paper)); color: var(--ink); font: inherit; }
+:root[data-theme] body.mapping-active #main { position: relative; min-height: 0; padding: 0; overflow: hidden; }
+body.mapping-active #content, body.mapping-active .mapping-view { height: 100%; min-height: 0; }
+body.mapping-active .mapping-view { position: relative; }
+body.mapping-active .mapping-layout { display: block; height: 100%; border: 0; }
+body.mapping-active .mapping-layout > :is(.mapping-corner,.mapping-top,.mapping-left) { display: none; }
+body.mapping-active .mapping-scroll { height: 100%; }
+body.mapping-active .mapping-hint { position: absolute; z-index: 2; left: 8px; right: 22px; bottom: 8px; padding: 8px; margin: 0; background: var(--paper); border: 1px solid var(--line); pointer-events: none; }
+body.mapping-active .mapping-evidence:not(:empty) { position: absolute; z-index: 2; bottom: 8px; right: 22px; left: 8px; max-height: min(180px,35%); padding: 8px; background: var(--paper); border: 1px solid var(--line); }
+body.mapping-active .mapping-view.has-selection .mapping-hint { display: none; }
+@media (max-width:700px) { :root[data-theme] body.mapping-active .shell { grid-template-columns: 124px minmax(0,1fr); } }
+:root[data-theme] body.mapping-active .shell { display: grid; } :root[data-theme] body.mapping-active #sidebar { display: flex; }
+
+@media (max-width:700px) {
+  :root[data-theme] body.mapping-active .mapping-navigation .nav-option { gap: 6px; padding-inline: 8px; font-size: 12px; }
+  body.mapping-active .sidebar-footer { padding-inline: 8px; }
+}
+body.mapping-active #connection { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+:root[data-theme] body.mapping-active #main { width: 100%; height: 100%; max-width: none; margin: 0; }
+body.mapping-active :is(#content,.mapping-view,.mapping-layout,.mapping-scroll) { width: 100%; min-width: 0; }

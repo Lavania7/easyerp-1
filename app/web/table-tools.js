@@ -1,14 +1,69 @@
 'use strict';
 (() => {
+  let active = null;
+  function bind(panel, trigger, beforeOpen) {
+    const close = (restoreFocus = false) => {
+      if (panel.matches(':popover-open')) panel.hidePopover();
+      trigger.setAttribute('aria-expanded', 'false');
+      if (active?.panel === panel) active = null;
+      if (restoreFocus) trigger.focus({ preventScroll: true });
+    };
+    const toggle = () => {
+      if (panel.matches(':popover-open')) return close();
+      active?.close();
+      beforeOpen?.();
+      panel.style.removeProperty('max-height');
+      panel.showPopover();
+      const anchor = trigger.getBoundingClientRect();
+      panel.style.left = Math.max(8, Math.min(anchor.left, innerWidth - panel.offsetWidth - 8)) + 'px';
+      const below = innerHeight - anchor.bottom - 8;
+      const top = panel.offsetHeight <= below ? anchor.bottom + 6 : anchor.top - panel.offsetHeight - 6;
+      const position = Math.max(8, Math.min(top, innerHeight - panel.offsetHeight - 8));
+      panel.style.top = position + 'px';
+      panel.style.maxHeight = innerHeight - position - 8 + 'px';
+      trigger.setAttribute('aria-expanded', 'true');
+      active = { panel, close };
+      panel.querySelector('input,select,button')?.focus({ preventScroll: true });
+    };
+    trigger.addEventListener('click', toggle);
+    panel.addEventListener('toggle', event => {
+      trigger.setAttribute('aria-expanded', String(event.newState === 'open'));
+      if (event.newState === 'closed' && active?.panel === panel) active = null;
+    });
+    return {
+      close,
+      destroy() {
+        close();
+        trigger.removeEventListener('click', toggle);
+      },
+    };
+  }
+  window.addEventListener('resize', () => active?.close());
+  document.addEventListener('scroll', event => {
+    if (active && !active.panel.contains(event.target)) active.close();
+  }, true);
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !active) return;
+    event.preventDefault();
+    event.stopPropagation();
+    active.close(true);
+  }, true);
+  window.addEventListener('hashchange', () => active?.close());
+  window.easyerpQueryPopover = { bind };
+})();
+
+(() => {
   const preferences = new Map(), results = new Map(), uncertain = new Map(), requestContexts = new WeakMap();
   let current = null, selected = new Map(), fingerprint = '', generation = 0;
   const labels = {
-    '字段筛选与排序': ['Field filters and sorting', 'Feldfilter und Sortierung'],
+    '排序与筛选': ['Sort and filter', 'Sortieren und filtern'],
+    '暂无筛选排序设置': ['No filters or sorting applied', 'Keine Filter oder Sortierung angewendet'],
     '应用于全部匹配记录；分页、条数与导出使用同一条件。': ['Applies to every matching record; pages, counts and export use the same conditions.', 'Gilt für alle Treffer; Seiten, Anzahl und Export verwenden dieselben Bedingungen.'],
     '字段': ['Field', 'Feld'], '条件': ['Condition', 'Bedingung'], '筛选值': ['Filter value', 'Filterwert'],
     '增加筛选': ['Add filter', 'Filter hinzufügen'], '移除筛选': ['Remove filter', 'Filter entfernen'],
     '应用筛选与排序': ['Apply filters and sort', 'Filter und Sortierung anwenden'], '重置表格查询': ['Reset table query', 'Tabellenabfrage zurücksetzen'],
     '排序字段': ['Sort field', 'Sortierfeld'], '默认排序': ['Default order', 'Standardsortierung'],
+    '排序方向': ['Sort direction', 'Sortierrichtung'],
     '升序': ['Ascending', 'Aufsteigend'], '降序': ['Descending', 'Absteigend'],
     '等于': ['Equals', 'Gleich'], '不等于': ['Does not equal', 'Ungleich'], '包含': ['Contains', 'Enthält'],
     '开头为': ['Starts with', 'Beginnt mit'], '小于': ['Less than', 'Kleiner als'], '不大于': ['At most', 'Höchstens'],
@@ -124,10 +179,57 @@
     sync();
     return row;
   }
+  function querySummary(value) {
+    const rules = value.filters.map(item => `${t(item.field)} ${t(opLabels[item.op])}${noValue(item.op) ? '' : ' ' + item.value}`);
+    if (value.sort.field) rules.push(`${t('排序字段')} ${t(value.sort.field)} ${t(value.sort.direction === 'desc' ? '降序' : '升序')}`);
+    return rules.join(' · ') || t('暂无筛选排序设置');
+  }
+  function paintQuerySummary(session) {
+    const summary = session.queryRegion?.querySelector('[data-tool-query-summary]');
+    if (!summary) return;
+    const value = setting(session.extra);
+    summary.textContent = querySummary(value);
+    summary.title = summary.textContent;
+    session.queryRegion.querySelector('[data-tool-query-toggle]')?.classList.toggle('active', !!(value.filters.length || value.sort.field));
+  }
+  function clearQuery() {
+    current?.queryPopover?.destroy();
+    document.querySelector('#table-query-tools')?.replaceChildren();
+  }
   function queryPanel(session) {
-    const value = setting(session.extra), region = document.createElement('details');
+    const value = setting(session.extra), region = document.createElement('div');
     region.className = 'table-tools-query';
-    region.innerHTML = `<summary>${h(t('字段筛选与排序'))}${value.filters.length ? ' · ' + value.filters.length : ''}</summary><form><p>${h(t('应用于全部匹配记录；分页、条数与导出使用同一条件。'))}</p><div data-tool-filters></div><div class="table-tools-query-actions"><button type="button" class="button small" data-tool-add-filter>${h(t('增加筛选'))}</button><label>${h(t('排序字段'))}<select data-tool-sort><option value="">${h(t('默认排序'))}</option>${options(session.info.columns, value.sort.field)}</select></label><select data-tool-direction aria-label="${h(t('条件'))}"><option value="asc">${h(t('升序'))}</option><option value="desc" ${value.sort.direction === 'desc' ? 'selected' : ''}>${h(t('降序'))}</option></select><button type="submit" class="button primary">${h(t('应用筛选与排序'))}</button><button type="button" class="button small" data-tool-reset>${h(t('重置表格查询'))}</button></div></form>`;
+    region.innerHTML = `
+      <button type="button" class="button" data-tool-query-toggle aria-haspopup="dialog"
+        aria-expanded="false" aria-controls="table-query-popover">${h(t('排序与筛选'))}</button>
+      <div id="table-query-popover" class="query-popover" popover="auto" role="dialog"
+        aria-labelledby="table-query-heading">
+        <div class="query-popover-heading">
+          <strong id="table-query-heading">${h(t('排序与筛选'))}</strong>
+          <button type="button" class="icon-button" data-tool-query-close aria-label="${h(t('关闭'))}">×</button>
+        </div>
+        <form>
+          <span class="table-tools-query-summary" data-tool-query-summary data-i18n-ignore role="status"></span>
+          <div class="table-tools-query-actions">
+            <label>${h(t('排序字段'))}
+              <select data-tool-sort>
+                <option value="">${h(t('默认排序'))}</option>
+                ${options(session.info.columns, value.sort.field)}
+              </select>
+            </label>
+            <select data-tool-direction aria-label="${h(t('排序方向'))}">
+              <option value="asc">${h(t('升序'))}</option>
+              <option value="desc" ${value.sort.direction === 'desc' ? 'selected' : ''}>${h(t('降序'))}</option>
+            </select>
+          </div>
+          <div data-tool-filters></div>
+          <div class="table-tools-query-actions">
+            <button type="button" class="button small" data-tool-add-filter>${h(t('增加筛选'))}</button>
+            <button type="button" class="button small" data-tool-reset>${h(t('重置表格查询'))}</button>
+            <button type="submit" class="button primary">${h(t('应用筛选与排序'))}</button>
+          </div>
+        </form>
+      </div>`;
     const filters = region.querySelector('[data-tool-filters]');
     value.filters.forEach(item => filters.append(filterRow(session, item)));
     region.querySelector('[data-tool-add-filter]').addEventListener('click', () => {
@@ -140,13 +242,22 @@
       value.filters = [...filters.children].map(row => ({ field: row.querySelector('select').value, op: row.querySelector('[data-tool-filter-op]').value, ...(!noValue(row.querySelector('[data-tool-filter-op]').value) ? { value: row.querySelector('input').value } : {}) }));
       const field = region.querySelector('[data-tool-sort]').value;
       value.sort = field ? { field, direction: region.querySelector('[data-tool-direction]').value } : {};
+      session.queryPopover.close(true);
       refresh();
     });
     region.querySelector('[data-tool-reset]').addEventListener('click', () => {
       if (session.batch?.pending) return toast(t('保存期间请稍候。'));
-      value.filters = []; value.sort = {}; refresh();
+      value.filters = []; value.sort = {}; session.queryPopover.close(true); refresh();
     });
-    session.panel.querySelector('.table-wrap').before(region);
+    session.queryRegion = region;
+    const slot = document.querySelector('#table-query-tools');
+    if (slot) slot.replaceChildren(region);
+    else session.panel.querySelector('.table-wrap').before(region);
+    session.queryPopover = window.easyerpQueryPopover.bind(
+      region.querySelector('[popover]'), region.querySelector('[data-tool-query-toggle]')
+    );
+    region.querySelector('[data-tool-query-close]').addEventListener('click', () => session.queryPopover.close(true));
+    paintQuerySummary(session);
   }
   function updateSelection(session) {
     session.panel.querySelectorAll('[data-tool-row-select]').forEach(input => { input.checked = selected.has(input.dataset.id); input.disabled = !!session.batch?.pending; });
@@ -196,7 +307,7 @@
     session.batch?.region.remove(); session.batch = null;
   }
   async function entryRequest(session, path, options = {}, extra = {}) {
-    const response = await fetch('/api/entry/' + path + '?' + new URLSearchParams({ mode: session.mode, ...extra }), options);
+    const response = await window.easyerpFetch('/api/entry/' + path + '?' + new URLSearchParams({ mode: session.mode, ...extra }), options);
     let result;
     try { result = await response.json(); } catch { throw new Error(t('服务未返回有效结果，请重试原批次。')); }
     if (!response.ok) { const error = new Error(result.error || t('会话已失效，请刷新后重试。')); error.status = response.status; throw error; }
@@ -317,6 +428,7 @@
   }
   function mount() {
     const panel = document.querySelector('#content .table-edit-panel');
+    if (current?.panel !== panel) clearQuery();
     if (!panel) { current = null; selected.clear(); fingerprint = ''; return; }
     if (panel.dataset.tableToolsMounted) return;
     if (typeof lastList === 'undefined' || !source(lastList)) return;
@@ -335,12 +447,14 @@
   }
   window.addEventListener('erp:language-changed', () => {
     if (!current) return;
-    current.panel.querySelectorAll('.table-tools-query,.table-tools-bulk-bar,.table-tools-batch').forEach(paintLanguage);
+    paintLanguage(current.queryRegion);
+    paintQuerySummary(current);
+    current.panel.querySelectorAll('.table-tools-bulk-bar,.table-tools-batch').forEach(paintLanguage);
     current.panel.querySelector('[data-tool-select-page]')?.setAttribute('aria-label', t('勾选本页'));
     current.panel.querySelectorAll('[data-tool-row-select]').forEach(input => input.setAttribute('aria-label', t('选择记录') + ' ' + input.dataset.id));
   });
   window.addEventListener('beforeunload', event => { if (uncertain.size) { event.preventDefault(); event.returnValue = ''; } });
-  window.easyerpTableTools = { augmentParams, rememberResult, mount };
+  window.easyerpTableTools = { augmentParams, rememberResult, mount, clearQuery };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, { once: true });
   else queueMicrotask(mount);
 })();

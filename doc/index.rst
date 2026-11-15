@@ -4,6 +4,7 @@ easyERP 文档
 
 - `运行与维护 <operations.rst>`__：双击入口、数据库工具、权限、备份恢复、远程部署和监控。
 - `全局规则 <global-rules.rst>`__：唯一主录、人工核定、关联和精确数值。
+- `矩阵数据结构与关系规范 <matrix-data-model.rst>`__：六部门与七类内容、真实引用和展示聚合；后续数据库、归属及关系变更的必读依据。
 - `文件导入流程 <import-workflow.rst>`__：原件、映射、检查、导入与回执。
 - `SQL与逐表规范 <sql-specification.rst>`__：字段、基础SQL及历史来源标记。
 - `部门与主录清单 <departments-master-records.rst>`__ 和 `表数 <department-table-counts.rst>`__：基础建模清单。

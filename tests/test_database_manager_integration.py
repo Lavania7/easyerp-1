@@ -5,11 +5,18 @@ import hashlib
 import json
 import sys
 import time
+import threading
+from http.client import HTTPConnection
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'app'),str(ROOT/'tools')]
 from database_manager import DatabaseManager
 from easyerp import ERP, literal, ident
+from data import Data
+from entry import ManualEntry
+from workspace import Workspace
+import server
 
 
 def source_state():
@@ -40,7 +47,41 @@ def main():
             config=json.loads((target/'instance.json').read_text(encoding='utf-8'))['config']
             erp=ERP(config=config,runtime_root=target)
             assert erp.run('pg_ctl',['-D',erp.data,'status'],ok=False).returncode != 0
-            erp.start_server()
+            selected=manager.activate({'id':created['node']['id']})
+            assert selected['id']==created['node']['id'] and selected['mode']=='live'
+            assert erp.run('pg_ctl',['-D',erp.data,'status'],ok=False).returncode == 0
+            with manager.request_scope(selected['id'],'live'):
+                assert Data({'mode':'live'}).db==config['database']
+                assert ManualEntry({'mode':'live'}).data.erp.data==target/'pgdata'
+                assert Workspace('live').root==target/'workspace'
+                assert server.import_service('live').path==target/'var/import-interface.sqlite3'
+            class Quiet(server.Handler):
+                def log_message(self,*_): pass
+            with patch.object(server,'DATABASES',manager):
+                http=server.ThreadingHTTPServer(('127.0.0.1',0),Quiet)
+                thread=threading.Thread(target=http.serve_forever,daemon=True)
+                thread.start()
+                try:
+                    def call(method,path,payload=None):
+                        client=HTTPConnection('127.0.0.1',http.server_port)
+                        client.request(method,path,body=json.dumps(payload) if payload else None,
+                                       headers={'Content-Type':'application/json','X-EasyERP-Token':server.WRITE_TOKEN})
+                        response=client.getresponse();status=response.status;body=json.loads(response.read());client.close()
+                        assert status==200,(status,body)
+                        return body
+                    suffix='?mode=live&db='+selected['id']
+                    health=call('GET','/api/health'+suffix)
+                    assert health['status'][0]['database']==config['database']
+                    assert health['status'][0]['port']==config['port']
+                    saved=call('POST','/api/workspace/save'+suffix,{'request_id':'switch_test_workspace',
+                               'kind':'plan','values':{'title':'隔离库切换验证'}})
+                    listing=call('GET','/api/workspace'+suffix+'&kind=plan')
+                    assert any(item['id']==saved['item']['id'] for item in listing['rows'])
+                    assert (target/'workspace/live.json').is_file()
+                    result['switching']={'http_database':health['status'][0]['database'],
+                                         'port':health['status'][0]['port'], 'isolated_workspace_save':True}
+                finally:
+                    http.shutdown();http.server_close();thread.join()
             actual=erp.sql("BEGIN READ ONLY; SELECT current_setting('data_directory'); COMMIT;",db=config['database'],role='easyerp_admin').stdout.strip()
             assert Path(actual).resolve()==erp.data.resolve()
             result['instance']={key:preview[key] for key in ('directory','database','port')}

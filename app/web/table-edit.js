@@ -12,7 +12,7 @@
   const modeLabel = (mode) => (mode === 'demo' ? '演示库' : '正式库');
 
   async function request(path, mode, extra = {}, options = {}) {
-    const response = await fetch(
+    const response = await window.easyerpFetch(
       '/api/entry/' + path + '?' + new URLSearchParams({ mode, ...extra }),
       options
     );

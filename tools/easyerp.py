@@ -1,6 +1,7 @@
 """Local PostgreSQL lifecycle; Python standard library only."""
 
 from pathlib import Path
+from contextvars import ContextVar
 from datetime import datetime, timezone
 import argparse
 import hashlib
@@ -19,6 +20,7 @@ from business_queries import expand_queries
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMAS = ["finance", "legal", "production", "rd", "sales", "analysis"]
 CONFIG = ROOT / "config.json"
+DATABASE_CONTEXT = ContextVar("easyerp_database", default=None)
 
 
 def stamp():
@@ -42,7 +44,10 @@ class ERP:
     def __init__(self, *, mode="live", config=None, runtime_root=None):
         if mode not in ("live", "demo"):
             raise ValueError("无效数据来源")
-        base = dict(config) if config is not None else json.loads(CONFIG.read_text(encoding="utf-8-sig"))
+        context = DATABASE_CONTEXT.get() if config is None else None
+        if context and context["mode"] != mode:
+            raise ValueError("数据库与数据来源不一致，请刷新后重试。")
+        base = dict(config if config is not None else context["config"]) if config is not None or context else json.loads(CONFIG.read_text(encoding="utf-8-sig"))
         sources = base.get("database_sources", {})
         source = sources.get(mode, {})
         self.c = {**base, **source}
@@ -328,6 +333,10 @@ class ERP:
         ).stdout.strip()
         if self.version_matches(old, m, digest):
             return {"database": db, "migration": "already applied"}
+        if m.get("supplier_items_upgrade_from"):
+            from migrate_supplier_items import migrate as migrate_supplier_items
+
+            return migrate_supplier_items(self, db, apply=True)
         if m.get("finance_profile_upgrade_from"):
             from migrate_finance_profiles import migrate as migrate_finance, prior_versions
 

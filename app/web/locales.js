@@ -55,6 +55,9 @@ window.ERP_MESSAGES = {
   '德文': ['German', 'Deutsch'],
   '↻ 刷新': ['↻ Refresh', '↻ Aktualisieren'],
   '↓ 导出明细': ['↓ Export records', '↓ Datensätze exportieren'],
+  '↓ 导出': ['↓ Export', '↓ Exportieren'],
+  '日期范围': ['Date range', 'Zeitraum'],
+  '应用': ['Apply', 'Anwenden'],
   '标准主录表下载': ['Download standard templates', 'Standardvorlagen herunterladen'],
   '↑ 导入': ['↑ Import', '↑ Importieren'],
   '＋ 手工录入': ['＋ Add record', '＋ Datensatz erfassen'],
@@ -1459,4 +1462,10 @@ Object.assign(window.ERP_MESSAGES, {
   '基准工资': ['Base salary', 'Grundgehalt'],
   '工资账户开户行': ['Payroll bank', 'Gehaltsbank'],
   '工资账户ID': ['Payroll account ID', 'Gehaltskonto-ID'],
+});
+
+Object.assign(window.ERP_MESSAGES, {
+  '活动数据': ['Active data', 'Aktive Daten'],
+  '静态数据': ['Static data', 'Statische Daten'],
+  '查询筛选与操作': ['Query filters and actions', 'Abfragefilter und Aktionen'],
 });

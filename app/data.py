@@ -495,6 +495,8 @@ class Data:
             extra = ',("实盘数量"-"账面数量")::text AS "盘点差异"'
         elif key == "production.采购订单表":
             extra = ''',(SELECT s."名称" FROM production."供应商档案表" s WHERE s."供应商ID"=t."供应商ID") AS "供应商",coalesce(nullif(t."采购说明",''),(SELECT string_agg(concat_ws(' · ',l."物料版本ID",l."产品版本ID",l."数量"::text,u."单位名称",l."单价"::text),E'\n' ORDER BY l."行号") FROM production."采购订单行表" l LEFT JOIN rd."计量单位表" u USING ("单位ID") WHERE l."采购单ID"=t."采购单ID")) AS "采购内容"'''
+        elif key == "production.供应商档案表" and any(obj["schema"] == "production" and obj["name"] == "供应物品明细表" for obj in catalog["objects"]):
+            extra = ',(SELECT string_agg(coalesce(m."名称",d."MID"),\'、\' ORDER BY d."供应关系ID") FROM production."供应物品明细表" d LEFT JOIN rd."物料主数据表" m USING ("MID") WHERE d."供应商ID"=t."供应商ID") AS "供应的物品",(SELECT json_agg(json_build_object(\'id\',d."MID",\'name\',m."名称") ORDER BY d."供应关系ID") FROM production."供应物品明细表" d LEFT JOIN rd."物料主数据表" m USING ("MID") WHERE d."供应商ID"=t."供应商ID" AND d."MID" IS NOT NULL) AS "_供应物品"'
         elif key == "production.仓库档案表":
             extra = ''',(SELECT string_agg(l."库位代码",'、' ORDER BY l."库位ID") FROM production."库位档案表" l WHERE l."仓库ID"=t."仓库ID") AS "地点标识"'''
         result = self.bundle(

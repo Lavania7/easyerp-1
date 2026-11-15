@@ -22,18 +22,18 @@
   background: #ffffff;
 }
 .import-head h2 {
-  font-size: 26px;
+  font-size: calc(26px + var(--ui-font-step, 1px));
   --ui-en-size: 26px;
   margin: 7px 0;
 }
 .import-head p {
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   color: #949494;
   margin: 0;
 }
 .import-eyebrow {
-  font-size: calc(9px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(9px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(9px + 0px + var(--small-font-increase));
   letter-spacing: 2.3px;
   color: #9d9d9d;
@@ -44,7 +44,7 @@
   align-items: center;
   padding: 11px 30px;
   background: #f1f1f1;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   line-height: 1.7;
   --ui-leading: 1.7;
@@ -53,7 +53,7 @@
 }
 .import-scope-note > span {
   flex-shrink: 0;
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   border: 1px solid #d7d7d7;
   padding: 3px 8px;
@@ -72,7 +72,7 @@
   border: 0;
   border-bottom: 2px solid transparent;
   color: #949494;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
 }
 .import-tabs button.active {
@@ -108,17 +108,17 @@
   border-color: #6c6c6c;
 }
 .import-upload strong {
-  font-size: calc(17px + var(--body-font-increase));
+  font-size: calc(calc(17px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(17px + 0px);
   font-weight: 500;
 }
 .import-upload > span:not(.button):not(.import-upload-icon) {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #969696;
 }
 .import-upload-icon {
-  font-size: 32px;
+  font-size: calc(32px + var(--ui-font-step, 1px));
   --ui-en-size: 32px;
   color: #9b9b9b;
   line-height: 1;
@@ -138,7 +138,7 @@
   outline-offset: 3px;
 }
 .import-upload .button {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   padding: 10px 18px;
 }
@@ -147,7 +147,7 @@
   pointer-events: none;
 }
 .import-small {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   line-height: 1.9;
   --ui-leading: 1.9;
@@ -162,7 +162,7 @@
   padding: 20px;
 }
 .import-side h3 {
-  font-size: 14px;
+  font-size: calc(14px + var(--ui-font-step, 1px));
   --ui-en-size: 14px;
   display: flex;
   justify-content: space-between;
@@ -170,7 +170,7 @@
   margin: 0 0 13px;
 }
 .import-side h3 > span {
-  font-size: 12px;
+  font-size: calc(12px + var(--ui-font-step, 1px));
   --ui-en-size: 12px;
   border-radius: 6px;
   background: #f1f1f1;
@@ -178,7 +178,7 @@
   padding: 5px 9px;
 }
 .import-side > p {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #9c9c9c;
   line-height: 1.9;
@@ -190,14 +190,14 @@
   border-bottom: 1px solid #f1f1f1;
 }
 .import-mini strong {
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   font-weight: 500;
   display: block;
 }
 .import-mini small {
   display: block;
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   color: #a6a6a6;
   margin-top: 7px;
@@ -205,13 +205,13 @@
 .import-side > .text-button {
   margin: 18px 0 0;
   padding: 0;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
 }
 .import-empty {
   text-align: center;
   padding: 35px 15px;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   color: #aaaaaa;
   border: 1px solid #ececec;
@@ -235,14 +235,14 @@
   gap: 15px;
 }
 .import-result-top > strong {
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   font-weight: 500;
   overflow-wrap: anywhere;
 }
 .import-status {
   display: inline-block;
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   white-space: nowrap;
   border-radius: 5px;
@@ -259,7 +259,7 @@
   color: #868686;
 }
 .import-result > p {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #8f8f8f;
   line-height: 1.8;
@@ -269,7 +269,7 @@
   overflow-wrap: anywhere;
 }
 .import-record-note {
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   line-height: 1.8;
   --ui-leading: 1.8;
@@ -277,7 +277,7 @@
   color: #a1a1a1;
 }
 .import-dialog details {
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   color: #959595;
   margin: 15px 0 0;
@@ -303,7 +303,7 @@
   color: #717171;
 }
 .import-hash {
-  font: calc(10px + var(--small-font-increase)) var(--font-ui);
+  font: calc(10px + var(--small-font-increase) + var(--ui-font-step, 1px)) var(--font-ui);
   --ui-en-size: calc(10px + var(--small-font-increase));
   word-break: break-all;
   line-height: 1.8;
@@ -314,7 +314,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
 }
 .import-tools label {
@@ -328,7 +328,7 @@
   border-radius: 6px;
   background: #ffffff;
   padding: 9px 12px;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   width: 240px;
 }
@@ -358,17 +358,17 @@
 }
 .import-module {
   color: #aaaaaa;
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
 }
 .import-type h3 {
-  font-size: 15px;
+  font-size: calc(15px + var(--ui-font-step, 1px));
   --ui-en-size: 15px;
   margin: 16px 0 10px;
   font-weight: 500;
 }
 .import-type > p {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   color: #979797;
   line-height: 1.9;
@@ -378,7 +378,7 @@
   min-height: 42px;
 }
 .import-type-meta {
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   line-height: 1.9;
   --ui-leading: 1.9;
@@ -387,7 +387,7 @@
 }
 .import-type > button {
   margin-top: 18px;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
 }
 .import-profile {
@@ -396,7 +396,7 @@
   padding-top: 12px;
 }
 .import-profile p {
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   line-height: 1.9;
   --ui-leading: 1.9;
@@ -421,7 +421,7 @@
   margin-bottom: 20px;
 }
 .import-history-heading p {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   line-height: 1.9;
   --ui-leading: 1.9;
@@ -430,7 +430,7 @@
   margin: 0;
 }
 .import-history-heading .button {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   white-space: nowrap;
 }
@@ -442,7 +442,7 @@
   justify-content: space-between;
   gap: 20px;
   background: #ffffff;
-  font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   color: #a2a2a2;
   line-height: 1.9;
@@ -456,7 +456,7 @@
   border: 1px solid #e3e3e3;
   border-radius: 7px;
   color: #818181;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   line-height: 1.9;
   --ui-leading: 1.9;
@@ -480,14 +480,14 @@ body:has(#import-interface[open]) {
   }
   .import-scope-note {
     padding: 10px 20px;
-    font-size: calc(10px + var(--body-font-increase) + var(--small-font-increase));
+    font-size: calc(calc(10px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
     --ui-en-size: calc(10px + 0px + var(--small-font-increase));
   }
   .import-tabs {
     padding: 0 20px;
   }
   .import-head h2 {
-    font-size: 23px;
+    font-size: calc(23px + var(--ui-font-step, 1px));
     --ui-en-size: 23px;
   }
   .import-check-grid,

@@ -10,6 +10,7 @@ import shutil
 import sys
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'app'), str(ROOT/'tools')]
@@ -56,6 +57,23 @@ class RegistryTests(TestCase):
         self.assertEqual(len(result['nodes']), 3)
         self.assertEqual(result['nodes'][1]['relation'], 'unknown')
         self.assertFalse(self.manager.registry.exists())
+        self.assertTrue(result['activation_available'])
+        self.assertFalse(result['nodes'][0]['switchable'])
+        self.assertTrue(result['nodes'][1]['switchable'])
+    def test_switch_rejects_unregistered_or_incomplete_nodes(self):
+        for payload in ({}, {'id': []}, {'id':'active-live','config':{}}, {'id':'unknown'}):
+            with self.assertRaises(dm.DatabaseError): self.manager.activate(payload)
+        plan=self.preview()
+        with self.assertRaises(dm.DatabaseError): self.manager.connection(plan['plan_id'])
+    def test_request_scope_rejects_mode_mismatch_and_clears_after_failure(self):
+        with self.assertRaises(dm.DatabaseError):
+            with self.manager.request_scope('active-live','demo'): pass
+        self.assertIsNone(dm.DATABASE_CONTEXT.get())
+        with self.assertRaisesRegex(RuntimeError,'fixture'):
+            with self.manager.request_scope('active-live','live'):
+                self.assertEqual(dm.DATABASE_CONTEXT.get()['id'],'active-live')
+                raise RuntimeError('fixture')
+        self.assertIsNone(dm.DATABASE_CONTEXT.get())
     def test_native_selection_cancel_and_reject_supplied_path(self):
         self.manager.picker = lambda:None
         self.assertTrue(self.manager.select_folder({})['cancelled'])
@@ -167,11 +185,52 @@ class RegistryTests(TestCase):
                 self.assertEqual(call('POST','/api/databases/migrate','{}',headers)[0],405)
                 self.assertEqual(call('POST','/api/databases/delete','{}',headers)[0],405)
                 self.assertEqual(call('POST','/api/databases/folder','{}',headers)[0],200)
+                self.assertEqual(call('POST','/api/databases/activate','{"id":"unknown"}',headers)[0],409)
+                self.assertEqual(call('POST','/api/databases/activate','{"id":"active-live"}',{'Content-Type':'application/json'})[0],403)
+                self.assertEqual(call('GET','/api/health?mode=live&db=unknown')[0],409)
+                self.assertEqual(call('GET','/api/health?mode=demo&db=active-live')[0],409)
             finally:
                 http.shutdown();http.server_close();thread.join()
 
 
 class SourceTests(TestCase):
+    def test_configured_demo_selection_does_not_append_suffix_twice(self):
+        manager=dm.DatabaseManager()
+        expected=ERP(mode='demo').c['database']
+        selected=manager.connection('active-demo')
+        self.assertEqual(ERP(mode='demo',config=selected['config']).c['database'],expected)
+        with manager.request_scope('active-demo','demo'):
+            self.assertEqual(Data({'mode':'demo'}).db,expected)
+            self.assertEqual(Workspace('demo').root,ERP(mode='demo').workspace_root('demo'))
+    def test_selected_database_propagates_and_is_isolated_between_threads(self):
+        config=json.loads((ROOT/'config.json').read_text(encoding='utf-8-sig'))
+        with TemporaryDirectory(prefix='easyerp-switch-') as directory:
+            root=Path(directory)
+            def connection(number):
+                return {'id':str(number), 'mode':'live', 'config':{
+                    'python':config['python'],'postgres_bin':config['postgres_bin'],
+                    'database':'selected_'+str(number), 'port':55480+number,
+                    'runtime_root':str(root/str(number)), 'data_directory':str(root/str(number)/'pgdata'),
+                    'private_directory':str(root/str(number)/'private'),
+                    'workspace_directory':str(root/str(number)/'workspace')}}
+            manager=dm.DatabaseManager()
+            manager.connection=lambda node_id:connection(int(node_id))
+            barrier=threading.Barrier(2)
+            def inspect(number):
+                with manager.request_scope(str(number),'live'):
+                    barrier.wait(timeout=5)
+                    data=Data({'mode':'live'})
+                    self.assertEqual(data.db,'selected_'+str(number))
+                    self.assertEqual(data.erp.c['port'],55480+number)
+                    self.assertEqual(Workspace('live').root,root/str(number)/'workspace')
+                    self.assertEqual(server.import_service('live').path,root/str(number)/'var/import-interface.sqlite3')
+                    with self.assertRaises(ValueError): ERP(mode='demo')
+                    return ManualEntry({'mode':'live'}).cache_key
+            with patch.object(server,'IMPORTS',{}), ThreadPoolExecutor(max_workers=2) as pool:
+                jobs=[pool.submit(inspect,number) for number in (1,2)]
+                keys=[job.result() for job in jobs]
+            self.assertNotEqual(*keys)
+            self.assertIsNone(dm.DATABASE_CONTEXT.get())
     def test_explicit_sources_propagate(self):
         base=json.loads((ROOT/'config.json').read_text(encoding='utf-8-sig'))
         with TemporaryDirectory(prefix='easyerp-sources-') as directory:

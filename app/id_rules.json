@@ -728,5 +728,10 @@
     "prefix": "SL",
     "pk": "销售订单行ID",
     "department": "SAL"
+  },
+  "production.供应物品明细表": {
+    "prefix": "SPM",
+    "pk": "供应关系ID",
+    "department": "PRD"
   }
 }

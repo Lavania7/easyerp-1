@@ -4,7 +4,7 @@ window.easyerpRowDetails = (() => {
   const key = (object, id) => JSON.stringify([object, String(id)]);
   const alive = session => current === session && session.row.isConnected && state.mode === session.mode;
   async function request(session, path, extra = {}) {
-    const response = await fetch('/api/' + path + '?' + new URLSearchParams({ mode: session.mode, ...extra }), { signal: session.controller.signal });
+    const response = await window.easyerpFetch('/api/' + path + '?' + new URLSearchParams({ mode: session.mode, ...extra }), { signal: session.controller.signal });
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || '无法读取记录信息');
     return result;

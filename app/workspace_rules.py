@@ -42,7 +42,11 @@ LABELS = {
 
 def presentation(schema, name):
     area = "data"
-    if name in WORKFLOW_NAMES:
+    if name in {"交付记录表", "交付明细表"}:
+        area = "delivery"
+    elif name == "供应物品明细表":
+        area = "archive"
+    elif name in WORKFLOW_NAMES:
         area = "workflow"
     elif name == "工单草稿表" or (schema == "analysis" and name == "意见与规划总表"):
         area = "plans"

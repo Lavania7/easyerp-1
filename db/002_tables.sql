@@ -778,6 +778,14 @@ CREATE TABLE production."供应商档案表" (
   "开户行" text
 );
 
+-- readme.md:90001
+CREATE TABLE production."供应物品明细表" (
+  "供应关系ID" text PRIMARY KEY,
+  "供应商ID" text NOT NULL,
+  "MID" text,
+  UNIQUE ("供应商ID", "MID")
+);
+
 -- readme.md:1360
 CREATE TABLE production."采购合同表" (
   "采购合同ID" text PRIMARY KEY,

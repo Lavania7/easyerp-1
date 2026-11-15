@@ -53,7 +53,7 @@
   white-space: normal;
   overflow: visible;
   overflow-wrap: anywhere;
-  font-size: 18px;
+  font-size: calc(18px + var(--ui-font-step, 1px));
   line-height: 1.5;
   font-weight: 600;
 }
@@ -104,10 +104,10 @@
     flex: 1 1 auto;
   }
   :root[data-theme] #company-brand-name {
-    font-size: 15px;
+    font-size: calc(15px + var(--ui-font-step, 1px));
   }
   :root[data-theme] .topbar .breadcrumb {
-    font-size: 10px;
+    font-size: calc(10px + var(--ui-font-step, 1px));
   }
   :root[data-theme] .topbar .top-actions {
     grid-column: 1/-1;
@@ -147,7 +147,7 @@
   margin-left: auto;
 }
 :root[data-theme] .company-source {
-  font-size: 11px;
+  font-size: calc(11px + var(--ui-font-step, 1px));
   color: var(--accent);
   padding: 4px 7px;
   border: 1px solid var(--accent-line);
@@ -157,7 +157,7 @@
 :root[data-theme] .company-select-label {
   display: grid;
   gap: 8px;
-  font-size: 12px;
+  font-size: calc(12px + var(--ui-font-step, 1px));
   color: var(--muted);
 }
 :root[data-theme] .company-select-label select {
@@ -173,12 +173,12 @@
   overflow-wrap: anywhere;
 }
 :root[data-theme] .company-summary-title h2 {
-  font-size: 19px;
+  font-size: calc(19px + var(--ui-font-step, 1px));
   line-height: 1.6;
   font-weight: 600;
 }
 :root[data-theme] .company-summary-title p {
-  font-size: 12px;
+  font-size: calc(12px + var(--ui-font-step, 1px));
   line-height: 1.7;
   margin: 5px 0 0;
 }
@@ -192,12 +192,12 @@
   gap: 6px;
 }
 :root[data-theme] .company-summary dt {
-  font-size: 11px;
+  font-size: calc(11px + var(--ui-font-step, 1px));
   color: var(--muted);
 }
 :root[data-theme] .company-summary dd {
   margin: 0;
-  font-size: 13px;
+  font-size: calc(13px + var(--ui-font-step, 1px));
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
@@ -211,7 +211,7 @@
 }
 :root[data-theme] .company-empty {
   padding: 24px 0;
-  font-size: 13px;
+  font-size: calc(13px + var(--ui-font-step, 1px));
   line-height: 1.8;
   color: var(--muted);
 }
@@ -246,12 +246,12 @@ body:has(#company-details[open]) {
   gap: 15px;
 }
 :root[data-theme] .company-dialog-head h2 {
-  font-size: 23px;
+  font-size: calc(23px + var(--ui-font-step, 1px));
   font-weight: 600;
   margin: 12px 0 0;
 }
 :root[data-theme] .company-dialog-head p {
-  font-size: 13px;
+  font-size: calc(13px + var(--ui-font-step, 1px));
   color: var(--muted);
   overflow-wrap: anywhere;
   margin: 10px 0 0;
@@ -265,7 +265,7 @@ body:has(#company-details[open]) {
   border-top: 1px solid var(--line);
 }
 :root[data-theme] .company-section h3 {
-  font-size: 14px;
+  font-size: calc(14px + var(--ui-font-step, 1px));
   margin-bottom: 17px;
   color: var(--accent);
 }
@@ -279,7 +279,7 @@ body:has(#company-details[open]) {
   flex-direction: column;
   gap: 8px;
   min-width: 0;
-  font-size: 12px;
+  font-size: calc(12px + var(--ui-font-step, 1px));
 }
 :root[data-theme] .company-field.wide {
   grid-column: 1/-1;
@@ -313,7 +313,7 @@ body:has(#company-details[open]) {
 :root[data-theme] .company-record-id {
   margin: 24px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: calc(11px + var(--ui-font-step, 1px));
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -366,7 +366,7 @@ body:has(#company-details[open]) {
 }
 
 :root[data-theme] .company-context-hint {
-  font-size: 11px;
+  font-size: calc(11px + var(--ui-font-step, 1px));
   color: var(--muted);
   line-height: 1.7;
   margin: 9px 0 0;
@@ -443,7 +443,7 @@ body:has(#company-details[open]) {
 }
 :root[data-theme] .breadcrumb-drawer {
   margin: 0 32px 18px 0;
-  font-size: 12px;
+  font-size: calc(12px + var(--ui-font-step, 1px));
 }
 :root[data-theme] .breadcrumb .breadcrumb-return {
   display: flex;
@@ -464,7 +464,7 @@ body:has(#company-details[open]) {
 }
 :root[data-theme] .breadcrumb .breadcrumb-jump {
   color: var(--accent-text);
-  font-size: 18px;
+  font-size: calc(18px + var(--ui-font-step, 1px));
 }
 :root[data-theme] a.reference-link {
   color: var(--accent-text);
@@ -493,7 +493,7 @@ body:has(#company-details[open]) {
     display: block;
     width: 100%;
     max-width: 100%;
-    font-size: 11px;
+    font-size: calc(11px + var(--ui-font-step, 1px));
   }
   :root[data-theme] .breadcrumb ol {
     column-gap: 6px;

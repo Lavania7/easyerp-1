@@ -1,6 +1,7 @@
 """Local query and manual-entry application. No framework or remote services."""
 
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
+from functools import wraps
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
 from decimal import Decimal
@@ -23,6 +24,7 @@ from entry import ManualEntry, EntryError, PREFERRED
 from imports import Imports, ImportError as FormatError, MAX_FILE
 from standard_templates import StandardTemplates
 from workspace import Workspace
+from calculations import Calculations
 from database_manager import DatabaseManager
 from table_tools import TableData, BulkEntry
 from easyerp import ERP
@@ -72,6 +74,27 @@ def csv_cell(value):
     return text
 
 
+def database_request(method):
+    @wraps(method)
+    def scoped(self):
+        if not self.local_request():
+            return
+        parsed = urlsplit(self.path)
+        params = parse_qs(parsed.query, keep_blank_values=True)
+        node_id = params.get("db", [""])[-1]
+        try:
+            if node_id and parsed.path.startswith("/api/") and not parsed.path.startswith("/api/databases"):
+                with DATABASES.request_scope(node_id, params.get("mode", ["live"])[-1]):
+                    return method(self)
+            return method(self)
+        except InvalidRequest as exc:
+            return self.send(getattr(exc, "status", 400), encode({"error": str(exc)}))
+        except (RuntimeError, OSError, ValueError, KeyError):
+            logging.exception("Database selection failed")
+            return self.send(503, encode({"error": "所选数据库暂时不可用，请从数据库管理重新切换。"}))
+    return scoped
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "easyERP/0.2"
 
@@ -116,17 +139,21 @@ class Handler(BaseHTTPRequestHandler):
             return False
         return True
 
+    @database_request
     def do_POST(self):
         if not self.local_request():
             return
         parsed = urlsplit(self.path)
         if parsed.path not in (
             "/api/workspace/save",
+            "/api/calculations/save",
+            "/api/calculations/formulas/save",
             "/api/entry/save",
             "/api/entry/bulk",
             "/api/databases/folder",
             "/api/databases/preview",
             "/api/databases/create",
+            "/api/databases/activate",
             "/api/import/check",
             "/api/import/settings",
             "/api/import/execute",
@@ -208,10 +235,15 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path.startswith("/api/databases/"):
                 action = {"/api/databases/folder": DATABASES.select_folder,
                           "/api/databases/preview": DATABASES.preview,
-                          "/api/databases/create": DATABASES.create}[parsed.path]
+                          "/api/databases/create": DATABASES.create,
+                          "/api/databases/activate": DATABASES.activate}[parsed.path]
                 return self.send(200, encode(action(payload)))
             if parsed.path == "/api/entry/bulk":
                 return self.send(200, encode(BulkEntry(params).save(payload)))
+            if parsed.path == "/api/calculations/save":
+                return self.send(200, encode(Calculations(params.get("mode", "live"), root=ERP(mode=params.get("mode", "live")).workspace_root(params.get("mode", "live"))).save(payload)))
+            if parsed.path == "/api/calculations/formulas/save":
+                return self.send(200, encode(Calculations(params.get("mode", "live"), root=ERP(mode=params.get("mode", "live")).workspace_root(params.get("mode", "live"))).save_formula(payload)))
             if parsed.path == "/api/workspace/save":
                 return self.send(200, encode(Workspace(params.get("mode", "live"), root=ERP(mode=params.get("mode", "live")).workspace_root(params.get("mode", "live"))).save(payload)))
             if parsed.path == "/api/import/settings":
@@ -244,6 +276,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_HEAD(self):
         self.do_GET()
 
+    @database_request
     def do_GET(self):
         global CATALOG
         if not self.local_request():
@@ -280,11 +313,16 @@ class Handler(BaseHTTPRequestHandler):
             }
             files.update({
                 "/database-manager.js": "database-manager.js",
+                "/database-source.js": "database-source.js",
                 "/database-manager.css": "database-manager.css",
                 "/table-tools.js": "table-tools.js",
                 "/table-tools.css": "table-tools.css",
+                "/calculations.js": "calculations.js",
+                "/calculations.css": "calculations.css",
                 "/calculator.js": "calculator.js",
                 "/calculator.css": "calculator.css",
+                "/mapping-view.js": "mapping-view.js",
+                "/mapping-view.css": "mapping-view.css",
                 "/object-menu.js": "object-menu.js",
                 "/object-menu.css": "object-menu.css",
                 "/plan-visual.js": "plan-visual.js",
@@ -308,6 +346,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, encode({**DATABASES.listing(), "token": WRITE_TOKEN}))
             if path == "/api/databases/migration-preview":
                 return self.send(200, encode(DATABASES.migration_preview()))
+            if path == "/api/calculations":
+                return self.send(200, encode({**Calculations(params.get("mode", "live"), root=ERP(mode=params.get("mode", "live")).workspace_root(params.get("mode", "live"))).listing(params), "token": WRITE_TOKEN}))
             if path == "/api/workspace":
                 return self.send(
                     200,
@@ -352,7 +392,7 @@ class Handler(BaseHTTPRequestHandler):
                 if len(value) > 300:
                     return self.send(400, encode({"error": "编号过长"}))
                 if key.startswith("workspace."):
-                    result = Workspace(data.mode, root=data.erp.workspace_root(data.mode)).identity(value, key.split(".", 1)[1])
+                    result = (Calculations if key == "workspace.calculation" else Workspace)(data.mode, root=data.erp.workspace_root(data.mode)).identity(value, key.split(".", 1)[1])
                 else:
                     if key and key not in RULES:
                         return self.send(400, encode({"error": "未知主录"}))
@@ -424,9 +464,10 @@ class Handler(BaseHTTPRequestHandler):
                     )
                 return self.send(404, encode({"error": "录入接口不存在"}))
             with LOCK:
-                if data.mode not in CATALOG or path == "/api/meta":
-                    CATALOG[data.mode] = data.catalog()
-                catalog = CATALOG[data.mode]
+                catalog_key = (str(data.erp.data.resolve()), data.erp.c["port"], data.db)
+                if catalog_key not in CATALOG or path == "/api/meta":
+                    CATALOG[catalog_key] = data.catalog()
+                catalog = CATALOG[catalog_key]
             if path == "/api/meta":
                 result = {
                     **catalog,

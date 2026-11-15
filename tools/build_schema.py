@@ -58,7 +58,7 @@ def build():
         "foreign_keys": len(re.findall(r"FOREIGN KEY", all_sql)),
         "views": len(re.findall(r"CREATE VIEW ", all_sql)),
     }
-    if counts != dict(schemas=6, tables=146, foreign_keys=475, views=0):
+    if counts != dict(schemas=6, tables=147, foreign_keys=477, views=0):
         raise ValueError(f"Specification changed; review before deploying: {counts}")
     for name, group in zip(("001_schemas.sql", "002_tables.sql", "003_foreign_keys.sql"), groups):
         payload = (
@@ -109,6 +109,14 @@ def build():
            if "unit_profile_upgrade_from" in previous else {}),
         "finance_profile_upgrade_from": previous.get(
             "finance_profile_upgrade_from",
+            {
+                "source_sha256s": sorted({previous["source_sha256"],
+                    *(pair["source_sha256"] for pair in previous.get("compatible_sources", []))}),
+                "sql_files": previous["sql_files"],
+            },
+        ),
+        "supplier_items_upgrade_from": previous.get(
+            "supplier_items_upgrade_from",
             {
                 "source_sha256s": sorted({previous["source_sha256"],
                     *(pair["source_sha256"] for pair in previous.get("compatible_sources", []))}),

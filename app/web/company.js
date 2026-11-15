@@ -30,8 +30,8 @@
     ['工商信息', [['法定代表人'], ['成立日期'], ['有效状态'], ['经营范围']]],
     ['资料与备注', [['登记资料路径'], ['税务资料路径'], ['资料版本'], ['备注']]],
   ];
-  const sourceLabel = (mode) => (mode === 'demo' ? '演示数据' : '正式数据');
-  const storageKey = (mode) => 'easyerp.company.' + mode;
+  const sourceLabel = (mode) => h(window.easyerpDatabaseSource.sourceLabel(mode));
+  const storageKey = (mode) => 'easyerp.company.' + (window.easyerpDatabaseSource.custom ? window.easyerpDatabaseSource.id + '.' : '') + mode;
   function getSelected(mode) {
     if (!selected.has(mode)) {
       let value = '';
@@ -57,7 +57,7 @@
       ? '<span class="muted" data-ui-label>未填写</span>'
       : `<span data-i18n-ignore>${h(text)}</span>`;
   async function request(path, mode, extra = {}, options = {}) {
-    const response = await fetch(
+    const response = await window.easyerpFetch(
       '/api/' + path + '?' + new URLSearchParams({ mode, ...extra }),
       options
     );

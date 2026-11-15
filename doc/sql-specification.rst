@@ -1654,7 +1654,7 @@ SQL记录粒度与字段定义
 """"""""""""
 
 
-记录粒度：一个业务供应商。
+记录粒度：一个业务供应商。供应的物品由供应物品明细表按供应商ID及物料MID引用派生；同一供应商可供应多个物料，同一物料可由多个供应商供应，名称不用于猜测关联。
 
 .. sql-source-line: 1343
 
@@ -1668,6 +1668,24 @@ SQL记录粒度与字段定义
      "户名" text,
      "账户ID" text,
      "开户行" text
+   );
+
+
+
+供应物品明细表
+""""""""""""""
+
+记录粒度：一个供应商与一个研发物料主数据的明确供货关系。供应关系ID为独立短ID；未知物料保持NULL。没有证据时不从采购描述或名称生成关系。供应商档案的“供应的物品”由本表派生，不重复维护。
+
+.. sql-source-line: 90001
+
+.. code-block:: sql
+
+   CREATE TABLE production."供应物品明细表" (
+     "供应关系ID" text PRIMARY KEY,
+     "供应商ID" text NOT NULL,
+     "MID" text,
+     UNIQUE ("供应商ID", "MID")
    );
 
 
@@ -4769,3 +4787,14 @@ PDF、MD及ZIP仍保存为文件；数据库保存文件登记、路径、版本
 本版SQL用于表达数据结构、关系和查询接口。已通过642条PostgreSQL语句的语法解析，核对146张表的单列主键与475个外键目标，并完成15个视图的字段引用检查。未连接PostgreSQL业务数据库，未导入真实业务数据；语法与引用检查不等同于真实数据库运行验证。跨行核对、报表归集、统计生成和文件打包仍需相应业务实现，不以结构定义代替已完成的应用功能。
 
 SQL语法参考：`PostgreSQL约束 <https://www.postgresql.org/docs/current/ddl-constraints.html>`__、`schema <https://www.postgresql.org/docs/current/ddl-schemas.html>`__、`精确数值类型 <https://www.postgresql.org/docs/current/datatype-numeric.html>`__。
+
+
+供应物品引用（release-1.3）
+---------------------------
+
+.. sql-source-line: 90002
+
+.. code-block:: sql
+
+   ALTER TABLE production."供应物品明细表" ADD FOREIGN KEY ("供应商ID") REFERENCES production."供应商档案表" ("供应商ID");
+   ALTER TABLE production."供应物品明细表" ADD FOREIGN KEY ("MID") REFERENCES rd."物料主数据表" ("MID");

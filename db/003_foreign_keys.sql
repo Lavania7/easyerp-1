@@ -475,3 +475,7 @@ ALTER TABLE analysis."数据集输入来源表" ADD FOREIGN KEY ("production交�
 ALTER TABLE analysis."数据集输入来源表" ADD FOREIGN KEY ("rd交付ID") REFERENCES rd."交付记录表" ("交付ID");
 ALTER TABLE analysis."数据集输入来源表" ADD FOREIGN KEY ("sales交付ID") REFERENCES sales."交付记录表" ("交付ID");
 ALTER TABLE analysis."数据集输入来源表" ADD FOREIGN KEY ("analysis交付ID") REFERENCES analysis."交付记录表" ("交付ID");
+
+-- readme.md:90002
+ALTER TABLE production."供应物品明细表" ADD FOREIGN KEY ("供应商ID") REFERENCES production."供应商档案表" ("供应商ID");
+ALTER TABLE production."供应物品明细表" ADD FOREIGN KEY ("MID") REFERENCES rd."物料主数据表" ("MID");

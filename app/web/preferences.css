@@ -49,7 +49,7 @@
   border-radius: 4px;
   padding: 5px;
   background: transparent;
-  font-size: calc(10px + var(--small-font-increase));
+  font-size: calc(calc(10px + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(10px + var(--small-font-increase));
   color: var(--muted);
   font-weight: 600;
@@ -84,7 +84,7 @@
 }
 .import-commit p,
 .import-fixed {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   line-height: 1.8;
   --ui-leading: 1.8;
@@ -105,7 +105,7 @@
 .import-scope-note > span + span {
   border: 0;
   padding: 0;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   flex-shrink: 1;
 }
@@ -120,7 +120,7 @@
   white-space: nowrap;
 }
 .import-gap-note {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   line-height: 1.8;
   --ui-leading: 1.8;
@@ -140,7 +140,7 @@
   align-items: flex-start;
 }
 .import-confirm-dialog .import-head h2 {
-  font-size: 20px;
+  font-size: calc(20px + var(--ui-font-step, 1px));
   --ui-en-size: 20px;
   line-height: 1.5;
   --ui-leading: 1.5;
@@ -151,7 +151,7 @@
   padding: 0 24px 24px;
 }
 .import-confirm-body p {
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
   line-height: 1.9;
   --ui-leading: 1.9;
@@ -432,7 +432,7 @@
 }
 
 :root[data-theme] h1 {
-  font-size: 25px;
+  font-size: calc(25px + var(--ui-font-step, 1px));
   --ui-en-size: 25px;
   font-weight: 650;
   letter-spacing: 0;
@@ -505,19 +505,19 @@
 }
 :root[data-theme] .metric .label {
   color: var(--muted);
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
 }
 :root[data-theme] .metric .chevron {
   color: var(--muted);
 }
 :root[data-theme] .metric .value {
-  font-size: calc(22px + var(--body-font-increase));
+  font-size: calc(calc(22px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(22px + 0px);
   margin-top: 16px;
 }
 :root[data-theme] .metric .value.unknown {
-  font-size: calc(20px + var(--body-font-increase));
+  font-size: calc(calc(20px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(20px + 0px);
   color: var(--ink);
 }
@@ -537,7 +537,7 @@
 }
 :root[data-theme] .empty {
   min-height: 116px;
-  font-size: calc(12px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(12px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(12px + 0px + var(--small-font-increase));
 }
 :root[data-theme] .empty.graph {
@@ -835,7 +835,7 @@
   border-radius: 7px;
   background: transparent;
   color: var(--muted);
-  font-size: calc(13px + var(--body-font-increase));
+  font-size: calc(calc(13px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(13px + 0px);
   text-align: left;
 }
@@ -872,7 +872,7 @@
   margin: 0 6px;
 }
 #search {
-  font-size: calc(11px + var(--body-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px);
 }
 .preference-group .preference-toggle {
@@ -884,7 +884,7 @@
   white-space: nowrap;
 }
 #rtc-clock {
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -932,7 +932,7 @@
   background: transparent;
   color: var(--ink);
   font: inherit;
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   cursor: pointer;
   text-align: left;
@@ -970,7 +970,7 @@
   border-radius: 6px;
   background: transparent;
   color: var(--ink);
-  font-size: calc(11px + var(--body-font-increase) + var(--small-font-increase));
+  font-size: calc(calc(11px + var(--body-font-increase) + var(--small-font-increase)) + var(--ui-font-step, 1px));
   --ui-en-size: calc(11px + 0px + var(--small-font-increase));
   text-align: left;
 }
